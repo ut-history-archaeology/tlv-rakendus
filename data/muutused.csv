@@ -1,0 +1,634 @@
+muutus_id,isik_id,perenimi,eesnimi,nimekiri,kuupaev,koosseis_id,liik,liitus_prot,lahkus_prot,ryhmavahetus_prot,peatatud_prot,allikaviide,täpsustus,asendaja_ID,asendatav_ID,asendaja_puudub,asendatav_puudub
+1,284,Rätsepp,Walter,nr 2,1918-12-04,1917-1919,lahkumine,,04.12.1918,,,ERA.2966.2.57:112,,391,,ei,ei
+2,391,Meister,Erast,nr 2,1918-12-04,1917-1919,liitumine,04.12.1918,,,,ERA.2966.2.57:112,,,284,ei,ei
+3,389,Jenson,Aleksander,nr 2,1918-12-04,1917-1919,lahkumine,,04.12.1918,,,ERA.2966.2.57:112,,226,,ei,ei
+4,226,Korb,Robert,nr 2,1918-12-04,1917-1919,liitumine,04.12.1918,,,,ERA.2966.2.57:112,kellel aga teadaande hilise kättejõudmise tõttu koosoleku kutset ei saanud saata,,389,ei,ei
+5,257,Engelhardt,Paul,nr 4,1918-12-16,1917-1919,lahkumine,,16.12.1918,,,ERA.2966.2.57:122,,394,,ei,ei
+6,394,Seeland,Gustaw,nr 4,1918-12-16,1917-1919,liitumine,16.12.1918,,,,ERA.2966.2.57:122,,,257,ei,ei
+7,273,Mikkelsaar,V.,nr 1,1919-02-07,1917-1919,lahkumine,,07.02.1919,,,ERA.2966.2.59:4,,233,,ei,ei
+8,233,Metslang,G.,nr 1,1919-02-07,1917-1919,liitumine,07.02.1919,,,,ERA.2966.2.59:4,,,273,ei,ei
+9,277,Parik,J.,nr 1,1919-02-07,1917-1919,lahkumine,,07.02.1919,,,ERA.2966.2.59:4,,148,,ei,ei
+10,148,Rütli,O.,nr 1,1919-02-07,1917-1919,liitumine,07.02.1919,,,,ERA.2966.2.59:4,,,277,ei,ei
+11,394,Seeland,Gustav,nr 4,1919-02-07,1917-1919,lahkumine,,07.02.1919,,,ERA.2966.2.59:4,surma läbi lahkunud,32,,ei,ei
+12,32,Hirschfeldt,A.,nr 4,1919-02-07,1917-1919,liitumine,07.02.1919,,,,ERA.2966.2.59:4,,,394,ei,ei
+13,260,Kangro,Eduard,nr 1,1919-03-17,1917-1919,lahkumine,,17.03.1919,,,ERA.2966.2.59:11,,243,,ei,ei
+14,243,Zimmermann,Oskar,nr 1,1919-03-17,1917-1919,liitumine,17.03.1919,,,,ERA.2966.2.59:11,,,260,ei,ei
+15,247,Aule,E.,nr 1,1919-04-11,1917-1919,lahkumine,,11.04.1919,,,ERA.2966.2.59:23,,230,,ei,ei
+16,230,Liigand,O.,nr 1,1919-04-11,1917-1919,liitumine,11.04.1919,,,,ERA.2966.2.59:23,,,247,ei,ei
+17,236,Parts,Karl,nr 1,1919-05-09,1917-1919,lahkumine,,09.05.1919,,,ERA.2966.2.59:33,,393,,ei,ei
+18,393,Pikk,Karl,nr 1,1919-05-09,1917-1919,liitumine,09.05.1919,,,,ERA.2966.2.59:33,,,236,ei,ei
+19,392,Ostrat,Michael,nr 5,1919-05-09,1917-1919,lahkumine,,09.05.1919,,,ERA.2966.2.59:33,,390,,ei,ei
+20,390,Luik,Jüri,nr 5,1919-05-09,1917-1919,liitumine,09.05.1919,,,,ERA.2966.2.59:33,,,392,ei,ei
+21,231,Lind,,nr 1,1919-06-06,1919-1921,lahkumine,,06.06.1919,,,ERA.2966.2.59:43,,292,,ei,ei
+22,292,Jänes,,nr 1,1919-06-06,1919-1921,liitumine,06.06.1919,,,,ERA.2966.2.59:43,,,231,ei,ei
+23,222,Jans,Johan,nr 2,1919-06-30,1919-1921,lahkumine,,30.06.1919,,,ERA.2966.2.59:64,,289,,ei,ei
+24,289,Abarenkow-Ein,,nr 2,1919-06-30,1919-1921,liitumine,30.06.1919,,,,ERA.2966.2.59:64,,,222,ei,ei
+25,216,Bätge,Roman,nr 4,1919-06-30,1919-1921,lahkumine,,30.06.1919,,,ERA.2966.2.59:64,,24,,ei,ei
+26,24,Haller,Eduard,nr 4,1919-06-30,1919-1921,liitumine,30.06.1919,,,,ERA.2966.2.59:64,,,216,ei,ei
+27,213,Asson,Emma,nr 2,1919-07-28,1919-1921,lahkumine,,28.07.1919,,,ERA.2966.2.59:74,,293,,ei,ei
+28,293,Kriisa,Gustav,nr 2,1919-07-28,1919-1921,liitumine,28.07.1919,,,,ERA.2966.2.59:74,,,213,ei,ei
+29,211,Ammon,Aleksander,nr 4,1919-07-28,1919-1921,lahkumine,,28.07.1919,,,ERA.2966.2.59:74,,290,,ei,ei
+30,290,Fischer,Elmar,nr 4,1919-07-28,1919-1921,liitumine,28.07.1919,,,,ERA.2966.2.59:74,,,211,ei,ei
+31,88,Lukk,Karl (Ed.),nr 2,1919-07-28,1919-1921,lahkumine,,28.07.1919,,,ERA.2966.2.59:74,wõimalik ei olnud tema asemikku koosolekule kutsuda,295,,ei,ei
+32,295,Mäetaga-Kolo,,nr 2,1919-08-25,1919-1921,liitumine,25.08.1919,,,,ERA.2966.2.59:94,,,88,ei,ei
+33,292,Jänes,Jaak,nr 1,1919-08-25,1919-1921,lahkumine,,25.08.1919,,,ERA.2966.2.59:94,,41,,ei,ei
+34,41,Jonas,Erich,nr 1,1919-08-25,1919-1921,liitumine,25.08.1919,,,,ERA.2966.2.59:94,,,292,ei,ei
+35,244,Tõnisson,Jaan,nr 7,1919-12-29,1919-1921,lahkumine,,29.12.1919,,,ERA.2966.2.59:140,,81,,ei,ei
+36,81,Lepp,Karl,nr 7,1919-12-29,1919-1921,liitumine,29.12.1919,,,,ERA.2966.2.59:140,,,244,ei,ei
+37,232,Lomp,J.,nr 1,1920-03-29,1919-1921,lahkumine,,29.03.1920,,,ERA.2966.2.60:27,,296,,ei,ei
+38,296,Peets,K.,nr 1,1920-03-29,1919-1921,liitumine,29.03.1920,,,,ERA.2966.2.60:27,,,232,ei,ei
+39,,,,,1920-05-31,1919-1921,rühmavahetus,,,31.05.1920,,ERA.2966.2.60:51,Eesti Sots. rewol. partei Tartu linnawolikogu rühm ennast edaspidi saab nimetama Eesti iseseiswa Sotsialistliku tööliste partei Tartu linnawolikogu rühmaks,,,ei,ei
+40,217,Ernits,Willem,,1920-06-28,1919-1921,lahkumine,,28.06.1920,,,ERA.2966.2.60:61,,51,,ei,ei
+41,51,Kena,August,,1920-06-28,1919-1921,liitumine,28.06.1920,,,,ERA.2966.2.60:61,,,217,ei,ei
+42,41,Jonas,Erich,,1920-06-28,1919-1921,lahkumine,,28.06.1920,,,ERA.2966.2.60:61,,,,jah,ei
+43,99,Meyer,J.,,1920-07-26,1919-1921,lahkumine,,26.07.1920,,,ERA.2966.2.60:71,,404,,ei,ei
+44,404,Schmidt,A.,,1920-07-26,1919-1921,liitumine&lahkumine,26.07.1920,26.07.1920,,,ERA.2966.2.60:71,,405,99,ei,ei
+45,405,Landesen,V.,,1920-07-26,1919-1921,liitumine&lahkumine,26.07.1920,26.07.1920,,,ERA.2966.2.60:71,,406,404,ei,ei
+46,406,Gernhardt,Felix,,1920-07-26,1919-1921,liitumine,26.07.1920,,,,ERA.2966.2.60:71,,,405,ei,ei
+47,60,Kriisa,Jaan,nr 7,1920-08-16,1919-1921,lahkumine,,16.08.1920,,,ERA.2966.2.60:87,linnasead.§ 61 põhjal on linnawolikogust wälja astunuks,294,,ei,ei
+48,294,Luht,Heinrich,nr 7,1920-08-16,1919-1921,liitumine&lahkumine,16.08.1920,16.08.1920,,,ERA.2966.2.60:87,,298,60,ei,ei
+49,298,Saar,August,nr 7,1920-08-16,1919-1921,liitumine,16.08.1920,,,,ERA.2966.2.60:87,,,294,ei,ei
+50,212,Arens,Johan,nr 7,1920-08-16,1919-1921,lahkumine,,16.08.1920,,,ERA.2966.2.60:87,linnasead.§ 61 põhjal on linnawolikogust wälja astunuks,299,,ei,ei
+51,299,Siidam,Ado,nr 7,1920-08-16,1919-1921,liitumine,16.08.1920,,,,ERA.2966.2.60:87,,,212,ei,ei
+52,236,Parts,Karl,nr 7,1920-08-16,1919-1921,lahkumine,,16.08.1920,,,ERA.2966.2.60:87,linnasead.§ 61 põhjal on linnawolikogust wälja astunuks,297,,ei,ei
+53,297,Reinik,Mart,nr 7,1920-08-16,1919-1921,liitumine,16.08.1920,,,,ERA.2966.2.60:87,,,236,ei,ei
+54,223,Juhanson,Eduard,nr 2,1920-08-16,1919-1921,lahkumine,,16.08.1920,,,ERA.2966.2.60:87,surma läbi lahkunud,300,,ei,ei
+55,300,Türno,Eduard,nr 2,1920-08-16,1919-1921,liitumine,16.08.1920,,,,ERA.2966.2.60:87,,,223,ei,ei
+56,221,Holst,Klara,,1920-08-30,1919-1921,lahkumine,,30.08.1920,,,ERA.2966.2.60:100,,,,jah,ei
+57,235,Ostrat,Joh.,,1920-10-18,1919-1921,lahkumine,,18.10.1920,,,ERA.2966.2.60:124,linnawalitsuse poolt linna-juriskonsuliks määratud,408,,ei,ei
+58,408,Kukk,Martin,,1920-10-18,1919-1921,liitumine,18.10.1920,,,,ERA.2966.2.60:124,,,235,ei,ei
+59,245,Wirkhaus,O.,,1920-11-15,1919-1921,lahkumine,,15.11.1920,,,ERA.2966.2.60:143,surma läbi,407,,ei,ei
+60,407,Jürgenstein,Anton,,1920-11-15,1919-1921,liitumine,15.11.1920,,,,ERA.2966.2.60:143,,,245,ei,ei
+61,24,Haller,E.,nr 4,1920-12-20,1919-1921,lahkumine,,20.12.1920,,,ERA.2966.2.60:159,,291,,ei,ei
+62,291,Grass,A.,nr 4,1920-12-20,1919-1921,liitumine,20.12.1920,,,,ERA.2966.2.60:159,,,24,ei,ei
+63,41,Jonas,Erich,nr 1,1921-03-21,1921-1923,lahkumine,,21.03.1921,,,ERA.2966.2.61:27,,317,,ei,ei
+64,317,Päss,Max,nr 1,1921-03-21,1921-1923,liitumine&lahkumine,21.03.1921,21.03.1921,,,ERA.2966.2.61:27,,318,41,ei,ei
+65,318,Peeda,Jaan,nr 1,1921-03-21,1921-1923,liitumine,21.03.1921,,,,ERA.2966.2.61:27,,,317,ei,ei
+66,61,Kruse,Nikolai,nr 1,1921-04-25,1921-1923,lahkumine,,25.04.1921,,,ERA.2966.2.61:45,,310,,ei,ei
+67,410,Unt,Jaan,nr 1,1921-04-25,1921-1923,liitumine,25.04.1921,,,,ERA.2966.2.61:45,,,310,ei,ei
+68,101,Miger,Otto,nr 1,1921-04-25,1921-1923,lahkumine,,25.04.1921,,,ERA.2966.2.61:45,,319,,ei,ei
+69,319,Sai,Mihkel,nr 1,1921-04-25,1921-1923,liitumine,25.04.1921,,,,ERA.2966.2.61:45,,,101,ei,ei
+70,310,Leps,August,nr 1,1921-04-25,1921-1923,liitumine&lahkumine,25.04.1921,25.04.1921,,,ERA.2966.2.61:45,,410,61,ei,ei
+71,154,Seeberg,Rud.,nr 6,1921-05-19,1921-1923,lahkumine,,19.05.1921,,,ERA.2966.2.61:59,,304,,ei,ei
+72,304,Haugas,Ludwig,nr 6,1921-05-19,1921-1923,liitumine,19.05.1921,,,,ERA.2966.2.61:59,,,154,ei,ei
+73,40,Johanson,L.,nr 2,1921-09-26,1921-1923,lahkumine,,26.09.1921,,,ERA.2966.2.61:97,,228,,ei,ei
+74,228,Lattik,Samuel,nr 2,1921-09-26,1921-1923,liitumine,26.09.1921,,,,ERA.2966.2.61:97,,,40,ei,ei
+75,76,Laur,A.,nr 8,1921-11-28,1921-1923,lahkumine,,28.11.1921,,,ERA.2966.2.61:131,,308,,ei,ei
+76,308,Koiwa,Johan,nr 8,1921-11-28,1921-1923,liitumine,28.11.1921,,,,ERA.2966.2.61:131,,,76,ei,ei
+77,32,Hirschfeldt,Alwil,nr 9,1922-01-30,1921-1923,lahkumine,,30.01.1922,,,ERA.2966.2.62:4,surma läbi,220,,ei,ei
+78,220,Greinert,Leberecht,nr 9,1922-01-30,1921-1923,liitumine,30.01.1922,,,,ERA.2966.2.62:4,,,32,ei,ei
+79,319,Sai,Mihkel,nr 1,1922-02-27,1921-1923,lahkumine,,27.02.1922,,,ERA.2966.2.62:31,ei ole poole aasta jooksul wolikogu koosolekutest osa wötnud,323,,ei,ei
+80,323,Sutt,Johan,nr 1,1922-02-27,1921-1923,liitumine,27.02.1922,,,,ERA.2966.2.62:31,,,319,ei,ei
+81,159,Simm,A.,nr 7,1922-03-27,1921-1923,lahkumine,,27.03.1922,,,ERA.2966.2.62:47,,239,,ei,ei
+82,239,Sternfeldt,August,nr 7,1922-03-27,1921-1923,liitumine,27.03.1922,,,,ERA.2966.2.62:47,,,159,ei,ei
+83,73,Küla,August,nr 1,1922-06-26,1921-1923,lahkumine,,26.06.1922,,,ERA.2966.2.62:82,,315,,ei,ei
+84,315,Miger,Jaan,nr 1,1922-06-26,1921-1923,liitumine,26.06.1922,,,,ERA.2966.2.62:82,,,73,ei,ei
+85,65,Kurg,Margus,nr 7,1922-09-11,1921-1923,lahkumine,,11.09.1922,,,ERA.2966.2.62:101,surma läbi on lahkunud,233,,ei,ei
+86,233,Metslang,Gustaw,nr 7,1922-09-11,1921-1923,liitumine,11.09.1922,,,,ERA.2966.2.62:101,,,65,ei,ei
+87,49,Kase,Peeter,nr 8,1922-09-11,1921-1923,lahkumine,,11.09.1922,,,ERA.2966.2.62:101,elukoha muutmise pärast,312,,ei,ei
+88,312,Luksepp,Peeter,nr 8,1922-09-11,1921-1923,liitumine,11.09.1922,,,,ERA.2966.2.62:101,,,49,ei,ei
+89,39,Jaska,R.,iseseiswa sotsial.tööliste partei rühmast,1922-10-30,1921-1923,lahkumine,,30.10.1922,,,ERA.2966.2.62:135,,320,,ei,ei
+90,320,Schiffer,Johan,nr 1,1922-10-30,1921-1923,liitumine,30.10.1922,,,,ERA.2966.2.62:135,,,39,ei,ei
+91,162,Stallmeister,K.,iseseiswa sotsial.tööliste partei rühmast,1922-10-30,1921-1923,lahkumine,,30.10.1922,,,ERA.2966.2.62:135,,21,,ei,ei
+92,21,Erdmann,Johannes,nr 1,1922-10-30,1921-1923,liitumine,30.10.1922,,,,ERA.2966.2.62:135,,,162,ei,ei
+93,114,Ojar,Ed.,iseseiswa sotsial.tööliste partei rühmast,1922-10-30,1921-1923,lahkumine,,30.10.1922,,,ERA.2966.2.62:135,,307,,ei,ei
+94,307,Katago,Gustaw,nr 1,1922-10-30,1921-1923,liitumine,30.10.1922,,,,ERA.2966.2.62:135,,,114,ei,ei
+95,301,Engelhardt,W.,sakslaste rühm,1922-11-27,1921-1923,lahkumine,,27.11.1922,,,ERA.2966.2.62:155,,322,,ei,ei
+96,322,Ströhmberg,Konrad,sakslaste rühm,1922-11-27,1921-1923,liitumine,27.11.1922,,,,ERA.2966.2.62:155,,,301,ei,ei
+97,323,Sutt,Juhan,iseseisw.sots.tööl.partei rühm,1922-12-18,1921-1923,lahkumine,,18.12.1922,,,ERA.2966.2.62:168,,302,,ei,ei
+98,302,Freiberg,Karl,iseseisw.sots.tööl.partei rühm,1922-12-18,1921-1923,liitumine,18.12.1922,,,,ERA.2966.2.62:168,,,323,ei,ei
+99,8,Anderson,Hildegard,iseseisev sotsial. tööliste partei rühm,1923-01-04,1921-1923,lahkumine,,04.01.1923,,,ERA.2966.2.63:3,,316,,ei,ei
+100,316,Öunapuu,Helene,iseseisev sotsial. tööliste partei rühm,1923-01-04,1921-1923,liitumine,04.01.1923,,,,ERA.2966.2.63:3,,,8,ei,ei
+101,55,Koch,K.,saksa wabameelsete rühm,1923-01-29,1921-1923,lahkumine,,29.01.1923,,,ERA.2966.2.63:11,,290,,ei,ei
+102,290,Fischer,Elmar,saksa wabameelsete rühm,1923-01-29,1921-1923,liitumine,29.01.1923,,,,ERA.2966.2.63:11,,,55,ei,ei
+103,316,Öunapuu,Helene,iseseiswa sots.tööl.partei rühm,1923-02-26,1921-1923,lahkumine,,26.02.1923,,,ERA.2966.2.63:36,,305,,ei,ei
+104,305,Iwan,Aleksander,iseseiswa sots.tööl.partei rühm,1923-02-26,1921-1923,liitumine,26.02.1923,,,,ERA.2966.2.63:36,,,316,ei,ei
+105,91,Maim,Rich.,rahwaerakonna rühm,1923-03-26,1921-1923,lahkumine,,26.03.1923,,,ERA.2966.2.63:60,,242,,ei,ei
+106,242,Sööt,K. E.,rahwaerakonna rühm,1923-03-26,1921-1923,liitumine,26.03.1923,,,,ERA.2966.2.63:60,,,91,ei,ei
+107,37,Jaaska,Jaan,iseseiswa sots.tööl.partei rühm,1923-03-26,1921-1923,lahkumine,,26.03.1923,,,ERA.2966.2.63:60,,321,,ei,ei
+108,321,Simka,Samuel,iseseiswa sots.tööl.partei rühm,1923-03-26,1921-1923,liitumine,26.03.1923,,,,ERA.2966.2.63:60,,,37,ei,ei
+109,43,Kala,Jaan,,1923-06-25,1921-1923,rühmavahetus,,,25.06.1923,,ERA.2966.2.63:116,"ei kuulu enam Eesti Iseseiswa sotsialistliku Partei linnawolikogu rühma; on sellesse parteisse ja sellele platwormile jäänud,mille järele neid wolikogusse on walitud. Pikema teadaandega selle kohta esineb Iseseisw.sots.tööl.partei rühm edaspidi.",,,ei,ei
+110,305,Iwan,Aleksander,,1923-06-25,1921-1923,rühmavahetus,,,25.06.1923,,ERA.2966.2.63:116,"ei kuulu enam Eesti Iseseiswa sotsialistliku Partei linnawolikogu rühma; on sellesse parteisse ja sellele platwormile jäänud,mille järele neid wolikogusse on walitud. Pikema teadaandega selle kohta esineb Iseseisw.sots.tööl.partei rühm edaspidi.",,,ei,ei
+111,107,Mägi,Johannes,,1923-06-25,1921-1923,rühmavahetus,,,25.06.1923,,ERA.2966.2.63:116,"ei kuulu enam Eesti Iseseiswa sotsialistliku Partei linnawolikogu rühma; on sellesse parteisse ja sellele platwormile jäänud,mille järele neid wolikogusse on walitud. Pikema teadaandega selle kohta esineb Iseseisw.sots.tööl.partei rühm edaspidi.",,,ei,ei
+112,302,Freiberg,Karl,,1923-06-25,1921-1923,rühmavahetus,,,25.06.1923,,ERA.2966.2.63:116,"ei kuulu enam Eesti Iseseiswa sotsialistliku Partei linnawolikogu rühma; on sellesse parteisse ja sellele platwormile jäänud,mille järele neid wolikogusse on walitud. Pikema teadaandega selle kohta esineb Iseseisw.sots.tööl.partei rühm edaspidi.",,,ei,ei
+113,320,Schiffer,Johannes,,1923-06-25,1921-1923,rühmavahetus,,,25.06.1923,,ERA.2966.2.63:116,"ei kuulu enam Eesti Iseseiswa sotsialistliku Partei linnawolikogu rühma; on sellesse parteisse ja sellele platwormile jäänud,mille järele neid wolikogusse on walitud. Pikema teadaandega selle kohta esineb Iseseisw.sots.tööl.partei rühm edaspidi.",,,ei,ei
+114,51,Kena,Aug.,nr 2,1923-08-27,1921-1923,lahkumine,,27.08.1923,,,ERA.2966.2.63:130,,224,,ei,ei
+115,224,Kapsta,Ernst,nr 2,1923-08-27,1921-1923,liitumine,27.08.1923,,,,ERA.2966.2.63:130,,,51,ei,ei
+116,148,Rütli,Oskar,nr 6,1923-08-27,1921-1923,lahkumine,,27.08.1923,,,ERA.2966.2.63:130,,138,,ei,ei
+117,138,Pärn,Mihkel,nr 6,1923-08-27,1921-1923,liitumine,27.08.1923,,,,ERA.2966.2.63:130,,,148,ei,ei
+118,307,Katago,Gustaw,iseseiswa sotsial.tööliste partei rühm,1923-10-29,1921-1923,lahkumine,,29.10.1923,,,ERA.2966.2.63:177,,324,,ei,ei
+119,324,Tuks,Andreas,iseseiswa sotsial.tööliste partei rühm,1923-10-29,1921-1923,liitumine,29.10.1923,,,,ERA.2966.2.63:177,,,307,ei,ei
+120,110,Naaris,Hugo,üürnikkude rühm,1923-10-29,1921-1923,lahkumine,,29.10.1923,,,ERA.2966.2.63:177,,311,,ei,ei
+121,311,Lillemägi,Johannes,üürnikkude rühm,1923-10-29,1921-1923,liitumine,29.10.1923,,,,ERA.2966.2.63:177,,,110,ei,ei
+122,324,Tuks,Andres,nr 1,1923-11-26,1921-1923,lahkumine,,26.11.1923,,,ERA.2966.2.63:203,,28,,ei,ei
+123,28,Heidemann,Hans,nr 1,1923-11-26,1921-1923,liitumine,26.11.1923,,,,ERA.2966.2.63:203,,,324,ei,ei
+124,320,Schiffer,Johan,nr 1,1923-11-26,1921-1923,lahkumine,,26.11.1923,,,ERA.2966.2.63:203,linnasead.§ 61 põhjal,313,,ei,ei
+125,313,Meiesaar,Jaan,nr 1,1923-11-26,1921-1923,liitumine,26.11.1923,,,,ERA.2966.2.63:203,,,320,ei,ei
+128,74,Laja,Ferdinand,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,ei
+129,46,Karheiding,Karl,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+130,119,Pahk,Karl,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+131,115,Oksa,Arnold,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+132,112,Nieländer,August,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+133,23,Gross,Mihkel,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+134,15,Braats,Aleksander,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+135,154,Seeberg,Rudolf,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+136,126,Peterson,Hermann,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+137,177,Treiberg,Peeter,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+138,3,Adamson,Martin,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+139,66,Kurs-Olesk,Minni,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+140,43,Kala,Jaan,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+141,53,Kirs,Eduard,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+142,113,Nömmits,Tönis,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:3,uue wolikogu liikmete nimekirja,,,ei,jah
+143,28,Heidemann,Hans,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+144,137,Pälson,Rudolf,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+145,100,Michelson,Peeter,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+146,152,Sassi,Woldemar,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+147,173,Tiimann,Eduard,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+148,64,Kurg,Kristjan,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+149,136,Pächter,Rudolf,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+150,42,Kaas,Hugo,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+151,104,Mork,Karl,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+152,57,Kopli,Peeter,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+153,21,Erdmann,Johannes,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+154,108,Mühlberg,August,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+155,68,Kutta,August,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+156,179,Tsögankow,Jakob,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+157,190,Weimer,Arnold,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+158,6,Allik,Oskar,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+159,148,Rütli,Oskar,,1924-01-15,1924-1926,liitumine&lahkumine,15.01.1924,15.01.1924,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,326,,ei,jah
+160,326,Ernits,August,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,,,148,ei,ei
+161,44,Kampmann,Mihkel,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+162,82,Lill,Julius,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+163,78,Lell,Hans,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+164,50,Keiss,Aleksander,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+165,45,Kangro,Fromhold,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+166,138,Pärn,Mihkel,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+167,94,Mauer,Martin,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+168,178,Treumann,Jaan,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+169,120,Paigaline,Emil,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+170,189,Willberg,Martin,,1924-01-15,1924-1926,liitumine&lahkumine,15.01.1924,15.01.1924,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,344,,ei,jah
+171,344,Liblik,Friedrich,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,,,189,ei,ei
+172,134,Pöld,Peeter,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+173,86,Luik,Karl,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+174,60,Kriisa,Jaan,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+175,165,Sumberg,Herman,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+176,105,Möru,August,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+177,141,Raudsepp,Jaan,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+178,72,Käppa,Gustaw,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+179,180,Tubin,Willem,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+180,144,Rekand,Jaan,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+181,170,Tamm,Rudolf,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+182,17,Bundt,Oskar,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+183,146,Rutopöld,Gustaw,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+184,127,Pfaff,Konrad,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+185,133,Punga,Aleksander,,1924-01-15,1924-1926,liitumine&lahkumine,15.01.1924,15.01.1924,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,369,,ei,jah
+186,369,Walter,Alfred,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,,,133,ei,ei
+187,87,Luisa,Ludwig,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+188,131,Post,Georg,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+189,27,Hartmann,Woldemar,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+190,16,Bulgarin,Wetsheslaw,,1924-01-15,1924-1926,liitumine,15.01.1924,,,,ERA.2966.2.64a:4,uue wolikogu liikmete nimekirja,,,ei,jah
+191,6,Allik,O.,nr 5,1924-01-28,1924-1926,lahkumine,,28.01.1924,,,ERA.2966.2.64a:10,,93,,ei,ei
+192,93,Massakas,Mihkel,nr 5,1924-01-28,1924-1926,liitumine,28.01.1924,,,,ERA.2966.2.64a:10,,,6,ei,ei
+193,113,Nömmits,Tönis,nr 3,1924-02-27,1924-1926,lahkumine,,27.02.1924,,,ERA.2966.2.64a:18,,25,,ei,ei
+194,25,Hanberg,Leonhard,nr 3,1924-02-27,1924-1926,liitumine,27.02.1924,,,,ERA.2966.2.64a:18,,,113,ei,ei
+195,127,Pfaff,Konrad,nr 11,1924-02-27,1924-1926,lahkumine,,27.02.1924,,,ERA.2966.2.64a:18,,360,,ei,ei
+196,360,Sihle,Roderich,nr 11,1924-02-27,1924-1926,liitumine,27.02.1924,,,,ERA.2966.2.64a:18,,,127,ei,ei
+197,28,Heidemann,Hans,,1924-03-26,1924-1926,lahkumine,,26.03.1924,,,ERA.2966.2.64a:47,,340,,ei,ei
+198,340,Koorits,Nikolai,,1924-03-26,1924-1926,liitumine&lahkumine,26.03.1924,26.03.1924,,,ERA.2966.2.64a:47,,349,28,ei,ei
+199,349,Michelson,Bernhard,,1924-03-26,1924-1926,liitumine,26.03.1924,,,,ERA.2966.2.64a:47,,,340,ei,ei
+200,137,Pälson,Rudolf,,1924-03-26,1924-1926,lahkumine,,26.03.1924,,,ERA.2966.2.64a:47,,352,,ei,ei
+201,352,Osjamets,Jaan,,1924-03-26,1924-1926,liitumine,26.03.1924,,,,ERA.2966.2.64a:47,,,137,ei,ei
+202,42,Kaas,H.,,1924-04-16,1924-1926,lahkumine,,16.04.1924,,,ERA.2966.2.64a:67,,350,,ei,ei
+203,350,Michelson,Rudolf,,1924-04-16,1924-1926,liitumine,16.04.1924,,,,ERA.2966.2.64a:67,,,42,ei,ei
+204,108,Mühlberg,A.,,1924-04-16,1924-1926,lahkumine,,16.04.1924,,,ERA.2966.2.64a:67,,356,,ei,ei
+205,356,Priks,Elise,,1924-04-16,1924-1926,liitumine,16.04.1924,,,,ERA.2966.2.64a:67,,,108,ei,ei
+206,152,Sassi,W.,töörahwa ühise wäerinna nimekiri Nr. 4,1924-05-27,1924-1926,lahkumine,,27.05.1924,,,ERA.2966.2.64a:93,,361,,ei,ei
+207,361,Speek,Kr.,töörahwa ühise wäerinna nimekiri Nr. 4,1924-05-27,1924-1926,liitumine,27.05.1924,,,,ERA.2966.2.64a:93,,,152,ei,ei
+208,173,Tiimann,E.,töörahwa ühise wäerinna nimekiri Nr. 4,1924-05-27,1924-1926,lahkumine,,27.05.1924,,,ERA.2966.2.64a:93,,370,,ei,ei
+209,370,Walter,Arth.,töörahwa ühise wäerinna nimekiri Nr. 4,1924-05-27,1924-1926,liitumine,27.05.1924,,,,ERA.2966.2.64a:93,,,173,ei,ei
+210,100,Michelson,P.,töörahwa ühise wäerinna nimekiri Nr. 4,1924-05-27,1924-1926,lahkumine,,27.05.1924,,,ERA.2966.2.64a:93,,353,,ei,ei
+211,353,Paal,Leo,töörahwa ühise wäerinna nimekiri Nr. 4,1924-05-27,1924-1926,liitumine&lahkumine,27.05.1924,27.05.1924,,,ERA.2966.2.64a:93,,348,100,ei,ei
+212,348,Meinwald,Juulius,töörahwa ühise wäerinna nimekiri Nr. 4,1924-05-27,1924-1926,liitumine,27.05.1924,,,,ERA.2966.2.64a:93,,,353,ei,ei
+213,190,Weimer,A.,Ühise wäerinna nimekiri Nr.4,1924-08-27,1924-1926,lahkumine,,27.08.1924,,,ERA.2966.2.64a:126,,363,,ei,ei
+214,363,Tamman,Palmi,Ühise wäerinna nimekiri Nr.4,1924-08-27,1924-1926,liitumine&lahkumine,27.08.1924,27.08.1924,,,ERA.2966.2.64a:126,,339,190,ei,ei
+215,339,Kiiter,Joh.,Ühise wäerinna nimekiri Nr.4,1924-08-27,1924-1926,liitumine,27.08.1924,,,,ERA.2966.2.64a:126,,,363,ei,ei
+216,349,Michelson,Bernhard,Töörahwa Ühise wäerinna nimekiri Nr.4,1924-08-27,1924-1926,lahkumine,,27.08.1924,,,ERA.2966.2.64a:126,,365,,ei,ei
+217,365,Tooming,Emmeline,Töörahwa Ühise wäerinna nimekiri Nr.4,1924-08-27,1924-1926,liitumine,27.08.1924,,,,ERA.2966.2.64a:126,,,349,ei,ei
+218,352,Osjamets,J.,Töörahwa Ühise wäerinna nimekiri Nr.4,1924-09-24,1924-1926,lahkumine,,24.09.1924,,,ERA.2966.2.64a:145,,364,,ei,ei
+219,364,Tedder,Jaan,Töörahwa Ühise wäerinna nimekiri Nr.4,1924-09-24,1924-1926,liitumine,24.09.1924,,,,ERA.2966.2.64a:145,,,352,ei,ei
+220,64,Kurg,Kristjan,Töörahwa Ühise wäerinna nimekiri Nr.4,1924-09-24,1924-1926,lahkumine,,24.09.1924,,,ERA.2966.2.64a:145,§ 61,355,,ei,ei
+221,355,Piir,Gustaw,Töörahwa Ühise wäerinna nimekiri Nr.4,1924-09-24,1924-1926,liitumine&lahkumine,24.09.1924,24.09.1924,,,ERA.2966.2.64a:145,,345,64,ei,ei
+222,345,Lipstal,Albert,Töörahwa Ühise wäerinna nimekiri Nr.4,1924-09-24,1924-1926,liitumine,24.09.1924,,,,ERA.2966.2.64a:145,,,355,ei,ei
+223,179,Tsögankov,Jakob,Töörahwa Ühise wäerinna nimekiri Nr.4,1924-09-24,1924-1926,lahkumine,,24.09.1924,,,ERA.2966.2.64a:145,§ 61,354,,ei,ei
+224,354,Paltser,Johannes,Töörahwa Ühise wäerinna nimekiri Nr.4,1924-09-24,1924-1926,liitumine,24.09.1924,,,,ERA.2966.2.64a:145,,,179,ei,ei
+225,345,Lipstal,Albert,töörahwa ühise wäerinna rühm,1924-10-29,1924-1926,lahkumine,,29.10.1924,,,ERA.2966.2.64a:165,,336,,ei,ei
+226,336,Kalla,Gustaw,töörahwa ühise wäerinna rühm,1924-10-29,1924-1926,liitumine,29.10.1924,,,,ERA.2966.2.64a:165,,,345,ei,ei
+227,23,Gross,Mihkel,üürnikkude ja wabadussöjalaste rühm,1924-10-29,1924-1926,lahkumine,,29.10.1924,,,ERA.2966.2.64a:165,,338,,ei,ei
+228,338,Kepp,Oskar,üürnikkude ja wabadussöjalaste rühm,1924-10-29,1924-1926,liitumine,29.10.1924,,,,ERA.2966.2.64a:165,,,23,ei,ei
+229,364,Tedder,Jaan,Töörahwa Ühise wäerinna nimekiri,1924-11-12,1924-1926,lahkumine,,12.11.1924,,,ERA.2966.2.64a:177,,368,,ei,ei
+230,368,Tutti,Eduard,Töörahwa Ühise wäerinna nimekiri,1924-11-12,1924-1926,liitumine&lahkumine,12.11.1924,12.11.1924,,,ERA.2966.2.64a:177,,359,364,ei,ei
+231,359,Sepre,Oskar,Töörahwa Ühise wäerinna nimekiri,1924-11-12,1924-1926,liitumine,12.11.1924,,,,ERA.2966.2.64a:177,,,368,ei,ei
+232,,,,Töörahwa Ühise wäerinna nimekiri,1924-12-22,1924-1926,peatamine,,,,22.12.1924,ERA.2966.2.64a:198,"Selle diwiisi üleme korralduse põhjal on wolikogust körwaldatud söjaseisukorra kestwuse ajaks Töörahwa ühise wäerinna (Tartu Töölisühisuste Kesknõukogu, Eestimaa Töörahwa Partei, Tööliste Ühisuste ja Tööliste wanemate) kandidaatide nimekirja järele walitud 15 linnawolinikku.",,,ei,ei
+233,228,Lattik,Samuel,,1925-02-25,1924-1926,lahkumine,,25.02.1925,,,ERA.2966.2.66:22,surma läbi on lahkunud,,,jah,ei
+234,104,Mork,Karl,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,341,,ei,ei
+235,57,Kopli,Peeter,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,343,,ei,ei
+236,21,Erdmann,Johannes,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,35,,ei,ei
+237,361,Speek,Kristjan,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,217,,ei,ei
+238,339,Kiiter,Johannes,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,142,,ei,ei
+239,365,Tooming,Emmeline,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,36,,ei,ei
+240,354,Paltser,Johannes,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,334,,ei,ei
+241,336,Kalla,Gustaw,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,332,,ei,ei
+242,325,Einmann,Ewald,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,139,,ei,ei
+243,331,Jakobson,Peeter,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,143,,ei,ei
+244,337,Karro,Martha,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,299,,ei,ei
+245,333,Jõgi,Ida,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,219,,ei,ei
+246,347,Märtmann,Eduard,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,116,,ei,ei
+247,328,Grünberg,August,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,54,,ei,ei
+248,366,Tork,Oskar,Töörahwa Ühise wäerinna nimekiri,1925-03-26,1924-1926,lahkumine,,26.03.1925,,,ERA.2966.2.66:28,Siseministri 23 weebruari s.a. määruse Nr.389 põhjal on Töörahwa ühise wäerinna nimekirja järele wolikogusse walitud linnawolinikkude wolitused lõppenuks tunnistatud,99,,ei,ei
+249,341,Kurg,Leonhard,Nr. 1. Üürnikkude ja Wabadussõjalaste ühise kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,104,ei,ei
+250,343,Laisaar,Johannes,Nr. 1. Üürnikkude ja Wabadussõjalaste ühise kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,57,ei,ei
+251,35,Imelik,Henrik,Nr. 1. Üürnikkude ja Wabadussõjalaste ühise kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,21,ei,ei
+252,217,Ernits,Willem,Nr. 2. Eesti Sots.dem.Tööl.Partei ja Iseseiswa Sots.Töölispartei Liidu kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,361,ei,ei
+253,142,Reeben,August,Nr. 2. Eesti Sots.dem.Tööl.Partei ja Iseseiswa Sots.Töölispartei Liidu kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,339,ei,ei
+254,36,Ingermann,Paul,Nr. 5. Majaomanikkude kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,365,ei,ei
+255,334,Juck,Peeter,Nr. 5. Majaomanikkude kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,354,ei,ei
+256,332,Jänes,Märt,Nr. 7. Eesti Rahwaerakonna kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,336,ei,ei
+257,139,Ratnik,Jaan,Nr. 7. Eesti Rahwaerakonna kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,325,ei,ei
+258,143,Reimann,Marie,Nr. 7. Eesti Rahwaerakonna kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,331,ei,ei
+259,299,Siidam,Adu,Nr. 7. Eesti Rahwaerakonna kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,337,ei,ei
+260,219,Genss,Julius,Nr. 8. Tartu Juudi Wähemusrahw. rühma kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,333,ei,ei
+261,116,Olesk,Lui,Nr. 10. Tööerakonna kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,347,ei,ei
+262,54,Klau,Sigmund,Nr. 11. Balti-Saksa kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,328,ei,ei
+263,99,Meyer,Johannes,Nr. 11. Balti-Saksa kandidaatide nimekiri,1925-03-26,1924-1926,liitumine,26.03.1925,,,,ERA.2966.2.66:28,,,366,ei,ei
+264,332,Jänes,Märt,nr 7,1925-04-29,1924-1926,lahkumine,,29.04.1925,,,ERA.2966.2.66:55,,164,,ei,ei
+265,164,Steinberg,Ewald,nr 7,1925-04-29,1924-1926,liitumine,29.04.1925,,,,ERA.2966.2.66:55,,,332,ei,ei
+266,360,Sihle,Rod.,,1925-09-30,1924-1926,lahkumine,,30.09.1925,,,ERA.2966.2.66:113,,329,,ei,ei
+267,329,Hirschfeldt,Friderich,,1925-09-30,1924-1926,liitumine&lahkumine,30.09.1925,30.09.1925,,,ERA.2966.2.66:113,,330,360,ei,ei
+268,330,Hoppe,Gustaw,,1925-09-30,1924-1926,liitumine&lahkumine,30.09.1925,30.09.1925,,,ERA.2966.2.66:113,,327,329,ei,ei
+269,327,Eschcholz,Woldemar,,1925-09-30,1924-1926,liitumine,30.09.1925,,,,ERA.2966.2.66:113,,,330,ei,ei
+270,177,Treiberg,P.,,1925-12-22,1924-1926,lahkumine,,22.12.1925,,,ERA.2966.2.66:186,,88,,ei,ei
+271,88,Lukk,Karl,,1925-12-22,1924-1926,liitumine,22.12.1925,,,,ERA.2966.2.66:186,,,177,ei,ei
+272,362,Tamm,A.,nr 7,1926-02-17,1924-1926,lahkumine,,17.02.1926,,,ERA.2966.2.67:40,,346,,ei,ei
+273,346,Luiga,Hans,nr 7,1926-02-17,1924-1926,liitumine,17.02.1926,,,,ERA.2966.2.67:40,,,362,ei,ei
+274,154,Seeberg,Rudolf,üürnikkude ja wabadussõjalaste nimekiri Nr.1,1926-02-17,1924-1926,lahkumine,,17.02.1926,,,ERA.2966.2.67:40,,96,,ei,ei
+275,96,Mekkart,Aleksander,üürnikkude ja wabadussõjalaste nimekiri Nr.1,1926-02-17,1924-1926,liitumine&lahkumine,17.02.1926,17.02.1926,,,ERA.2966.2.67:40,,342,154,ei,ei
+276,342,Kurwits,Aleksander,üürnikkude ja wabadussõjalaste nimekiri Nr.1,1926-02-17,1924-1926,liitumine,17.02.1926,,,,ERA.2966.2.67:40,,,96,ei,ei
+277,342,Kurwits,A.,üürnikkude ja wabadussõjalaste rühm,1926-03-17,1924-1926,lahkumine,,17.03.1926,,,ERA.2966.2.67:59,,335,,ei,ei
+278,335,Kaasik,K.,üürnikkude ja wabadussõjalaste rühm,1926-03-17,1924-1926,liitumine,17.03.1926,,,,ERA.2966.2.67:59,,,342,ei,ei
+279,72,Käppa,G.,rahwaerakonna rühm,1926-03-17,1924-1926,lahkumine,,17.03.1926,,,ERA.2966.2.67:59,linnasead.§ 61. põhjal,243,,ei,ei
+280,243,Zimmermann,Oskar,rahwaerakonna rühm,1926-03-17,1924-1926,liitumine,17.03.1926,,,,ERA.2966.2.67:59,,,72,ei,ei
+281,243,Zimmermann,Oskar,rahwaerakonna rühm,1926-03-31,1924-1926,lahkumine,,31.03.1926,,,ERA.2966.2.67:69,,351,,ei,ei
+282,351,Miitra,Johan,rahwaerakonna rühm,1926-03-31,1924-1926,liitumine,31.03.1926,,,,ERA.2966.2.67:69,,,243,ei,ei
+283,45,Kangro,Fromhold,majaomanikkude rühm,1926-03-31,1924-1926,lahkumine,,31.03.1926,,,ERA.2966.2.67:69,,63,,ei,ei
+284,63,Kullam,August,majaomanikkude rühm,1926-03-31,1924-1926,liitumine,31.03.1926,,,,ERA.2966.2.67:69,,,45,ei,ei
+285,74,Laja,Fred.,üürnikkude ja wabadussõjalaste rühm,1926-06-30,1924-1926,lahkumine,,30.06.1926,,,ERA.2966.2.67:151,,304,,ei,ei
+286,304,Haugas,L.,üürnikkude ja wabadussõjalaste rühm,1926-06-30,1924-1926,liitumine&lahkumine,30.06.1926,30.06.1926,,,ERA.2966.2.67:151,,358,74,ei,ei
+287,358,Sepp,Peeter,üürnikkude ja wabadussõjalaste rühm,1926-06-30,1924-1926,liitumine,30.06.1926,,,,ERA.2966.2.67:151,,,304,ei,ei
+288,126,Peterson,H.,,1926-11-10,1924-1926,rühmavahetus,,,10.11.1926,,ERA.2966.2.67:239,"on walitud wolikogusse üürnikkude ja wabadussõjalaste kandidaatide nimekirja järele, on saadud kiri, milles ta palub lugeda teda wolikogus sotsialistlikku rühma kuuluwaks",,,ei,ei
+289,326,Ernits,August,Tartu Majaomanikkude kandidaatide nimekiri,1926-12-15,1924-1926,lahkumine,,15.12.1926,,,ERA.2966.2.67:249,linnaseaduse § 61 põhjal,357,,ei,ei
+290,357,Ruus,Heinrich,Tartu Majaomanikkude kandidaatide nimekiri,1926-12-15,1924-1926,liitumine,15.12.1926,,,,ERA.2966.2.67:249,,,326,ei,ei
+291,335,Kaasik,Karl,üürnikkude ja wabadussõjalaste kandidaatide nimekiri,1926-12-15,1924-1926,lahkumine,,15.12.1926,,,ERA.2966.2.67:249,,367,,ei,ei
+292,367,Trubok,Aleksander,üürnikkude ja wabadussõjalaste kandidaatide nimekiri,1926-12-15,1924-1926,liitumine,15.12.1926,,,,ERA.2966.2.67:249,,,335,ei,ei
+293,134,Põld,Peeter,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+294,86,Luik,Karl,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+295,60,Kriisa,Jaan,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+296,165,Sumberg,Hermann,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+297,105,Mõru,August,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+298,141,Raudsepp,Jaan,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+299,180,Tubin,Willem,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+300,144,Rekand,Jaan-Aleksander,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+301,139,Ratnik,Jaan,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+302,81,Lepp,Karl,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+303,69,Kuum,Aleksander,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+304,34,Iise,Johan,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+305,177,Treiberg,Peeter,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+306,142,Reeben,August,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+307,96,Mekkart,Aleksander,,1927-02-07,1927-1929,liitumine&lahkumine,07.02.1927,07.02.1927,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,217,,ei,jah
+308,217,Ernits,Willem,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:5,,,96,ei,ei
+309,130,Pikkand,Eduard,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+310,66,Kurs-Olesk,Minni,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+311,53,Kirs,Eduard,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+312,192,Õunapuu,Mihkel,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+313,122,Pau,August,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+314,102,Mihkelson,Mihkel,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+315,88,Lukk,Karl,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+316,150,Sapotzki,Ludwig,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+317,10,Audowa,Aleksander,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+318,47,Karin,Peeter,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+319,3,Adamson,Mart,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+320,186,Wellberg,Mihkel,,1927-02-07,1927-1929,liitumine&lahkumine,07.02.1927,07.02.1927,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,403,,ei,jah
+321,403,Funcke,Robert,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:5,,,186,ei,ei
+322,181,Unt,Bernhard,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+323,80,Lepp,Hermann,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+324,29,Hein,Ulrich,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+325,95,Meister,Mihkel,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+326,178,Treumann,Jaan,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+327,189,Willberg,Martin,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+328,20,Emblik,Julie,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+329,147,Ruuben,Aleksander,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+330,99,Meyer,Johannes,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+331,161,Stackelberg,Walter,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+332,54,Klau,Sigismund,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+333,18,Daugull,Ernst,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+334,117,Oraw,Hans,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+335,6,Allik,Oskar,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+336,50,Keiss,Aleksander,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+337,148,Rütli,Johan-Oskar,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+338,138,Pärn,Mihkel,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+339,63,Kullam,August,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+340,1,Aawik,Johann,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+341,109,Müürsepp,Johannes,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+342,58,Koppel,Woldemar,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+343,111,Nahk,Julius,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+344,46,Karheiding,Karl,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+345,119,Pahk,Karl,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+346,15,Braats,Aleksander,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+347,35,Imelik,Hendrik,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+348,116,Olesk,Lui,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+349,16,Bulgarin,Wetscheslaw,,1927-02-07,1927-1929,liitumine,07.02.1927,,,,ERA.2966.2.68:4,walitud linnawolikogu liikmeteks,,,ei,jah
+350,117,Oraw,Hans,,1927-02-07,1927-1929,rühmavahetus,,,07.02.1927,,ERA.2966.2.68:5,"walitud wolikogusse Tartu Majandustegelaste koonduse nimekirja järgi, on esinenud teadaandega, et tema liitub Majaomanikkude ja teist. selts. rühmaga",,,ei,ei
+351,138,Pärn,M.,majaomanikkude rühma nimekiri,1927-06-13,1927-1929,lahkumine,,13.06.1927,,,ERA.2966.2.68:120,,183,,ei,ei
+352,183,Unt,Karl,majaomanikkude rühma nimekiri,1927-06-13,1927-1929,liitumine,13.06.1927,,,,ERA.2966.2.68:120,,,138,ei,ei
+353,142,Reeben,August,,1927-08-29,1927-1929,lahkumine,,29.08.1927,,,ERA.2966.2.68:134,,224,,ei,ei
+354,224,Kapsta,Ernst,,1927-08-29,1927-1929,liitumine&lahkumine,29.08.1927,29.08.1927,,,ERA.2966.2.68:134,,166,142,ei,ei
+355,166,Sütt,Juhan,,1927-08-29,1927-1929,liitumine,29.08.1927,,,,ERA.2966.2.68:134,,,224,ei,ei
+356,102,Mihkelson,Mihkel,Eesti Sotsialistliku tööliste partei nimekiri,1928-01-30,1927-1929,lahkumine,,30.01.1928,,,ERA.2966.2.70:14,,376,,ei,ei
+357,376,Petrow,Wladimir,Eesti Sotsialistliku tööliste partei nimekiri,1928-01-30,1927-1929,liitumine,30.01.1928,,,,ERA.2966.2.70:14,,,102,ei,ei
+358,376,Petrow,Wladimir,Eesti Sotsialistliku tööliste partei rühm,1928-03-26,1927-1929,lahkumine,,26.03.1928,,,ERA.2966.2.70:44,,371,,ei,ei
+359,371,Jääger,Siegfried,Eesti Sotsialistliku tööliste partei rühm,1928-03-26,1927-1929,liitumine&lahkumine,26.03.1928,26.03.1928,,,ERA.2966.2.70:44,,374,376,ei,ei
+360,374,Nano,Willem,Eesti Sotsialistliku tööliste partei rühm,1928-03-26,1927-1929,liitumine,26.03.1928,,,,ERA.2966.2.70:44,,,371,ei,ei
+361,111,Nahk,Julius,Majaomanikkude seltsi kandidaatide nimekiri,1928-09-10,1927-1929,lahkumine,,10.09.1928,,,ERA.2966.2.70:172,surma läbi on lahkunud,49,,ei,ei
+362,49,Kase,Peeter,Majaomanikkude seltsi kandidaatide nimekiri,1928-09-10,1927-1929,liitumine,10.09.1928,,,,ERA.2966.2.70:172,,,111,ei,ei
+363,374,Nano,Willem,Eesti Sotsialistliku Tööliste Partei nimekiri,1928-09-10,1927-1929,lahkumine,,10.09.1928,,,ERA.2966.2.70:172,Narwa elama asumise puhul,163,,ei,ei
+364,109,Müürsepp,J.,,1928-09-10,1927-1929,rühmavahetus,,,10.09.1928,,ERA.2966.2.70:173,"lahkub majaomanikkude rühmast wolikogus, kuid jääb edasi wolikogusse erapooletu nime all",,,ei,ei
+365,163,Stein,Arnold,Eesti Sotsialistliku Tööliste Partei nimekiri,1928-09-24,1927-1929,liitumine,24.09.1928,,,,ERA.2966.2.70:181,,,374,ei,ei
+366,80,Lepp,Hermann,,1928-10-29,1927-1929,lahkumine,,29.10.1928,,,ERA.2966.2.70:206,Linnasead.§ 61 põhjal,378,,ei,ei
+367,378,Toots,Karl,,1928-10-29,1927-1929,liitumine,29.10.1928,,,,ERA.2966.2.70:206,,,80,ei,ei
+368,183,Unt,Karl,,1928-10-29,1927-1929,rühmavahetus,,,29.10.1928,,ERA.2966.2.70:206,wolikogu majaomanikkude rühmast wälja astub ja jääb wolikogusse erapooletu nime all,,,ei,ei
+369,49,Kase,Peeter,majaomanikkude rühm,1928-11-12,1927-1929,rühmavahetus,,,12.11.1928,,ERA.2966.2.70:259,majaomanikkude rühmast wälja astub ja edaspidi wolikogus erapooletu nime all,,,ei,ei
+370,99,Meyer,Johannes,Saksa rühma kandidaatide nimekiri,1929-01-11,1927-1929,lahkumine,,11.01.1929,,,ERA.2966.2.71:4,,27,,ei,ei
+371,27,Hartmann,Woldemar,Saksa rühma kandidaatide nimekiri,1929-01-11,1927-1929,liitumine,11.01.1929,,,,ERA.2966.2.71:4,,,99,ei,ei
+372,54,Klau,Sigismund,Saksa rühma kandidaatide nimekiri,1929-01-11,1927-1929,lahkumine,,11.01.1929,,,ERA.2966.2.71:4,,131,,ei,ei
+373,131,Post,Georg,Saksa rühma kandidaatide nimekiri,1929-01-11,1927-1929,liitumine,11.01.1929,,,,ERA.2966.2.71:4,,,54,ei,ei
+374,181,Unt,Bernhard,Eesti Tööliste Partei Tartu osakond,1929-03-11,1927-1929,rühmavahetus,,,11.03.1929,,ERA.2966.2.71:48,"heidetud wälja nimetatud parteist; nimetab ennast edaspidi, kui Tartu tööliste huwide kaitsja Linnawolikogus ""Tartu Tööliste rühmaks.""",,,ei,ei
+375,95,Meister,M.,,1929-03-11,1927-1929,rühmavahetus,,,11.03.1929,,ERA.2966.2.71:48,"astunud wälja; nimetab ennast edaspidi, kui Tartu tööliste huwide kaitsja Linnawolikogus ""Tartu Tööliste rühmaks.""",,,ei,ei
+376,378,Toots,K.,,1929-03-11,1927-1929,rühmavahetus,,,11.03.1929,,ERA.2966.2.71:48,"astunud wälja; nimetab ennast edaspidi, kui Tartu tööliste huwide kaitsja Linnawolikogus ""Tartu Tööliste rühmaks.""",,,ei,ei
+377,117,Oraw,Hans,Majandustegelaste Koonduse kandidaatide nimekiri,1929-03-11,1927-1929,lahkumine,,11.03.1929,,,ERA.2966.2.71:48,,375,,ei,ei
+378,375,Nieländer,Heinrich,Majandustegelaste Koonduse kandidaatide nimekiri,1929-03-11,1927-1929,liitumine,11.03.1929,,,,ERA.2966.2.71:48,,,117,ei,ei
+379,375,Nieländer,Heinrich,Majaomanikkude rühm,1929-03-11,1927-1929,rühmavahetus,,,11.03.1929,,ERA.2966.2.71:48,saab töötama wolikogus kontaktis Majaomanikkude rühmaga,,,ei,ei
+380,10,Audowa,A.,Eesti sotsialistliku tööliste partei kandidaatide nimekiri,1929-09-30,1927-1929,lahkumine,,30.09.1929,,,ERA.2966.2.71:177,,215,,ei,ei
+381,215,Priks (Brik),W.,Eesti sotsialistliku tööliste partei kandidaatide nimekiri,1929-09-30,1927-1929,liitumine&lahkumine,30.09.1929,30.09.1929,,,ERA.2966.2.71:177,,373,10,ei,ei
+382,373,Lobona,R.,Eesti sotsialistliku tööliste partei kandidaatide nimekiri,1929-09-30,1927-1929,liitumine&lahkumine,30.09.1929,30.09.1929,,,ERA.2966.2.71:177,,377,215,ei,ei
+383,377,Tamberg,K.,Eesti sotsialistliku tööliste partei kandidaatide nimekiri,1929-09-30,1927-1929,liitumine,30.09.1929,,,,ERA.2966.2.71:177,,,373,ei,ei
+384,217,Ernits,Willem,Eesti Sotsialistliku Töölste Partei nimekiri,1929-10-28,1927-1929,lahkumine,,28.10.1929,,,ERA.2966.2.71:200,Linnasead. § 61 põhjal,379,,ei,ei
+385,379,Walge,Martin,Eesti Sotsialistliku Töölste Partei nimekiri,1929-10-28,1927-1929,liitumine,28.10.1929,,,,ERA.2966.2.71:200,,,217,ei,ei
+386,29,Hein,Ulrich,Eesti Tööliste Partei nimekiri,1929-10-28,1927-1929,lahkumine,,28.10.1929,,,ERA.2966.2.71:200,Linnasead. § 61 põhjal,372,,ei,ei
+387,372,Kiwiware,Herman,Eesti Tööliste Partei nimekiri,1929-10-28,1927-1929,liitumine,28.10.1929,,,,ERA.2966.2.71:200,,,29,ei,ei
+388,372,Kiwiware,Herman,Tartu Tööliste rühm,1929-10-28,1927-1929,rühmavahetus,,,28.10.1929,,ERA.2966.2.71:200,temal Eesti Tööliste Parteiga midagi ühist ei ole ja et ta ühineb Linnawolikogus Tartu Tööliste rühmaga,,,ei,ei
+389,177,Treiberg,Peeter,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+390,184,Wain,Jaan,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+391,3,Adamson,Mart,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+392,192,Õunapuu,Mihkel,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+393,163,Stein,Arnold,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+394,166,Sütt,Johan,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+395,88,Lukk,Karl,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+396,186,Wellema,Mihkel,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+397,53,Kirs,Eduard,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+398,84,Linnomägi,August,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+399,96,Mekkart,Aleksander,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+400,122,Pau,August,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+401,182,Unt,Johannes,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+402,19,Eidermann,August,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+403,129,Piir,Aleksander,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+404,178,Treumann,Jaan,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+405,189,Willberg,Martin,,1930-01-24,1930-1934,liitumine&lahkumine,24.01.1930,24.01.1930,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu; tema asemele on kutsutud 22. jaanuaril s.a. järgmine kandidaat,147,,ei,jah
+406,147,Ruuben,Aleksander,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,189,ei,ei
+407,20,Emblik,Julie,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+408,156,Sepp,Johan,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+409,77,Laurits,Oskar,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+410,169,Tallo,Johannes,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+411,7,Alwer,Jaan,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+412,134,Põld,Peeter,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+413,86,Luik,Karl,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+414,60,Kriisa,Jaan,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+415,165,Sumberg,Herman,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+416,105,Mõru,August,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+417,141,Raudsepp,Jaan,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+418,180,Tubin,Willem,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+419,139,Ratnik,Jaan,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+420,106,Mäelo,Helmi,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+421,81,Lepp,Karl,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+422,31,Hirsch,Johannes,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+423,188,Wiik,Johannes,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+424,145,Ronimois,Hans,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+425,69,Kuum,Aleksander,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+426,27,Hartmann,Woldemar,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+427,18,Daugull,Ernst,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+428,168,Zur-Mühlen,Erich,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+429,131,Post,Georg,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+430,52,Kippik,Johann,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+431,6,Allik,Oskar,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+432,63,Kullam,August,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+433,36,Ingermann,Paul,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+434,1,Aawik,Johan,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+435,58,Koppel,Woldemar,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+436,93,Massakas,Mihkel,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+437,148,Rütli,Johan-Oskar,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:6,Uue Linnawolikogu koosseisu,,,ei,jah
+438,172,Tamman,Woldemar,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:7,Uue Linnawolikogu koosseisu,,,ei,jah
+439,116,Olesk,Lui,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:7,Uue Linnawolikogu koosseisu,,,ei,jah
+440,119,Pahk,Karl,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:7,Uue Linnawolikogu koosseisu,,,ei,jah
+441,128,Piip,Ants,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:7,Uue Linnawolikogu koosseisu,,,ei,jah
+442,46,Karheiding,Karl,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:7,Uue Linnawolikogu koosseisu,,,ei,jah
+443,15,Braats,Aleksander,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:7,Uue Linnawolikogu koosseisu,,,ei,jah
+444,12,Belousow,Nasari,,1930-01-24,1930-1934,liitumine&lahkumine,24.01.1930,24.01.1930,,,ERA.2966.2.74:7,"Uue Linnawolikogu koosseisu, tagasi astunud; asemele kutsutud 21. jaanuaril",16,,ei,jah
+445,16,Bulgarin,Wetseslaw,,1930-01-24,1930-1934,liitumine,24.01.1930,,,,ERA.2966.2.74:7,"Uue Linnawolikogu koosseisu, asemele kutsutud 21. jaanuaril",,12,ei,ei
+446,147,Ruuben,Aleksander,Kristliku Rahwaerakonna kandidaatide nimekiri,1930-04-15,1930-1934,lahkumine,,15.04.1930,,,ERA.2966.2.74:24,tagasi astunud 11.weebr.s.a.,234,,ei,ei
+447,234,Märtson,Johannes,Kristliku Rahwaerakonna kandidaatide nimekiri,1930-04-15,1930-1934,liitumine,15.04.1930,,,,ERA.2966.2.74:24,,,147,ei,ei
+448,129,Piir,A.,,1930-04-15,1930-1934,rühmavahetus,,,15.04.1930,,ERA.2966.2.74:24,"saadud 18. märtsil s.a. teadaanne, et neil ei ole midagi ühist ega siduwat Eesti Tööliste Parteiga ja selle keskkomiteega ning et nad jääwad Tartu linnawolikokku tegutsema iseseiswalt Tartu tööliste esindajatena ja wõtawad nimetuseks: ""Tartu linnawolikogu töölisrühm.""",,,ei,ei
+449,182,Unt,J.,,1930-04-15,1930-1934,rühmavahetus,,,15.04.1930,,ERA.2966.2.74:24,"saadud 18. märtsil s.a. teadaanne, et neil ei ole midagi ühist ega siduwat Eesti Tööliste Parteiga ja selle keskkomiteega ning et nad jääwad Tartu linnawolikokku tegutsema iseseiswalt Tartu tööliste esindajatena ja wõtawad nimetuseks: ""Tartu linnawolikogu töölisrühm.""",,,ei,ei
+450,19,Eidermann,A.,,1930-04-15,1930-1934,rühmavahetus,,,15.04.1930,,ERA.2966.2.74:24,"saadud 18. märtsil s.a. teadaanne, et neil ei ole midagi ühist ega siduwat Eesti Tööliste Parteiga ja selle keskkomiteega ning et nad jääwad Tartu linnawolikokku tegutsema iseseiswalt Tartu tööliste esindajatena ja wõtawad nimetuseks: ""Tartu linnawolikogu töölisrühm.""",,,ei,ei
+451,182,Unt,Johannes,"Eesti Tööliste Partei, töötatööliste ja iseseiswate Töölisühisuste kandidaatide nimekiri",1930-05-12,1930-1934,lahkumine,,12.05.1930,,,ERA.2966.2.74:71,"Kohtu- ja siseministri määrusega 26.aprillist 1930 a. nr.86, mis awaldat. Riigi Teat.nr.33-1930 a., on tunnistatud makswusetuks linnawolikogude walimistel 1929 ja 1930 a. esitatud ""Eesti Tööliste Partei"" nime all wõi tema nimega ühendatud rühmituste kandidaatide nimekirjad ning lõppenuks nende nimekirjade järgi walitud esindajate wolitused.",92,,ei,ei
+452,19,Eidermann,August,"Eesti Tööliste Partei, töötatööliste ja iseseiswate Töölisühisuste kandidaatide nimekiri",1930-05-12,1930-1934,lahkumine,,12.05.1930,,,ERA.2966.2.74:71,"Kohtu- ja siseministri määrusega 26.aprillist 1930 a. nr.86, mis awaldat. Riigi Teat.nr.33-1930 a., on tunnistatud makswusetuks linnawolikogude walimistel 1929 ja 1930 a. esitatud ""Eesti Tööliste Partei"" nime all wõi tema nimega ühendatud rühmituste kandidaatide nimekirjad ning lõppenuks nende nimekirjade järgi walitud esindajate wolitused.",382,,ei,ei
+453,129,Piir,Aleksander,"Eesti Tööliste Partei, töötatööliste ja iseseiswate Töölisühisuste kandidaatide nimekiri",1930-05-12,1930-1934,lahkumine,,12.05.1930,,,ERA.2966.2.74:71,"Kohtu- ja siseministri määrusega 26.aprillist 1930 a. nr.86, mis awaldat. Riigi Teat.nr.33-1930 a., on tunnistatud makswusetuks linnawolikogude walimistel 1929 ja 1930 a. esitatud ""Eesti Tööliste Partei"" nime all wõi tema nimega ühendatud rühmituste kandidaatide nimekirjad ning lõppenuks nende nimekirjade järgi walitud esindajate wolitused.",82,,ei,ei
+454,92,Marmor,Albert,Eesti Sotsialistliku Tööliste partei nimekiri,1930-05-12,1930-1934,liitumine,12.05.1930,,,,ERA.2966.2.74:71,kutsutud kandidaadid teiste rühmade nimekirjade järgi,,182,ei,ei
+455,382,Laes,Roman,Tartu Tööliste ja töötatööliste ühine nimekiri,1930-05-12,1930-1934,liitumine,12.05.1930,,,,ERA.2966.2.74:71,kutsutud kandidaadid teiste rühmade nimekirjade järgi,,19,ei,ei
+456,82,Lill,Julius,"Tartu majaomanikkude, haridus- ja majandustegelaste ning teiste kodanikkude ühise kandidaatide nimekiri (Nimek.eesotsas J.O.Rütliga)",1930-05-12,1930-1934,liitumine,12.05.1930,,,,ERA.2966.2.74:71,kutsutud kandidaadid teiste rühmade nimekirjade järgi,,129,ei,ei
+457,134,Põld,Peeter,Rahwaerakonna kandidaatide nimekiri,1930-09-08,1930-1934,lahkumine,,08.09.1930,,,ERA.2966.2.74:243,surma läbi lahkunud,346,,ei,ei
+458,346,Luiga,Hans,Rahwaerakonna kandidaatide nimekiri,1930-09-08,1930-1934,liitumine,08.09.1930,,,,ERA.2966.2.74:243,,,134,ei,ei
+459,96,Mekkart,A.,Eesti Sotsialistliku tööliste partei kandidaatide nimekiri,1930-10-13,1930-1934,lahkumine,,13.10.1930,,,ERA.2966.2.74:306,,380,,ei,ei
+460,380,Köhler,Ernst,Eesti Sotsialistliku tööliste partei kandidaatide nimekiri,1930-10-13,1930-1934,liitumine,13.10.1930,,,,ERA.2966.2.74:306,,,96,ei,ei
+461,382,Laes,Roman,tööliste ja töötatööliste ühise kandidaatide nimekiri,1930-10-13,1930-1934,lahkumine,,13.10.1930,,,ERA.2966.2.74:306,,372,,ei,ei
+462,372,Kiwiware,Herman,tööliste ja töötatööliste ühise kandidaatide nimekiri,1930-10-27,1930-1934,liitumine,27.10.1930,,,,ERA.2966.2.74:339,,,382,ei,ei
+463,15,Braats,A.,Tartu üürnikkude ja Tööerakonna ühendatud kandidaatide nimekiri,1931-08-21,1930-1934,lahkumine,,21.08.1931,,,ERA.2966.2.77:253,lahkunud 18.juulil s.a.,383,,ei,ei
+464,383,Lüüs,Ella,Tartu üürnikkude ja Tööerakonna ühendatud kandidaatide nimekiri,1931-08-21,1930-1934,liitumine,21.08.1931,,,,ERA.2966.2.77:253,,,15,ei,ei
+465,53,Kirs,Eduard,Eesti Sotsialistliku Tööliste Partei kandidaatide nimekiri,1931-09-28,1930-1934,lahkumine,,28.09.1931,,,ERA.2966.2.77:285,,385,,ei,ei
+466,385,Offril,Karl,Eesti Sotsialistliku Tööliste Partei kandidaatide nimekiri,1931-09-28,1930-1934,liitumine,28.09.1931,,,,ERA.2966.2.77:285,,,53,ei,ei
+467,116,Olesk,Lui,Tartu üürnikkude ja Tööerakonna ühise kandidaatide nimekiri,1932-01-25,1930-1934,lahkumine,,25.01.1932,,,ERA.2966.2.79:4,,367,,ei,ei
+468,367,Trubok,Aleksander,Tartu üürnikkude ja Tööerakonna ühise kandidaatide nimekiri,1932-01-25,1930-1934,liitumine,25.01.1932,,,,ERA.2966.2.79:4,,,116,ei,ei
+469,18,Daugull,Ernst,saksa rühm,1932-03-07,1930-1934,lahkumine,,07.03.1932,,,ERA.2966.2.79:41,22.veebruaril s.a.,161,,ei,ei
+470,161,Stackelberg,Valter,saksa rühm,1932-03-07,1930-1934,liitumine,07.03.1932,,,,ERA.2966.2.79:41,,,18,ei,ei
+471,234,Märtson,Johannes,Kristlik Rahvaerakond,1932-03-07,1930-1934,lahkumine,,07.03.1932,,,ERA.2966.2.79:41,3.märtsil s.a.,388,,ei,ei
+472,388,Kõva,August,,1932-03-07,1930-1934,liitumine,07.03.1932,,,,ERA.2966.2.79:41,,,234,ei,ei
+473,46,Karheiding,K.,Tartu üürnikkude ja Tööerakonna kandidaatide nimekiri,1932-03-21,1930-1934,lahkumine,,21.03.1932,,,ERA.2966.2.79:83,,305,,ei,ei
+474,305,Ivan,Aleksander,Tartu üürnikkude ja Tööerakonna kandidaatide nimekiri,1932-03-21,1930-1934,liitumine,21.03.1932,,,,ERA.2966.2.79:83,,,46,ei,ei
+475,305,Ivan,Aleksander,Tartu Üürnikkude ja Tööerakonna ühendatud kandidaatide nimekiri,1932-09-26,1930-1934,lahkumine,,26.09.1932,,,ERA.2966.2.79:306,Linnasead.§ 61 põhjal,384,,ei,ei
+476,384,Madisson,Hans,Tartu Üürnikkude ja Tööerakonna ühendatud kandidaatide nimekiri,1932-09-26,1930-1934,liitumine,26.09.1932,,,,ERA.2966.2.79:306,,,305,ei,ei
+477,384,Madisson,Hans,üürnikkude ja Tööerakonna kandidaatide nimekiri,1932-10-24,1930-1934,lahkumine,,24.10.1932,,,ERA.2966.2.79:334,,338,,ei,ei
+478,338,Kepp,Oskar,üürnikkude ja Tööerakonna kandidaatide nimekiri,1932-10-24,1930-1934,liitumine,24.10.1932,,,,ERA.2966.2.79:334,,,384,ei,ei
+479,346,Luiga,Hans,Rahvaerakonna kandidaatide nimekiri,1932-10-24,1930-1934,lahkumine,,24.10.1932,,,ERA.2966.2.79:334,,381,,ei,ei
+480,381,Kuperjanov,Alice,Rahvaerakonna kandidaatide nimekiri,1932-10-24,1930-1934,liitumine,24.10.1932,,,,ERA.2966.2.79:334,,,346,ei,ei
+481,380,Köhler,Ernst,Eesti Sotsialistliku Tööliste Partei kandidaatide nimekiri,1932-12-12,1930-1934,lahkumine,,12.12.1932,,,ERA.2966.2.79:383,Linnaseaduse § 61 põhjal,386,,ei,ei
+482,386,Pank,Artur,Eesti Sotsialistliku Tööliste Partei kandidaatide nimekiri,1932-12-12,1930-1934,liitumine,12.12.1932,,,,ERA.2966.2.79:383,,,380,ei,ei
+483,31,Hirsch,Johannes,Rahvaerakonna kandidaatide nimekiri,1932-12-12,1930-1934,lahkumine,,12.12.1932,,,ERA.2966.2.79:383,Linnaseaduse § 61 põhjal,299,,ei,ei
+484,299,Siidam,Ado,Rahvaerakonna kandidaatide nimekiri,1932-12-12,1930-1934,liitumine,12.12.1932,,,,ERA.2966.2.79:383,,,31,ei,ei
+485,,,,,1933-09-04,1930-1934,rühmavahetus,,,04.09.1933,,ERA.2966.2.81:305,"linnavolinikkude J.Sepa, P.Ingermanni ja teiste poolt on esitatud teadaanne, et Tartu Linnavolikogu Majaomanikkude rühm ja Majaomanikkude ja Majandustegelaste koondus on ühinenud linnavolikogusüheks rühmaks nime all: ""Tartu Linnavolikogu Majaomanikkude rühm""",,,ei,ei
+486,163,Stein,Arnold,Eesti Sotsialistliku Tööliste partei nimekiri,1933-11-27,1930-1934,lahkumine,,27.11.1933,,,ERA.2966.2.81:368,Linnasead.§ 61 põhjal,387,,ei,ei
+487,387,Toom,Mihkel,Eesti Sotsialistliku Tööliste partei nimekiri,1933-11-27,1930-1934,liitumine,27.11.1933,,,,ERA.2966.2.81:368,,,163,ei,ei
+488,121,Panksep,Peeter,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+489,9,Annok,Voldemar-Rudolf,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+490,86,Luik,Karl,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+491,165,Sumberg,Herman,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+492,70,Kõpp,Juhan,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+493,128,Piip,Ants,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+494,105,Mõru,August,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+495,75,Lang,Juhan,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+496,67,Kustlov,Villem,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+497,119,Pahk,Karl,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+498,56,Kokla,Konstantin,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+499,69,Kuum,Aleksander,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+500,177,Treiberg,Peeter,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+501,166,Sütt,Johann,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+502,184,Vain,Jaan,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+503,92,Marmor,Albert,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+504,3,Adamson,Mart,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+505,186,Vellema,Mihkel,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+506,178,Treumann,Jaan,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+507,36,Ingermann,Paul,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+508,172,Tamman,Voldemar,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+509,1,Aavik,Johan,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+510,63,Kullam,August,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+511,82,Lill,Julius,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+512,83,Linkberg,Artur,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+513,160,Siska,August,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+514,169,Tallo,Johannes,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+515,161,Stackelberg,Valter,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+516,85,Luck,Otto,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+517,185,Valter,Herman,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+518,131,Post,Georg,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+519,13,Bernakoff,Rudolf,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+520,62,Kubbo,Eduard-Alfred,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+521,4,Ainson,Hans,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+522,149,Saarema,Oskar,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+523,22,Grau,Karl,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+524,48,Karlson,Karl-Ferdinand,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+525,176,Treial,Hugo-August,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+526,30,Hindrikson,Gustav-Aleksander,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+527,171,Tamman,Mihkel,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+528,155,Seidelbach,Leopold,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+529,140,Raudsepp,Aleksander,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+530,98,Meoma,Oskar,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+531,97,Meksi,Eduard,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+532,135,Põltsama,August,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+533,71,Kähr,Voldemar,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+534,167,Zirkel,Peeter,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+535,174,Timmermann,Aleksander,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+536,409,Raudsepp,Jaan,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+537,187,Vihalem,Hugo,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+538,90,Lätti,Alfred,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+539,103,Morin,Arnold,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+540,125,Peitel,August,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+541,26,Hanko,Eduard,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+542,183,Unt,Karl,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+543,89,Luksepp,Aleksander,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+544,5,Akermann,Juhan,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+545,123,Peets,Gustav,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+546,153,Schmidt,Nikolai,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+547,157,Siil,Voldemar,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+548,59,Kornev,Nikolai,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+549,33,Huik,Johan,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+550,11,Beifeldt,Johannes,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+551,38,Jaska,Arnold,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+552,14,Bežanitskaja,Klavdia,,1934-03-02,1934-1939,liitumine,02.03.1934,,,,ERA.2966.2.83:103,valitud linnavolinikkude nimekirja,,,ei,jah
+553,62,Kubbo,Eduard-Alfred,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+554,4,Ainson,Hans,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+555,149,Saarema,Oskar,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+556,22,Grau,Karl,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+557,48,Karlson,Karl-Ferdinand,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+558,176,Treial,Hugo-August,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+559,30,Hindrikson,Gustav-Aleksander,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+560,171,Tamman,Mihkel,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+561,155,Seidelbach,Leopold,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+562,140,Raudsepp,Aleksander,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+563,98,Meoma,Oskar,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+564,97,Meksi,Eduard,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+565,135,Põltsama,August,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+566,71,Kähr,Voldemar,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+567,167,Zirkel,Peeter,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+568,174,Timmermann,Aleksander,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+569,409,Raudsepp,Jaan,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+570,187,Vihalem,Hugo,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+571,90,Lätti,Alfred,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+572,103,Morin,Arnold,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+573,125,Peitel,August,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+574,26,Hanko,Eduard,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+575,183,Unt,Karl,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+576,89,Luksepp,Aleksander,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+577,5,Akermann,Juhan,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+578,123,Peets,Gustav,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+579,153,Schmidt,Nikolai,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+580,157,Siil,Voldemar,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+581,59,Kornev,Nikolai,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+582,33,Huik,Johan,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+583,11,Beifeldt,Johannes,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+584,38,Jaska,Arnold,Vabadussõjalaste Rahvaliikumise kandidaatide esitamiskiri,1934-04-09,1934-1939,lahkumine,,09.04.1934,,,ERA.2966.2.83:119,"""Vabadussõjalaste Rahvaliikumise"" kandidaatide esitamiskirjade järele valitud Tartu linnavolinikkude volitused lõppenud, Kohtu- ja siseminister, arvesse võttes, et tema otsusega 22.märtsist",,,jah,ei
+585,119,Pahk,Karl,Eesti Rahvusliku valimisliidu nimekiri,1934-04-30,1934-1939,lahkumine,,30.04.1934,,,ERA.2966.2.83:134,,151,,ei,ei
+586,151,Saral,Karl,Eesti Rahvusliku valimisliidu nimekiri,1934-04-30,1934-1939,liitumine,30.04.1934,,,,ERA.2966.2.83:134,,,119,ei,ei
+587,70,Kõpp,Johan,Eesti Rahvusliku valimisliidu kandidaatide nimekiri,1936-05-25,1934-1939,lahkumine,,25.05.1936,,,ERA.2966.2.87:211,ajapuudusel ja tervislistel põhjustel,204,,ei,ei
+588,204,Reisner,Artur,Eesti Rahvusliku valimisliidu kandidaatide nimekiri,1936-05-25,1934-1939,liitumine,25.05.1936,,,,ERA.2966.2.87:211,,,70,ei,ei
+589,92,Marmor,Albert,Sotsialistliku Tööliste Partei kandidaatide nimekiri,1936-10-12,1934-1939,lahkumine,,12.10.1936,,,ERA.2966.2.87:324,1.oktoobrist 1936.a.,142,,ei,ei
+590,142,Reeben,August,Sotsialistliku Tööliste Partei kandidaatide nimekiri,1936-10-12,1934-1939,liitumine,12.10.1936,,,,ERA.2966.2.87:324,,,92,ei,ei
+591,75,Lang,Juhan,Eesti Rahvusliku Valimisliidu kandidaatide nimekiri,1938-04-25,1934-1939,lahkumine,,25.04.1938,,,ERA.2966.2.91:162,"teatas kirjaga 7. aprillist s. a., et ta palub lugeda teda lahkunuks Tartu Linnavolikogu liikmete hulgast, arvates 7. aprillist 1938",106,,ei,ei
+592,106,Mäelo,Helmi,Eesti Rahvusliku Valimisliidu kandidaatide nimekiri,1938-04-25,1934-1939,liitumine,25.04.1938,,,,ERA.2966.2.91:162,,,75,ei,ei
+593,69,Kuum,Aleksander,,1938-06-27,1934-1939,lahkumine,,27.06.1938,,,ERA.2966.2.91:283,16. juunil s. a.,201,,ei,ei
+594,201,Maasik,Johannes,,1938-06-27,1934-1939,liitumine,27.06.1938,,,,ERA.2966.2.91:283,,,69,ei,ei
+595,161,Stackelberg,W.,,1939-11-20,1934-1939,lahkumine,,20.11.1939,,,ERA.2966.2.94:236,"kirjaga 12. X 1939, mis saadud 21. oktoobril 1939, teatas, et ta, olles sunnitud lahkuma välismaale, astub tagasi linnavoliniku ametist",,,jah,ei
+596,1,Aavik,Johan,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+597,3,Adamson,Mart,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+598,4,Ainson,Hans,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+599,9,Annok,Voldemar-Rudolf,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+600,13,Bernakoff,Rudolf,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+601,14,Beganitskaja,Klaudia,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+602,194,Ilus,Olinde,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+603,195,Jalak,Kristjan-Eduard,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+604,196,Karu,Marta,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+605,197,Kirch,Bernhard,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+606,56,Kokla,Konstantin,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+607,199,Koplus,Oskar,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+608,60,Kriisa,Jaan,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+609,200,Kull,Ernst-Voldemar,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+610,67,Kuusloo,Villem,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+611,82,Lill,Julius,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+612,83,Linkberg,Artur,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+613,86,Luik,Karl-Juulius,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+614,201,Maasik,Johannes,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+615,202,Mark,Heinrich,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+616,121,Panksep,Peeter,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+617,203,Reedre,Aleksander-Taaniel,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+618,204,Reisner,August-Artur,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+619,151,Saral,Karl,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+620,157,Siil,Voldemar,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+621,205,Sõlba,Emilie,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+622,165,Sumberg,Herman,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+623,206,Sostsikov,Mihhail,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+624,166,Sütt,Juhan,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+625,167,Zirkel,Peeter,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+626,172,Tamman,Voldemar,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+627,177,Tarvel,Peeter,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+628,207,Tein,Friedrich,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+629,208,Temmo,Johannes,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+630,178,Treumann,Jaan,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+631,210,Truupõld,Richard-Eduard,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+632,209,Tõnisson,Aleksander,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+633,187,Vihalem,Hugo,,1940-01-19,1940,liitumine,19.01.1940,,,,ERA.2966.9.8:6,kutsutud Linnavolikokku,,,ei,jah
+634,128,Piip,Ants,,1940-01-29,1940,liitumine,29.01.1940,,,,ERA.2966.9.8:21,,,,ei,jah
+635,193,Hion,Viktor,,1940-01-29,1940,liitumine,29.01.1940,,,,ERA.2966.9.8:21,,,,ei,jah
