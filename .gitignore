@@ -1,0 +1,7 @@
+node_modules/
+.next/
+out/
+public/tlv-andmestik.zip
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
