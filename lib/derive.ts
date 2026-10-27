@@ -328,3 +328,50 @@ export function liikmedKuupaevalMemo(
   }
   return tulemus;
 }
+
+/** PR-12: isiku mainimised protokollides (`data/protokolli_mainimised.csv`, ET-08). */
+export interface MainimisteProfiil {
+  /** kindlus kõrge/keskmine */
+  protokolle: number;
+  kordi: number;
+  /** registriväline mitmesus ("N;None") */
+  toenaolisi: number;
+  toenaolisiProtokolle: number;
+  loetelu: {
+    koosolek_id: string;
+    kuupaev: string;
+    koosseis_id: string;
+    kindlaid: number;
+    toenaolisi: number;
+  }[];
+}
+
+export function mainimisedProfiilile(andmed: Andmestik, isikId: number): MainimisteProfiil | null {
+  const read = andmed.mainimised.filter((m) => m.isik_id === isikId);
+  if (read.length === 0) return null;
+  const koosseis = new Map(andmed.koosolekud.map((k) => [k.koosolek_id, k.koosseis_id]));
+  const prot = new Map<string, MainimisteProfiil["loetelu"][number]>();
+  let kordi = 0;
+  let toenaolisi = 0;
+  for (const m of read) {
+    const r = prot.get(m.koosolek_id) ?? {
+      koosolek_id: m.koosolek_id, kuupaev: m.kuupaev, koosseis_id: koosseis.get(m.koosolek_id) ?? "", kindlaid: 0, toenaolisi: 0,
+    };
+    if (m.kindlus === "mitmene") {
+      r.toenaolisi += m.arv;
+      toenaolisi += m.arv;
+    } else {
+      r.kindlaid += m.arv;
+      kordi += m.arv;
+    }
+    prot.set(m.koosolek_id, r);
+  }
+  const loetelu = [...prot.values()].sort((a, b) => a.kuupaev.localeCompare(b.kuupaev) || a.koosolek_id.localeCompare(b.koosolek_id));
+  return {
+    protokolle: loetelu.filter((l) => l.kindlaid > 0).length,
+    kordi,
+    toenaolisi,
+    toenaolisiProtokolle: loetelu.filter((l) => l.toenaolisi > 0).length,
+    loetelu,
+  };
+}

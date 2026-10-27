@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { kokkuvote, onKehtivParing, vajalikudAastad, OTSINGU_MIN_PIKKUS } from "@/lib/protokollid/otsing";
+import { kokkuvote, onKehtivParing, vajalikudAastad, OLEMI_BITID, OTSINGU_MIN_PIKKUS } from "@/lib/protokollid/otsing";
+import { OLEMI_NIMED, type OlemiTyyp } from "@/lib/colors";
+import type { OlemiTyyp as OlemiTyypT } from "@/lib/protokollid/types";
+import { MitmikValik } from "./TabeliOsad";
 import type { OtsinguParing, OtsinguVastus, TabamusKuva } from "@/lib/protokollid/otsing.worker";
 import { kuupaevLyhike } from "@/lib/format";
 import { useDebounce } from "@/lib/useTabeliSeis";
@@ -18,6 +21,15 @@ interface Props {
   lopp: string;
   /** olemasolevad aastakillud (_meta.json) */
   killud: number[];
+  /** PT-07: valitud nimeüksuste tüübid, komaga eraldatud (PER,ORG,…) */
+  tyybid: string;
+  setTyybid: (t: string) => void;
+}
+
+const TYYBID: OlemiTyyp[] = ["PER", "ORG", "LOC", "MONEY", "POSITION"];
+
+export function tyybiMask(tyybid: string): number {
+  return tyybid.split(",").filter(Boolean).reduce((m, t) => m | (OLEMI_BITID[t as OlemiTyypT] ?? 0), 0);
 }
 
 /**
@@ -25,7 +37,9 @@ interface Props {
  * laetakse ainult ajavahemiku aastate kohta (PT-06), tulemused protokollide kaupa
  * kronoloogiliselt, tabamus `<mark>`-iga, paginatsioon 50 tabamust, eksport.
  */
-export default function TaistekstOtsing({ q, setQ, algus, lopp, killud }: Props) {
+export default function TaistekstOtsing({ q, setQ, algus, lopp, killud, tyybid, setTyybid }: Props) {
+  const mask = tyybiMask(tyybid);
+  const valitudTyybid = tyybid.split(",").filter(Boolean);
   const paring = useDebounce(q, 300);
   const worker = useRef<Worker | null>(null);
   const paringId = useRef(0);
@@ -49,7 +63,7 @@ export default function TaistekstOtsing({ q, setQ, algus, lopp, killud }: Props)
   }, []);
 
   useEffect(() => {
-    const kehtiv = onKehtivParing(paring);
+    const kehtiv = onKehtivParing(paring) || (mask > 0 && paring.trim() === "");
     if (!kehtiv) {
       setTulemus(null);
       setLaen(null);
@@ -79,11 +93,11 @@ export default function TaistekstOtsing({ q, setQ, algus, lopp, killud }: Props)
     w.addEventListener("message", vastus);
     const sonum: OtsinguParing = {
       tyyp: "otsi", id, q: paring, aastad: vajalikudAastad(killud, algus || undefined, lopp || undefined),
-      mask: 0, algus, lopp, kontekst,
+      mask, algus, lopp, kontekst,
     };
     w.postMessage(sonum);
     return () => w.removeEventListener("message", vastus);
-  }, [paring, algus, lopp, killud, kontekst]);
+  }, [paring, algus, lopp, killud, kontekst, mask]);
 
   const kokku = tulemus ? kokkuvote(tulemus.tabamused) : null;
   const lehti = tulemus ? Math.max(1, Math.ceil(tulemus.tabamused.length / LEHE_SUURUS)) : 1;
@@ -134,6 +148,15 @@ export default function TaistekstOtsing({ q, setQ, algus, lopp, killud }: Props)
             className="w-full rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm"
           />
         </label>
+        <div className="text-sm">
+          <span className="mb-0.5 block text-xs text-stone-500">Nimeüksuse tüüp lauses</span>
+          <MitmikValik
+            silt="Tüüp"
+            valikud={TYYBID.map((t) => ({ id: t, nimi: OLEMI_NIMED[t] }))}
+            valitud={valitudTyybid}
+            muuda={(uus) => setTyybid(TYYBID.filter((t) => uus.includes(t)).join(","))}
+          />
+        </div>
         <label className="text-sm">
           <span className="mb-0.5 block text-xs text-stone-500">Kontekst</span>
           <select
@@ -166,15 +189,23 @@ export default function TaistekstOtsing({ q, setQ, algus, lopp, killud }: Props)
               { key: "kontekst", pealkiri: "Kontekst" },
             ]}
             meta={{
-              failinimi: `tlv-protokollid-otsing-${tulemus.q.replace(/[^\p{L}\p{N}]+/gu, "-").slice(0, 40)}`,
-              filtrid: { paring: tulemus.q, ...(algus ? { alates: algus } : {}), ...(lopp ? { kuni: lopp } : {}) },
+              failinimi: `tlv-protokollid-otsing-${(tulemus.q || tyybid).replace(/[^\p{L}\p{N}]+/gu, "-").slice(0, 40)}`,
+              filtrid: {
+                paring: tulemus.q, ...(tyybid ? { tyybid } : {}),
+                ...(algus ? { alates: algus } : {}), ...(lopp ? { kuni: lopp } : {}),
+              },
             }}
           />
         )}
       </div>
 
       <div aria-live="polite" className="mt-3 text-sm">
-        {lyhike && <p className="text-stone-500">Sisesta vähemalt {OTSINGU_MIN_PIKKUS} märki.</p>}
+        {lyhike && mask === 0 && <p className="text-stone-500">Sisesta vähemalt {OTSINGU_MIN_PIKKUS} märki.</p>}
+        {mask > 0 && (
+          <p className="text-xs text-stone-500">
+            Tüübifilter: {valitudTyybid.map((t) => OLEMI_NIMED[t as OlemiTyyp]).join(", ")} — {paring.trim() ? "tabamused ainult lausetes, kus tüüp esineb" : "kõik laused, kus tüüp esineb"} (automaatmärgendus).
+          </p>
+        )}
         {laen && (
           <p className="text-stone-600">
             Laen {laen.aasta}… ({laen.laetud + 1}/{laen.kokku})
@@ -184,7 +215,7 @@ export default function TaistekstOtsing({ q, setQ, algus, lopp, killud }: Props)
         {tulemus && kokku && !laen && (
           <p className="font-medium">
             {kokku.tabamusi === 0
-              ? `„${tulemus.q}“: tabamusi ei leitud${algus || lopp ? " valitud ajavahemikus" : ""}.`
+              ? `${tulemus.q.trim() ? `„${tulemus.q}“: ` : ""}tabamusi ei leitud${algus || lopp ? " valitud ajavahemikus" : ""}.`
               : `${kokku.tabamusi} tabamust ${kokku.protokolle} protokollis`}
             <span className="ml-2 text-xs font-normal text-stone-400">({Math.round(tulemus.kestus)} ms)</span>
           </p>

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
 import {
   isikuAadressid, isikuKoosseisud, juhatamiseStatistika, karjaariSegmendid,
-  osavotuStatistika, peamineNimekiri,
+  mainimisedProfiilile, osavotuStatistika, peamineNimekiri,
 } from "@/lib/derive";
 import { eluaastad, kuupaevEesti, kuupaevLyhike, taisnimi } from "@/lib/format";
 import { koosseisuVarv } from "@/lib/colors";
@@ -63,6 +63,7 @@ export default async function IsikuProfiil({
   const aadressid = isikuAadressid(andmed, id);
   const osavott = osavotuStatistika(andmed, id);
   const juhatamine = juhatamiseStatistika(andmed, id);
+  const mainimised = mainimisedProfiilile(andmed, id);
 
   // Asendussuhete võrk (PR-11)
   const servaMap = new Map<string, VorguServ>();
@@ -86,6 +87,9 @@ export default async function IsikuProfiil({
 
   const profiilJSON = {
     isik_id: id,
+    mainimised_protokollides: mainimised
+      ? { protokolle: mainimised.protokolle, kordi: mainimised.kordi, toenaolisi: mainimised.toenaolisi, loetelu: mainimised.loetelu }
+      : null,
     perenimi: isik.perenimi,
     eesnimi: isik.eesnimi,
     alt_perenimi: isik.alt_perenimi,
@@ -380,6 +384,61 @@ export default async function IsikuProfiil({
             Arvestatud on ainult kõrge ja keskmise kindlusega seotud
             protokollikirjeid; tuletatud kohalolu põhineb liikmelisusel.
           </p>
+        </section>
+      )}
+
+      {/* PR-12: mainimised protokollides */}
+      {mainimised && (
+        <section aria-labelledby="mainimised">
+          <h2 id="mainimised" className="mb-2 text-xl font-semibold">
+            Mainimised protokollides
+            <HelpTip tekst={ABI.automaatmargendus} />
+          </h2>
+          <p className="text-sm text-stone-700">
+            Nimetatud {mainimised.protokolle} protokollis ({mainimised.kordi} korda).
+            {mainimised.toenaolisi > 0 && (
+              <>
+                {" "}Lisaks {mainimised.toenaolisi} tõenäolist mainimist ({mainimised.toenaolisiProtokolle} protokollis),
+                kus sama nimekuju võib viidata ka teistele isikutele.
+              </>
+            )}
+          </p>
+          <p className="mb-2 mt-1 inline-block rounded bg-stone-100 px-2 py-0.5 text-xs text-stone-600">
+            automaatne — nimeüksused ja isikuseosed on tuvastatud keelemudeliga
+          </p>
+          {(() => {
+            const loend = (
+              <ul className="flex flex-wrap gap-x-3 gap-y-1 text-sm">
+                {mainimised.loetelu.map((l) => (
+                  <li key={l.koosolek_id} className="inline-flex items-center gap-1.5">
+                    <span
+                      className="inline-block h-2.5 w-2.5 rounded-sm"
+                      style={{ backgroundColor: koosseisuVarv(l.koosseis_id) }}
+                      aria-hidden
+                    />
+                    <Link href={`/protokollid/${l.koosolek_id}/?isik=${id}`} className="text-blue-700 hover:underline">
+                      {kuupaevLyhike(l.kuupaev)}
+                    </Link>
+                    <span className="text-xs text-stone-500">
+                      {l.kindlaid > 0 && `${l.kindlaid}×`}
+                      {l.kindlaid > 0 && l.toenaolisi > 0 && " + "}
+                      {l.toenaolisi > 0 && `${l.toenaolisi}× ?`}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            );
+            return mainimised.loetelu.length > 20 ? (
+              <details>
+                <summary className="cursor-pointer select-none text-sm text-blue-700">
+                  Näita kõiki ({mainimised.loetelu.length} protokolli)
+                </summary>
+                <div className="mt-2">{loend}</div>
+              </details>
+            ) : (
+              loend
+            );
+          })()}
         </section>
       )}
 

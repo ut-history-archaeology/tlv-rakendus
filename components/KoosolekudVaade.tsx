@@ -7,7 +7,7 @@ import {
 } from "recharts";
 import type { KoosolekuRida } from "@/lib/types";
 import type { ProtokolliRida } from "@/lib/protokollid/types";
-import { VORMI_VARVID } from "@/lib/colors";
+import { OLEMI_NIMED, VORMI_VARVID, type OlemiTyyp } from "@/lib/colors";
 import { kuupaevLyhike } from "@/lib/format";
 import { multiSort, useTabeliSeis } from "@/lib/useTabeliSeis";
 import {
@@ -74,7 +74,7 @@ export default function KoosolekudVaade({
   const onProtokollid = variant === "protokollid";
   const seis = useTabeliSeis(
     onProtokollid
-      ? { q: "", aasta: "", algus: "", lopp: "", juhataja: "", vorm: "" }
+      ? { q: "", tyybid: "", aasta: "", algus: "", lopp: "", juhataja: "", vorm: "" }
       : { aasta: "", algus: "", lopp: "", juhataja: "", vorm: "" },
     onProtokollid ? "tlv-vaade-protokollid" : "tlv-vaade-koosolekud"
   );
@@ -159,6 +159,12 @@ export default function KoosolekudVaade({
     ...(valitudJuhataja
       ? [{ key: "j", silt: `Juhataja: ${valitudJuhataja.nimi}`, eemalda: () => seis.setFilter("juhataja", "") }]
       : []),
+    ...(onProtokollid && seis.filtrid.q
+      ? [{ key: "q", silt: `Otsing: „${seis.filtrid.q}“`, eemalda: () => seis.setFilter("q", "") }]
+      : []),
+    ...(onProtokollid && seis.filtrid.tyybid
+      ? [{ key: "t", silt: `Tüüp: ${seis.filtrid.tyybid.split(",").map((t) => OLEMI_NIMED[t as OlemiTyyp] ?? t).join(", ")}`, eemalda: () => seis.setFilter("tyybid", "") }]
+      : []),
   ];
 
   const ekspordiRead = sorditud.map((r) => ({
@@ -188,6 +194,8 @@ export default function KoosolekudVaade({
           algus={seis.filtrid.algus}
           lopp={seis.filtrid.lopp}
           killud={killud}
+          tyybid={seis.filtrid.tyybid ?? ""}
+          setTyybid={(t) => seis.setFilter("tyybid", t)}
         />
       )}
       {/* KO-01 */}

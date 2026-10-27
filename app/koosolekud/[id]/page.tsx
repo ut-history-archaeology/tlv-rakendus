@@ -46,6 +46,11 @@ export default async function KoosolekuLeht({
 
   const on1940 = koosolek.koosseis_id === "1940-1941";
   const protokoll = andmed.protokollid.find((p) => p.koosolek_id === id && p.fail) ?? null;
+  // KO-11: päevakord (data/paevakorrapunktid.csv); korduva nr puhul (K002) on ankur p<nr>-<jrk>
+  const paevakord = andmed.paevakord.filter((r) => r.koosolek_id === id).sort((a, b) => a.jrk - b.jrk);
+  const nrLoend = new Map<number, number>();
+  for (const r of paevakord) nrLoend.set(r.nr, (nrLoend.get(r.nr) ?? 0) + 1);
+  const punktiAnkur = (r: (typeof paevakord)[number]) => ((nrLoend.get(r.nr) ?? 0) > 1 ? `p${r.nr}-${r.jrk}` : `p${r.nr}`);
 
   const jsonEksport = {
     koosolek_id: id,
@@ -65,6 +70,8 @@ export default async function KoosolekuLeht({
       nimi_toor: o.nimi_toor, isik_id: o.isik_id, sidumise_kindlus: o.sidumise_kindlus,
     })),
     tuletatud_kohalolijad: tuletatud,
+    paevakord: paevakord.map((r) => ({ nr: r.nr, pealkiri: r.pealkiri })),
+    protokoll_taistekst: protokoll ? `/protokollid/${id}/` : null,
     kuupaev_txt: koosolek.kuupaev_txt,
     protokolli_algus_txt: koosolek.protokolli_algus_txt,
   };
@@ -248,6 +255,33 @@ export default async function KoosolekuLeht({
           </p>
         )}
       </section>
+
+      {protokoll && (
+        <section aria-labelledby="paevakord">
+          <h2 id="paevakord" className="mb-2 text-xl font-semibold">
+            Päevakord{paevakord.length > 0 && <> ({paevakord.length})</>}
+            <HelpTip tekst={ABI.paevakorrapunkt} />
+          </h2>
+          {paevakord.length > 0 ? (
+            <ol className="space-y-1 text-sm">
+              {paevakord.map((r) => (
+                <li key={r.jrk} className="flex gap-2">
+                  <span className="w-7 shrink-0 text-right text-stone-500">{r.nr}.</span>
+                  <Link href={`/protokollid/${id}/#${punktiAnkur(r)}`} className="text-blue-700 hover:underline">
+                    {r.pealkiri || "(pealkirjata)"}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className="text-sm text-stone-600">
+              Päevakorrapunkte ei ole eristatud; vt{" "}
+              <Link href={`/protokollid/${id}/`} className="text-blue-700 hover:underline">protokolli täistekst</Link>.
+            </p>
+          )}
+          <p className="mt-1 text-xs text-stone-500">Pealkirjad on protokolli tekstist eraldatud automaatselt.</p>
+        </section>
+      )}
 
       {koosolek.protokolli_algus_txt && (
         <section aria-labelledby="protokoll">

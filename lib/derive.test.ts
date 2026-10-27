@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { liikmedKuupaeval, koosseisuLiikmedKokku, tuletatudKohalolijad } from "./derive";
+import { liikmedKuupaeval, koosseisuLiikmedKokku, mainimisedProfiilile, tuletatudKohalolijad } from "./derive";
 import { loeAndmestik } from "./data";
 import type { Muutus, Valimine } from "./types";
 
@@ -173,5 +173,22 @@ describe("TE-15: liikmelisus pärast andmeparandusi AP-01/AP-02", () => {
     expect(jarjestatud[i329 + 1].koosolek_id).toBe("K338");
     expect(jarjestatud[jarjestatud.length - 1].koosolek_id).toBe("K337");
     expect(andmed.koosolekud.every((k) => k.kuupaev !== "" && !Number.isNaN(Date.parse(k.kuupaev)))).toBe(true);
+  });
+});
+
+describe("PR-12 mainimisedProfiilile", () => {
+  it("Ants Piip (128): 1937-09-06 (K272) loetelus 2 kindla mainimisega; Lui Olesk (116) saab tõenäoliste arvu", () => {
+    const andmed = loeAndmestik();
+    const piip = mainimisedProfiilile(andmed, 128);
+    expect(piip).not.toBeNull();
+    const k272 = piip!.loetelu.find((l) => l.koosolek_id === "K272");
+    expect(k272?.kindlaid).toBe(2);
+    expect(piip!.loetelu.map((l) => l.kuupaev)).toEqual([...piip!.loetelu.map((l) => l.kuupaev)].sort());
+    const olesk = mainimisedProfiilile(andmed, 116);
+    expect(olesk!.toenaolisi).toBeGreaterThan(0);
+    expect(olesk!.protokolle).toBeGreaterThan(0);
+  });
+  it("isik, keda ei mainita → null", () => {
+    expect(mainimisedProfiilile(loeAndmestik(), 999999)).toBeNull();
   });
 });

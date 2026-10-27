@@ -16,6 +16,7 @@ import ProtokollJuht from "@/components/ProtokollJuht";
 import ProtokollTegevused from "@/components/ProtokollTegevused";
 import ProtokollTekst from "@/components/ProtokollTekst";
 import ParalleelVaade from "@/components/ParalleelVaade";
+import KirjakujuVaade from "@/components/KirjakujuVaade";
 
 export function generateStaticParams() {
   return loeAndmestik().protokollid.filter((p) => p.koosolek_id && p.fail).map((p) => ({ id: p.koosolek_id }));
@@ -49,6 +50,11 @@ export default async function ProtokolliLeht({ params }: { params: Promise<{ id:
     transkribusUrl: p.transkribus_url,
   };
   const s = p.statistika;
+  // PT-08: kliendipoolse (moderniseeritud) renderduse jaoks ainult selles protokollis esinevad nimed
+  const protokolliNimed: Record<string, string> = {};
+  for (const o of p.olemid) {
+    for (const iid of [o.isik_id, ...o.kandidaadid]) if (iid !== null && nimed.has(iid)) protokolliNimed[iid] = nimed.get(iid)!;
+  }
   const prindiViide = koostaViide({ ...viide, leheUrl: `https://ut-history-archaeology.github.io/tlv-rakendus/protokollid/${id}/` });
 
   return (
@@ -155,7 +161,9 @@ export default async function ProtokolliLeht({ params }: { params: Promise<{ id:
         viide={viide}
         leheplokid={Object.fromEntries(leheplokid(p))}
       >
-        <ProtokollTekst p={p} nimed={nimed} />
+        <KirjakujuVaade id={id} nimed={protokolliNimed} sonu={s.sonu}>
+          <ProtokollTekst p={p} nimed={nimed} />
+        </KirjakujuVaade>
       </ParalleelVaade>
 
       <p className="text-xs text-stone-500">

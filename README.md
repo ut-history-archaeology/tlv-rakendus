@@ -70,7 +70,7 @@ Mõõtmine 27.10.2026 (`next build`, 337 protokollilehte, build ≈ 30 s kokku):
 | suurim `index.html` (K222, 1934-02-26) | 1,25 MB (sisaldab inline RSC-payloadi ≈ 0,8 MB; märgistus ≈ 0,45 MB) |
 | K266 (1937-03-22, 151 kB teksti, 2 348 olemit) | 1,09 MB |
 | suurim `index.txt` (RSC-payload kliendipoolseks navigeerimiseks) | 0,65 MB |
-| `out/` kokku | 741 MB (pildid 344 MB, protokollid 241 MB, `_next` 2 MB) |
+| `out/` kokku | 763 MB (isikud 92 MB, koosolekud 73 MB — iga lehe RSC-payload sisaldab globaalse otsingu indeksit) (pildid 344 MB, protokollid 241 MB, `_next` 2 MB) |
 
 Otsus O-06: piir 2 MB lehe kohta peab → leht jääb täielikult staatiliseks, kliendipoolset
 sisu laadimist ei ole. Kui HTML-i mahtu on vaja veel vähendada, on järgmine samm
@@ -105,6 +105,22 @@ seega tulemuste laused kuvatakse normaliseeritud kirjakujus; algkuju näeb proto
 Kontroll kildude peal 27.10.2026: "walimine" = "valimine" = 1 274 tabamust 205 protokollis;
 "raekojas" 1937. a 13 tabamust; `?algus=1930-01-01&lopp=1930-12-31` → 16 rida;
 `?algus=1940-08-01` → 29 rida; suurim "Sõnu" 1934-08-27.
+
+### VÕIKS-nõuded (samm 5)
+
+- **KO-11** koosoleku lehel sektsioon "Päevakord" (`data/paevakorrapunktid.csv`), pealkirjad
+  lingitud `/protokollid/<id>/#p<nr>` (K002 korduvad numbrid → `#p<nr>-<jrk>`); JSON-eksporti
+  lisandub `paevakord`. 1. etapi lause "PÄEVAKORDA EI OLE" ei kehti enam.
+- **PR-12** isikuprofiilil "Mainimised protokollides" (`lib/derive.ts` `mainimisedProfiilile`):
+  kindlad (kõrge/keskmine) ja tõenäolised (`N;None`) eraldi, loetelu kronoloogiliselt lingiga
+  `/protokollid/<id>/?isik=<id>`, > 20 → "Näita kõiki"; JSON-eksporti `mainimised_protokollides`.
+- **PT-08** kirjakuju-lüliti `KirjakujuVaade`: ajalooline kuju on serveris renderdatud; moderniseeritud
+  kuju laetakse JSON-ist ja renderdatakse kliendis `moderniseeri()`-ga (kõik vahemikud nihutatud);
+  seis `tlv-kirjakuju` + `?kuju=mod`; näidatakse "<n> sõna <m>-st moderniseeritud". `?q=` esiletõst
+  rakendub ainult serveris renderdatud (ajaloolisele) tekstile.
+- **PT-07** otsingus nimeüksuse tüübifilter (`?tyybid=PER,ORG`, kiip tabeli kohal; päringuta =
+  kõik laused, kus tüüp esineb). **IN-04** globaalses otsingus kolmas kategooria "Protokollid"
+  lingiga `/protokollid/?q=…`.
 
 Kuva eripärad: `tabelid` vahemikud ja `LIST OR TABULAR` lehed (`Leht.loend`, 1 596 lehte)
 säilitavad reavahetused (pre-wrap, monospace; E-09); kõne teise kõne sees (vahelehüüe)

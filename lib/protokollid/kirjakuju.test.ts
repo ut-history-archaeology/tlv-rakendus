@@ -41,3 +41,30 @@ describe("TE-07 kirjakuju", () => {
     expect(r.tekst).toBe("AB CD");
   });
 });
+
+describe("PT-08 moderniseeri(): kogu protokoll nihutatud vahemikega", () => {
+  it("olem ja kõne jäävad õigete sõnade peale ka pikkust muutva asenduse järel", async () => {
+    const { moderniseeri } = await import("./kirjakuju");
+    const tekst = "Wolikogu juhataja Olesk: tere.";
+    //            0123456789012345678901234567890
+    const p = {
+      id: "K0", fail: "x", kuupaevad: ["1920-01-01"], transkribus_url: "u", arhiiviviide: "a",
+      tekst,
+      sissejuhatus: [0, tekst.length] as [number, number],
+      paevakord: [], lopuosa: null, lisad: [], tabelid: [[25, 30] as [number, number]], laused: [[0, 30] as [number, number]],
+      olemid: [{ a: 18, l: 23, t: "PER" as const, isik_id: 116, kandidaadid: [116], kindlus: "kõrge" as const }],
+      koned: [{ koneleja: [18, 23] as [number, number], nimi: "Olesk", tykid: [[25, 30] as [number, number]], isik_id: 116, kandidaadid: [116], kindlus: "kõrge" as const }],
+      normid: [[0, 8, "Volikogu"], [9, 17, "juhataja-ja"]] as [number, number, string][],
+      lehed: [{ jrk: 1, lk: "1", arhiiviviide: "a", algus: 0, lopp: 30, pilt: "x.png", transkribus_lk: 1, tekstita: false, jagatud: false, loend: false }],
+      statistika: { sonu: 4, lauseid: 1, paevakorrapunkte: 0, olemeid: 1, olemeid_PER: 1, seotud_isikuid: 1, konesid: 1, lehekylgi: 1, lehekylgi_tekstita: 0, lisasid: 0, tabeleid: 1, tekst_kb: 0 },
+    };
+    const m = moderniseeri(p);
+    expect(m.tekst).toBe("Volikogu juhataja-ja Olesk: tere.");
+    expect(m.tekst.slice(m.olemid[0].a, m.olemid[0].l)).toBe("Olesk");
+    expect(m.tekst.slice(...m.koned[0].tykid[0])).toBe("tere.");
+    expect(m.tekst.slice(...m.tabelid[0])).toBe("tere.");
+    expect(m.lehed[0].lopp).toBe(m.tekst.length);
+    expect(m.asendusi).toBe(2);
+    expect(m.normid).toEqual([]);
+  });
+});

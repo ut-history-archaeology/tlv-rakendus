@@ -2,7 +2,7 @@
  * PT-08 / ET-04: normid-asenduste (moderniseeritud kirjakuju) rakendamine ja
  * märgikohtade nihutamine (TE-07).
  */
-import type { Vahemik } from "./types";
+import type { ProtokollAndmed, Vahemik } from "./types";
 
 export type Norm = [number, number, string];
 
@@ -66,5 +66,40 @@ export function rakendaNormid(tekst: string, normid: Norm[]): KirjakujuTulemus {
     teisenda,
     teisendaVahemik: (v) => [teisenda(v[0]), teisenda(v[1])],
     asendusi: kaart.length,
+  };
+}
+
+/**
+ * PT-08: kogu ProtokollAndmed moderniseeritud kirjakujus — tekst asendatud, kõik vahemikud
+ * (plokid, laused, tabelid, olemid, kõned, lehed) nihutatud; `normid` tühi. Statistika jääb.
+ */
+export function moderniseeri(p: ProtokollAndmed): ProtokollAndmed & { asendusi: number } {
+  const m = rakendaNormid(p.tekst, p.normid);
+  const v = m.teisendaVahemik;
+  return {
+    ...p,
+    tekst: m.tekst,
+    sissejuhatus: v(p.sissejuhatus),
+    paevakord: p.paevakord.map((pk) => {
+      const [a, l] = v([pk.algus, pk.lopp]);
+      return { ...pk, algus: a, lopp: l, pealkiri: v(pk.pealkiri) };
+    }),
+    lopuosa: p.lopuosa ? v(p.lopuosa) : null,
+    lisad: p.lisad.map((x) => {
+      const [a, l] = v([x.algus, x.lopp]);
+      return { ...x, algus: a, lopp: l };
+    }),
+    tabelid: p.tabelid.map(v),
+    laused: p.laused.map(v),
+    olemid: p.olemid.map((o) => {
+      const [a, l] = v([o.a, o.l]);
+      return { ...o, a, l };
+    }),
+    koned: p.koned.map((k) => ({ ...k, koneleja: v(k.koneleja), tykid: k.tykid.map(v) })),
+    lehed: p.lehed.map((x) =>
+      x.algus !== null && x.lopp !== null ? { ...x, algus: m.teisenda(x.algus), lopp: m.teisenda(x.lopp) } : x
+    ),
+    normid: [],
+    asendusi: m.asendusi,
   };
 }

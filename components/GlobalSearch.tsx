@@ -61,9 +61,23 @@ export default function GlobalSearch({ indeks }: { indeks: OtsinguIndeks }) {
         <div className="absolute right-0 z-50 mt-1 max-h-96 w-80 overflow-auto rounded-md border border-stone-200 bg-white shadow-lg">
           {!onTulemusi && (
             <p className="px-3 py-2 text-sm text-stone-500">
-              Tulemusi ei leitud. Isikuid otsi nime, koosolekuid kuupäeva järgi
+              Isikuid ega koosolekuid ei leitud. Isikuid otsi nime, koosolekuid kuupäeva järgi
               (nt 11.01.1918 või 1918-01-11).
             </p>
+          )}
+          {otsing.trim().length >= 3 && (
+            <div>
+              <p className="border-b border-stone-100 bg-stone-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-stone-500">
+                Protokollid
+              </p>
+              <Link
+                href={`/protokollid/?q=${encodeURIComponent(otsing.trim())}`}
+                onClick={() => setAvatud(false)}
+                className="block px-3 py-1.5 text-sm hover:bg-stone-100"
+              >
+                Otsi protokollide täistekstist: „{otsing.trim()}“ →
+              </Link>
+            </div>
           )}
           {tulemused.isikud.length > 0 && (
             <div>
