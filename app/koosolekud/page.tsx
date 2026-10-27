@@ -51,6 +51,7 @@ export default function KoosolekudLeht() {
         read={read}
         juhatajaValikud={juhatajaValikud}
         ekstra={ekstra}
+        protokollid={Object.fromEntries(andmed.protokollid.filter((p) => p.fail).map((p) => [p.koosolek_id, p]))}
       />
     </div>
   );

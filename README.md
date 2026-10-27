@@ -70,7 +70,7 @@ Mõõtmine 27.10.2026 (`next build`, 337 protokollilehte, build ≈ 30 s kokku):
 | suurim `index.html` (K222, 1934-02-26) | 1,25 MB (sisaldab inline RSC-payloadi ≈ 0,8 MB; märgistus ≈ 0,45 MB) |
 | K266 (1937-03-22, 151 kB teksti, 2 348 olemit) | 1,09 MB |
 | suurim `index.txt` (RSC-payload kliendipoolseks navigeerimiseks) | 0,65 MB |
-| `out/` kokku | 739 MB (pildid 344 MB, protokollid 241 MB, `_next` 2 MB) |
+| `out/` kokku | 741 MB (pildid 344 MB, protokollid 241 MB, `_next` 2 MB) |
 
 Otsus O-06: piir 2 MB lehe kohta peab → leht jääb täielikult staatiliseks, kliendipoolset
 sisu laadimist ei ole. Kui HTML-i mahtu on vaja veel vähendada, on järgmine samm
@@ -87,6 +87,25 @@ rAF); pilt → tekst avab ploki (`leheplokid()`) ja kerib markerile, lukk 600 ms
 mount'is, lehevahetus kirjutab `replaceState`. Pildid laetakse alles paneeli avamisel
 (SSR-HTML-is `<img>`-e pole); naaberlehed (±1) eellaetakse. `out/` 739 MB (< 1 GB).
 
+### Protokollide nimekiri ja täistekstiotsing `/protokollid` (samm 4)
+
+`KoosolekudVaade` on üldistatud (`variant="protokollid"`, `protokollid`, `killud` propid):
+diagrammita, veerud Päevakorrapunkte ja Sõnu, rida → `/protokollid/<id>/`, eksport kõigi
+`protokollid.csv` veergudega, "Minu vaade" `tlv-vaade-protokollid`; koosolekute lehel lisandub
+veerg "Protokoll" ja ekspordi veerg `protokoll_olemas` (IN-03). Ajavahemiku filter (`algus`/`lopp`)
+kehtib korraga tabelile ja otsingule (PT-06).
+
+`TaistekstOtsing` (PT-02): `?q=` URL-is, debounce 300 ms, min 3 märki; `lib/protokollid/otsing.worker.ts`
+(Web Worker, webpack `new Worker(new URL(...))`, publicPath `/tlv-rakendus/_next/`) laeb ainult
+vahemiku aastate killud, puhverdab mälus, näitab "Laen 1930… (3/5)"; tulemused protokollide kaupa
+kronoloogiliselt, tabamus `<mark>`-iga, link `/protokollid/<id>/?q=…#p<nr>`, 50 tabamust lehel,
+eksport CSV/XLSX/JSON. Kontekst 1 / ±2 lauset / kogu päevakorrapunkt (`tlv-otsing-kontekst`, PT-10).
+**Piirang:** killud sisaldavad ainult normaliseeritud teksti (väiketähed, diakriitikata, w→v),
+seega tulemuste laused kuvatakse normaliseeritud kirjakujus; algkuju näeb protokolli lehel.
+Kontroll kildude peal 27.10.2026: "walimine" = "valimine" = 1 274 tabamust 205 protokollis;
+"raekojas" 1937. a 13 tabamust; `?algus=1930-01-01&lopp=1930-12-31` → 16 rida;
+`?algus=1940-08-01` → 29 rida; suurim "Sõnu" 1934-08-27.
+
 Kuva eripärad: `tabelid` vahemikud ja `LIST OR TABULAR` lehed (`Leht.loend`, 1 596 lehte)
 säilitavad reavahetused (pre-wrap, monospace; E-09); kõne teise kõne sees (vahelehüüe)
 pesastatakse; K002 korduvate punktinumbrite id on `p<nr>-<jrk>` (L-03).
@@ -94,8 +113,8 @@ pesastatakse; K002 korduvate punktinumbrite id on `p<nr>-<jrk>` (L-03).
 ## Teadlikud piirangud (vt lähteülesanne)
 
 - Kaardileht ja nimekirjade kanoniseerimine on välja jäetud (andmed pole valmis).
-  Protokollide nimekiri `/protokollid` ja täistekstiotsing on 2. etapi samm 4 (pooleli);
-  protokolli vaade `/protokollid/[id]` on olemas.
+  Protokollide leht `/protokollid` (nimekiri, täistekstiotsing) ja protokolli vaade
+  `/protokollid/[id]` on olemas (2. etapp).
 - Protokolli vaates on märgendus (olemid, isikuseosed, kõned) automaatne ja vigadega;
   `?q=` esiletõst leiab vasted ainult ühe tekstisõlme sees (olemi piiri ületavat fraasi
   ei märgita); tooltip on CSS-põhine (`data-tip`), ekraanilugejale on seletus legendis.
