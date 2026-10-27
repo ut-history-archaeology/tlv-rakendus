@@ -18,8 +18,8 @@ const p: ProtokollAndmed = {
   koned: [{ koneleja: [i("Olesk: K"), i("Olesk: K") + 5], nimi: "Olesk", tykid: [[i("Kinnitame."), i("Kinnitame.") + 10]], isik_id: 116, kandidaadid: [116], kindlus: "kõrge" }],
   normid: [[6, 19, "linnavolikogu"], [i("Päewakorra"), i("Päewakorra") + 10, "Päevakorra"]],
   lehed: [
-    { jrk: 1, lk: "27", arhiiviviide: "ERA.2966.2.60", algus: 0, lopp: 50, pilt: "1920/0060_027.png", transkribus_lk: 5, tekstita: false, jagatud: false },
-    { jrk: 2, lk: "28", arhiiviviide: "ERA.2966.2.60", algus: 50, lopp: tekst.length, pilt: "1920/0060_028.png", transkribus_lk: 6, tekstita: false, jagatud: false },
+    { jrk: 1, lk: "27", arhiiviviide: "ERA.2966.2.60", algus: 0, lopp: 50, pilt: "1920/0060_027.png", transkribus_lk: 5, tekstita: false, jagatud: false, loend: false },
+    { jrk: 2, lk: "28", arhiiviviide: "ERA.2966.2.60", algus: 50, lopp: tekst.length, pilt: "1920/0060_028.png", transkribus_lk: 6, tekstita: false, jagatud: false, loend: false },
   ],
   statistika: { sonu: 20, lauseid: 9, paevakorrapunkte: 2, olemeid: 0, olemeid_PER: 0, seotud_isikuid: 0, konesid: 1, lehekylgi: 2, lehekylgi_tekstita: 0, lisasid: 1, tabeleid: 0, tekst_kb: 0.2 },
 };

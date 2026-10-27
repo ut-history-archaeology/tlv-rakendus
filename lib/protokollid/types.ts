@@ -67,6 +67,8 @@ export interface Leht {
   tekstita: boolean;
   /** Sama pilt jagatud mitme rea vahel (134/134a/134b). */
   jagatud: boolean;
+  /** textline_info.page_class "LIST OR TABULAR": reavahetused säilitatakse kuvas (E-09). */
+  loend: boolean;
 }
 
 export interface ProtokolliStatistika {

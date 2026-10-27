@@ -4,6 +4,7 @@ import Papa from "papaparse";
 import type {
   Andmestik, Isik, Koosolek, KoosolekJuhataja, Koosseis, Muutus, Osavott, Valimine,
 } from "./types";
+import type { MainimiseRida, PaevakorraRida, ProtokolliRida } from "./protokollid/types";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 
@@ -147,6 +148,51 @@ export function loeAndmestik(): Andmestik {
     sidumise_kindlus: (r.sidumise_kindlus ?? "") as Osavott["sidumise_kindlus"],
   }));
 
-  cache = { isikud, koosseisud, koosolekud, juhatajad, muutused, valimised, osavott };
+  const protokollid: ProtokolliRida[] = loeCSV("protokollid.csv").map((r) => ({
+    koosolek_id: r.koosolek_id,
+    fail: r.fail ?? "",
+    kuupaev_1: r.kuupaev_1 ?? "",
+    kuupaev_2: r.kuupaev_2 ?? "",
+    transkribus_url: r.transkribus_url ?? "",
+    arhiiviviide: r.arhiiviviide ?? "",
+    lehekylgi: num(r.lehekylgi),
+    lehekylgi_tekstita: num(r.lehekylgi_tekstita),
+    esimene_lk: r.esimene_lk ?? "",
+    viimane_lk: r.viimane_lk ?? "",
+    sonu: num(r.sonu),
+    lauseid: num(r.lauseid),
+    paevakorrapunkte: num(r.paevakorrapunkte),
+    olemeid: num(r.olemeid),
+    olemeid_PER: num(r.olemeid_PER),
+    seotud_isikuid: num(r.seotud_isikuid),
+    konesid: num(r.konesid),
+    tekst_kb: num(r.tekst_kb),
+    lisasid: num(r.lisasid),
+    tabeleid: num(r.tabeleid),
+    markus: r.markus ?? "",
+  }));
+
+  const paevakord: PaevakorraRida[] = loeCSV("paevakorrapunktid.csv").map((r) => ({
+    koosolek_id: r.koosolek_id,
+    jrk: Number(r.jrk),
+    nr: Number(r.nr),
+    pealkiri: r.pealkiri ?? "",
+    algus: Number(r.algus),
+    lopp: Number(r.lopp),
+    sonu: Number(r.sonu),
+  }));
+
+  const mainimised: MainimiseRida[] = loeCSV("protokolli_mainimised.csv").map((r) => ({
+    isik_id: Number(r.isik_id),
+    koosolek_id: r.koosolek_id,
+    kuupaev: r.kuupaev ?? "",
+    kindlus: r.kindlus as MainimiseRida["kindlus"],
+    arv: Number(r.arv),
+  }));
+
+  cache = {
+    isikud, koosseisud, koosolekud, juhatajad, muutused, valimised, osavott,
+    protokollid, paevakord, mainimised,
+  };
   return cache;
 }

@@ -3,7 +3,7 @@
  * Puhas funktsioon (ilma failisüsteemita), et seda saaks testida (TE-11) ja skriptist kasutada.
  */
 import { kiht, onSona, relKiht, transkribusLehenumber, vahemik, type KorpuseFail } from "./korpus";
-import { seoLehed, sailikXmlist, xmlVahemikud, type LeheRida } from "./lehed";
+import { loendLehed, seoLehed, sailikXmlist, xmlVahemikud, type LeheRida } from "./lehed";
 import { sissejuhatusJaLopuosa } from "./plokid";
 import { parsiCouncilMemberId, seoKoneleja } from "./sidumine";
 import { erinevadNormid } from "./kirjakuju";
@@ -173,11 +173,12 @@ export function tootleProtokoll(fail: KorpuseFail, ctx: TootluseKontekst): Tootl
   // --- lehed (ET-09) ---
   const tl = kiht<TextlineAnn>(fail, "textline_info").spans.map((s) => ({
     xml_file: s.annotations[0].xml_file,
+    page_class: s.annotations[0].page_class,
     vahemik: vahemik(s.base_span),
   }));
   const xmlV = xmlVahemikud(tl);
   if (ctx.leheRead.length === 0) throw new Error(`${id}: protokolli_lehed.csv-s pole faili ${ctx.fail} ridu`);
-  const lehedT = seoLehed(ctx.leheRead, xmlV);
+  const lehedT = seoLehed(ctx.leheRead, xmlV, loendLehed(tl));
   hoiatused.push(...lehedT.hoiatused);
   const lehed = lehedT.lehed;
   const arhiiviviide = lehed[0].arhiiviviide;

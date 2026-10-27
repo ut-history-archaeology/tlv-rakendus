@@ -45,6 +45,7 @@ export default async function KoosolekuLeht({
   tuletatud.sort((a, b) => a.nimi.localeCompare(b.nimi, "et"));
 
   const on1940 = koosolek.koosseis_id === "1940-1941";
+  const protokoll = andmed.protokollid.find((p) => p.koosolek_id === id && p.fail) ?? null;
 
   const jsonEksport = {
     koosolek_id: id,
@@ -176,6 +177,18 @@ export default async function KoosolekuLeht({
             <div>
               <dt className="inline font-medium">Protokollis nimetatud puudujaid: </dt>
               <dd className="inline">{puudub.length}</dd>
+            </div>
+            <div>
+              <dt className="inline font-medium">Protokoll: </dt>
+              <dd className="inline">
+                {protokoll ? (
+                  <Link href={`/protokollid/${id}/`} className="text-blue-700 hover:underline">
+                    Täistekst →
+                  </Link>
+                ) : (
+                  <span className="text-stone-500">protokolli täistekst puudub</span>
+                )}
+              </dd>
             </div>
           </dl>
         </div>

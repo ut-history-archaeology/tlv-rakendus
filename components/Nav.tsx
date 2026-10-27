@@ -11,6 +11,7 @@ const LEHED = [
   { href: "/isikud/", nimi: "Isikud" },
   { href: "/koosseisud/", nimi: "Koosseisud" },
   { href: "/koosolekud/", nimi: "Koosolekud" },
+  { href: "/protokollid/", nimi: "Protokollid" },
 ];
 
 export default function Nav({ indeks }: { indeks: OtsinguIndeks }) {

@@ -26,3 +26,33 @@ export const VORMI_VARVID: Record<string, string> = {
   pidulik: "#ca8a04",
   määramata: "#cbd5e1",
 };
+
+/**
+ * Nimeüksuste tüüpide värvid (IN-06). Eristatavad koosseisude paletist; värv ei ole
+ * ainus tunnus — igal tüübil on oma allajoonituse stiil (`OLEMI_STIILID`).
+ */
+export type OlemiTyyp = "PER" | "ORG" | "LOC" | "MONEY" | "POSITION";
+
+export const OLEMI_VARVID: Record<OlemiTyyp, string> = {
+  PER: "#1d4ed8",      // sinine
+  ORG: "#b45309",      // pruunoranž
+  LOC: "#15803d",      // roheline
+  MONEY: "#7e22ce",    // lilla
+  POSITION: "#be123c", // punakas
+};
+
+export const OLEMI_STIILID: Record<OlemiTyyp, "solid" | "dotted" | "dashed" | "double" | "wavy"> = {
+  PER: "solid",
+  ORG: "dashed",
+  LOC: "dotted",
+  MONEY: "double",
+  POSITION: "wavy",
+};
+
+export const OLEMI_NIMED: Record<OlemiTyyp, string> = {
+  PER: "isik",
+  ORG: "organisatsioon",
+  LOC: "koht",
+  MONEY: "rahasumma",
+  POSITION: "ametinimetus",
+};

@@ -1,3 +1,5 @@
+import type { MainimiseRida, PaevakorraRida, ProtokolliRida } from "./protokollid/types";
+
 export interface Isik {
   isik_id: number;
   perenimi: string;
@@ -126,6 +128,12 @@ export interface Andmestik {
   muutused: Muutus[];
   valimised: Valimine[];
   osavott: Osavott[];
+  /** 2. etapp: data/protokollid.csv (337 rida; K336-l protokolli ei ole) */
+  protokollid: ProtokolliRida[];
+  /** data/paevakorrapunktid.csv */
+  paevakord: PaevakorraRida[];
+  /** data/protokolli_mainimised.csv */
+  mainimised: MainimiseRida[];
 }
 
 /** Isikute tabeli tuletatud rida (/isikud vaade). */

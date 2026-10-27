@@ -25,7 +25,12 @@ export interface LehtedeTulemus {
  * Vead: jrk pole pidev 1…n; CSV xml_file puudub korpuses; korpuse xml_file puudub CSV-s;
  * tekstiga lehtede vahemikud ei kasva või kattuvad.
  */
-export function seoLehed(read: LeheRida[], xmlVahemikud: Map<string, Vahemik>): LehtedeTulemus {
+export function seoLehed(
+  read: LeheRida[],
+  xmlVahemikud: Map<string, Vahemik>,
+  /** xml_file-d, mille page_class on "LIST OR TABULAR" (E-09) */
+  loendXml: Set<string> = new Set()
+): LehtedeTulemus {
   const hoiatused: string[] = [];
   const sorted = [...read].sort((a, b) => a.jrk - b.jrk);
   const protokoll = sorted[0]?.protokoll ?? "?";
@@ -73,9 +78,17 @@ export function seoLehed(read: LeheRida[], xmlVahemikud: Map<string, Vahemik>): 
       transkribus_lk: r.transkribus_lk,
       tekstita: r.tekstita,
       jagatud,
+      loend: !r.tekstita && loendXml.has(r.xml_file),
     });
   }
   return { lehed, hoiatused };
+}
+
+/** `textline_info` spanid → xml_file-d, millel vähemalt üks rida on klassiga "LIST OR TABULAR". */
+export function loendLehed(read: { xml_file: string; page_class?: string }[]): Set<string> {
+  const s = new Set<string>();
+  for (const r of read) if (r.page_class === "LIST OR TABULAR") s.add(r.xml_file);
+  return s;
 }
 
 /** `textline_info` spanid (xml_file, vahemik) → xml_file → [esimese rea algus, viimase rea lõpp]. */

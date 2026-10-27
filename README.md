@@ -49,13 +49,46 @@ CSV-failidest (`data/`), serverit ega andmebaasi pole vaja.
   (base_span, pealkirjad), `vasted.ts` (SD-01), `sidumine.ts` (SD-02/SD-03),
   `eeltootlus.ts` (fail → ProtokollAndmed), `lehed.ts` (ET-09/ET-05), `plokid.ts`,
   `segmendid.ts` (renderdaja sisend), `kirjakuju.ts` (PT-08), `otsing.ts` (ET-04/PT-02),
-  `viide.ts`, `eksport.ts` (txt/md), `mainimised.ts` (ET-08); testid `*.test.ts`
+  `viide.ts`, `eksport.ts` (txt/md), `mainimised.ts` (ET-08), `kuva.ts` (tekstivaate
+  mudel: plokid → segmendid, lehemarkerid, pesastatud kõned), `laadi.ts` (basePath-URL-id,
+  kliendipoolne JSON-laadimine), `loe.ts` (build-aegne JSON-lugemine); testid `*.test.ts`
 - `app/` — lehed; `components/` — UI-komponendid (kasutajaliides eesti keeles)
+
+### Protokolli vaade `/protokollid/[id]` (2. etapp, samm 3)
+
+Tekst renderdatakse build-ajal HTML-i serverikomponendis `ProtokollTekst` (töötab ilma
+JS-ita; plokid on natiivsed `<details>`). Interaktiivsus tuleb väikestest saartest:
+`OlemiLegend` (märgenduse peitmine), `OlemPopover` (mitmese isiku kandidaadid),
+`ProtokollJuht` (`#p<nr>`, `?q=` esiletõst, `?isik=` esiletõst, "Ava/Sule kõik", print,
+punkti viide) ja `ProtokollTegevused` (JSON/TXT/Markdown/print/viide; protokolliandmed
+laetakse alles nupuvajutusel `public/protokollid/<id>.json`-ist).
+
+Mõõtmine 27.10.2026 (`next build`, 337 protokollilehte, build ≈ 30 s kokku):
+
+| Näitaja | Väärtus |
+|---|---|
+| suurim `index.html` (K222, 1934-02-26) | 1,23 MB (sisaldab inline RSC-payloadi ≈ 0,8 MB; märgistus ≈ 0,45 MB) |
+| K266 (1937-03-22, 151 kB teksti, 2 348 olemit) | 1,09 MB |
+| suurim `index.txt` (RSC-payload kliendipoolseks navigeerimiseks) | 0,65 MB |
+| `out/` kokku | 736 MB (pildid 344 MB, protokollid 241 MB, `_next` 2 MB) |
+
+Otsus O-06: piir 2 MB lehe kohta peab → leht jääb täielikult staatiliseks, kliendipoolset
+sisu laadimist ei ole. Kui HTML-i mahtu on vaja veel vähendada, on järgmine samm
+renderdada tekst serveris HTML-stringiks (`dangerouslySetInnerHTML`), mis poolitaks
+RSC-payloadi; selle hind on React-saarte (popover, HelpTip) asendamine delegeeritud JS-iga.
+
+Kuva eripärad: `tabelid` vahemikud ja `LIST OR TABULAR` lehed (`Leht.loend`, 1 596 lehte)
+säilitavad reavahetused (pre-wrap, monospace; E-09); kõne teise kõne sees (vahelehüüe)
+pesastatakse; K002 korduvate punktinumbrite id on `p<nr>-<jrk>` (L-03).
 
 ## Teadlikud piirangud (vt lähteülesanne)
 
-- Protokollide leht, kaardileht ja nimekirjade kanoniseerimine on selles
-  etapis välja jäetud (andmed pole valmis).
+- Kaardileht ja nimekirjade kanoniseerimine on välja jäetud (andmed pole valmis).
+  Protokollide nimekiri `/protokollid` ja täistekstiotsing on 2. etapi samm 4 (pooleli);
+  protokolli vaade `/protokollid/[id]` on olemas.
+- Protokolli vaates on märgendus (olemid, isikuseosed, kõned) automaatne ja vigadega;
+  `?q=` esiletõst leiab vasted ainult ühe tekstisõlme sees (olemi piiri ületavat fraasi
+  ei märgita); tooltip on CSS-põhine (`data-tip`), ekraanilugejale on seletus legendis.
 - 1940–41 nõukogude perioodi linnavalitsuse liikmed puuduvad isikute
   tabelist; sidumata nimed kuvatakse halli toortekstina.
 - Tuletatud kohalolijate arv võib protokolli omast erineda seal, kus

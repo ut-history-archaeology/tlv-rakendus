@@ -14,4 +14,17 @@ export const ABI = {
     "Protokollis olev nimekuju on isikuga seotud automaatselt. Kõrge = klapib koosseisu liikmega; keskmine = klapib üldnimestikuga; mitmene = mitu võimalikku isikut.",
   nimekirjaHoiatus:
     "Nimekirjade nimekujud on ühtlustamata — sama nimekiri võib esineda mitme variandina.",
+  // 2. etapp (IN-05)
+  automaatmargendus:
+    "Isikud, organisatsioonid, kohad, rahasummad ja ametinimetused on tuvastatud automaatselt keelemudeliga ja võivad sisaldada vigu; isikute seosed profiilidega on samuti automaatsed.",
+  kone:
+    "Kõned on tuvastatud automaatselt; kaudkõnesid ei kuvata.",
+  kirjakuju:
+    "Moderniseeritud kuju asendab vana kirjaviisi sõnad (nt wolikogu → volikogu) seal, kus automaatne normaliseering on olemas; ülejäänud tekst jääb algkujule.",
+  paevakorrapunkt:
+    "Päevakorrapunktid ja nende pealkirjad on protokolli tekstist eraldatud automaatselt; numeratsioon järgib allikat ja võib olla lünkadega. Püsiaadress on #p<nr>.",
+  protokolliLisa:
+    "Lisa on protokolli juurde kuuluv eraldi dokument (nt eelarve, nimekiri), mille piirid on tuvastatud automaatselt.",
+  lehemarker:
+    "Lehemarker näitab, kust algab arhiivisäiliku järgmine lehekülg. Klõps markeril avab sama lehe originaalpildi.",
 } as const;
