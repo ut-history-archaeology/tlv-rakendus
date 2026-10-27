@@ -67,15 +67,25 @@ Mõõtmine 27.10.2026 (`next build`, 337 protokollilehte, build ≈ 30 s kokku):
 
 | Näitaja | Väärtus |
 |---|---|
-| suurim `index.html` (K222, 1934-02-26) | 1,23 MB (sisaldab inline RSC-payloadi ≈ 0,8 MB; märgistus ≈ 0,45 MB) |
+| suurim `index.html` (K222, 1934-02-26) | 1,25 MB (sisaldab inline RSC-payloadi ≈ 0,8 MB; märgistus ≈ 0,45 MB) |
 | K266 (1937-03-22, 151 kB teksti, 2 348 olemit) | 1,09 MB |
 | suurim `index.txt` (RSC-payload kliendipoolseks navigeerimiseks) | 0,65 MB |
-| `out/` kokku | 736 MB (pildid 344 MB, protokollid 241 MB, `_next` 2 MB) |
+| `out/` kokku | 739 MB (pildid 344 MB, protokollid 241 MB, `_next` 2 MB) |
 
 Otsus O-06: piir 2 MB lehe kohta peab → leht jääb täielikult staatiliseks, kliendipoolset
 sisu laadimist ei ole. Kui HTML-i mahtu on vaja veel vähendada, on järgmine samm
 renderdada tekst serveris HTML-stringiks (`dangerouslySetInnerHTML`), mis poolitaks
 RSC-payloadi; selle hind on React-saarte (popover, HelpTip) asendamine delegeeritud JS-iga.
+
+**Paralleelvaade (PT-05, samm 3a).** `ParalleelVaade` (klient) võtab serveris renderdatud
+teksti `children`-ina: töölaual (≥ 1024 px) tekst ja pildipaneel kõrvuti, lohistatav/klaviatuuriga
+liigutatav jaotur (30–70 %, `tlv-pildipaneel-laius`), paneel vaikimisi avatud (`tlv-pildipaneel`);
+kitsamal sakid "Tekst" / "Originaal". `LehePilt` — 1200-PNG, suurendus 1×…4× (nupud, Ctrl+ratas,
+kahe näpuga, topeltklõps), lohistamine, klaviatuur (+ − 0 ↑ ↓); `LehtedeRiba` — 300-PNG eelvaated
+`loading="lazy"`. Sünk: tekst → pilt `aktiivneLeht()` (nähtavad markerid, ülemine kolmandik,
+rAF); pilt → tekst avab ploki (`leheplokid()`) ja kerib markerile, lukk 600 ms. `?lk=` loetakse
+mount'is, lehevahetus kirjutab `replaceState`. Pildid laetakse alles paneeli avamisel
+(SSR-HTML-is `<img>`-e pole); naaberlehed (±1) eellaetakse. `out/` 739 MB (< 1 GB).
 
 Kuva eripärad: `tabelid` vahemikud ja `LIST OR TABULAR` lehed (`Leht.loend`, 1 596 lehte)
 säilitavad reavahetused (pre-wrap, monospace; E-09); kõne teise kõne sees (vahelehüüe)

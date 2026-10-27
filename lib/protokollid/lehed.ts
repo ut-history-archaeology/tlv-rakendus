@@ -129,3 +129,49 @@ export function sailikXmlist(xmlFile: string): string | null {
   const [, arhiiv, fond, nimistu, sailik, taht] = m;
   return `${arhiiv.toUpperCase()}.${Number(fond)}.${Number(nimistu)}.${Number(sailik)}${taht}`;
 }
+
+// ---------------------------------------------------------------------------
+// PT-05 sünkroonimine (TE-18)
+// ---------------------------------------------------------------------------
+
+/** Nähtava lehemarkeri asukoht: `offset` = markeri ülaserv lugemisala suhtes (px). */
+export interface MarkeriKoht {
+  lk: string;
+  offset: number;
+}
+
+/**
+ * Tekst → pilt: aktiivne leht on see, mille NÄHTAV marker on viimasena ülalpool kerimiskohta
+ * (lugemisala ülemine kolmandik). Kokkuklapitud punktide markereid ei anta ette (nähtamatud).
+ * Tekstita leht ei saa kerimisest aktiivseks (E-14). Enne esimest markerit → esimene tekstiga leht.
+ */
+export function aktiivneLeht(lehed: Leht[], markerid: MarkeriKoht[], kerimiskoht: number): string | null {
+  if (lehed.length === 0) return null;
+  const tekstiga = new Set(lehed.filter((l) => !l.tekstita).map((l) => l.lk));
+  let parim: MarkeriKoht | null = null;
+  for (const m of markerid) {
+    if (!tekstiga.has(m.lk)) continue;
+    if (m.offset <= kerimiskoht && (!parim || m.offset > parim.offset)) parim = m;
+  }
+  if (parim) return parim.lk;
+  const esimene = lehed.find((l) => !l.tekstita) ?? lehed[0];
+  return esimene.lk;
+}
+
+/** `?lk=` väärtus → leht või null (kehtetu). */
+export function leiaLeht(lehed: Leht[], lk: string | null | undefined): Leht | null {
+  if (!lk) return null;
+  return lehed.find((l) => l.lk === lk) ?? null;
+}
+
+/** Eelmine (-1) / järgmine (+1) leht järjekorras; servas null. */
+export function naaberLeht(lehed: Leht[], lk: string, suund: -1 | 1): Leht | null {
+  const i = lehed.findIndex((l) => l.lk === lk);
+  if (i < 0) return null;
+  return lehed[i + suund] ?? null;
+}
+
+/** Jagatud lehe "sama leht kui …" silt: teised sama pildiga lehed. */
+export function samaPildiLehed(lehed: Leht[], leht: Leht): string[] {
+  return lehed.filter((l) => l.pilt === leht.pilt && l.lk !== leht.lk).map((l) => l.lk);
+}

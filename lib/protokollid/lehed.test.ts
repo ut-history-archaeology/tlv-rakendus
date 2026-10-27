@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pildiUrl, sailikXmlist, seoLehed, transkribusLeheUrl, xmlVahemikud, type LeheRida } from "./lehed";
+import { aktiivneLeht, leiaLeht, naaberLeht, pildiUrl, sailikXmlist, samaPildiLehed, seoLehed, transkribusLeheUrl, xmlVahemikud, type LeheRida } from "./lehed";
 
 const rida = (jrk: number, lehekulg: string, xml_file: string, pilt: string, transkribus_lk: number, tekstita = false): LeheRida =>
   ({ protokoll: "1934-04-30.json", jrk, arhiiviviide: "ERA.2966.2.83", lehekulg, xml_file, pilt, transkribus_lk, tekstita });
@@ -70,5 +70,38 @@ describe("TE-17 Transkribuse ja pildi URL (ET-05)", () => {
     expect(sailikXmlist("era2966_002_0000064a_00001_t.xml")).toBe("ERA.2966.2.64a");
     expect(sailikXmlist("era2966_009_0000008_00424_t.xml")).toBe("ERA.2966.9.8");
     expect(sailikXmlist("muu.xml")).toBeNull();
+  });
+});
+
+describe("TE-18 aktiivse lehe määramine (PT-05)", () => {
+  const L = (jrk: number, lk: string, algus: number | null, lopp: number | null) =>
+    ({ jrk, lk, arhiiviviide: "ERA.2966.2.57", algus, lopp, pilt: `p${lk}.png`, transkribus_lk: jrk, tekstita: algus === null, jagatud: false, loend: false });
+  const lehed = [L(1, "10", 0, 100), L(2, "11", 100, 200), L(3, "12", null, null), L(4, "13", 200, 300)];
+
+  it("kerimiskoht enne esimest markerit → 1. leht", () => {
+    expect(aktiivneLeht(lehed, [{ lk: "10", offset: 500 }, { lk: "11", offset: 900 }], 300)).toBe("10");
+  });
+  it("markerite vahel → viimane ülalpool", () => {
+    expect(aktiivneLeht(lehed, [{ lk: "10", offset: -800 }, { lk: "11", offset: -100 }, { lk: "13", offset: 600 }], 300)).toBe("11");
+  });
+  it("ainult nähtavad markerid loevad (kokkuklapitud punkti marker puudub loendist)", () => {
+    expect(aktiivneLeht(lehed, [{ lk: "10", offset: -800 }, { lk: "13", offset: 600 }], 300)).toBe("10");
+  });
+  it("tekstita leht ei saa kerimisest aktiivseks", () => {
+    expect(aktiivneLeht(lehed, [{ lk: "11", offset: -200 }, { lk: "12", offset: -50 }], 300)).toBe("11");
+  });
+  it("?lk= kehtetu väärtus → null; kehtiv → leht", () => {
+    expect(leiaLeht(lehed, "99")).toBeNull();
+    expect(leiaLeht(lehed, "")).toBeNull();
+    expect(leiaLeht(lehed, "12")?.tekstita).toBe(true);
+  });
+  it("naaberleht servades null", () => {
+    expect(naaberLeht(lehed, "10", -1)).toBeNull();
+    expect(naaberLeht(lehed, "13", 1)).toBeNull();
+    expect(naaberLeht(lehed, "11", 1)?.lk).toBe("12");
+  });
+  it("jagatud lehe teised lk-d", () => {
+    const j = [L(1, "134", 0, 10), L(2, "134a", 10, 20), L(3, "134b", 20, 30)].map((l) => ({ ...l, pilt: "x.png", jagatud: true }));
+    expect(samaPildiLehed(j, j[1])).toEqual(["134", "134b"]);
   });
 });

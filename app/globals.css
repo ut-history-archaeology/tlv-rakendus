@@ -184,6 +184,7 @@ details.plokk[open] > summary { border-bottom: 0; }
 details.plokk:target { outline: 2px solid #f59e0b; outline-offset: 2px; }
 
 @media print {
+  [data-tekstipaneel] { width: 100% !important; display: block !important; }
   .protokoll-tekst { font-size: 11pt; }
   .olem { color: black !important; text-decoration-color: black !important; }
   .olem-aktiivne, mark.otsing-vaste { background: none; outline: none; font-weight: 700; }

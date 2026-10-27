@@ -8,12 +8,14 @@ import { ABI } from "@/lib/abitekstid";
 import { loeProtokollAndmed } from "@/lib/protokollid/loe";
 import { korpuseFailiUrl } from "@/lib/protokollid/laadi";
 import { koostaViide, kuupaevadEesti } from "@/lib/protokollid/viide";
+import { leheplokid } from "@/lib/protokollid/kuva";
 import type { ViiteBaas } from "@/lib/protokollid/viide-klient";
 import HelpTip from "@/components/HelpTip";
 import OlemiLegend from "@/components/OlemiLegend";
 import ProtokollJuht from "@/components/ProtokollJuht";
 import ProtokollTegevused from "@/components/ProtokollTegevused";
 import ProtokollTekst from "@/components/ProtokollTekst";
+import ParalleelVaade from "@/components/ParalleelVaade";
 
 export function generateStaticParams() {
   return loeAndmestik().protokollid.filter((p) => p.koosolek_id && p.fail).map((p) => ({ id: p.koosolek_id }));
@@ -145,7 +147,16 @@ export default async function ProtokolliLeht({ params }: { params: Promise<{ id:
 
       <OlemiLegend konteinerId="protokoll-tekst" />
       <ProtokollJuht viide={viide} />
-      <ProtokollTekst p={p} nimed={nimed} />
+      <ParalleelVaade
+        lehed={p.lehed}
+        kuupaevTekst={kuupaevadEesti(kuupaevad)}
+        arhiiviviide={p.arhiiviviide}
+        transkribusUrl={p.transkribus_url}
+        viide={viide}
+        leheplokid={Object.fromEntries(leheplokid(p))}
+      >
+        <ProtokollTekst p={p} nimed={nimed} />
+      </ParalleelVaade>
 
       <p className="text-xs text-stone-500">
         Tekst on OCR-i ja automaatse märgenduse tulemus; osa sõnu võib olla valesti loetud.
