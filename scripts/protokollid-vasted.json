@@ -1,0 +1,53 @@
+{
+  "_kommentaar": "SD-01 p 4: käsitsi vasted protokollifail → koosolek_id. Rakenduvad ENNE automaatreegleid. koosolek_id = null tähendaks teadlikult sidumata faili (praegu ühtegi). Kontrollitud 27.10.2026 korpuse teksti ja koosolekud.csv protokolli_algus_txt protokollinumbri järgi.",
+  "vasted": {
+    "1920-02-29_1920-03-30.json": {
+      "koosolek_id": "K026",
+      "miks": "AP-01: CSV kuupäev parandati 1920-03-29/30 (failinimi järgib vana vigast 29.02/30.02); faili ümber ei nimetata, seepärast käsitsi vaste."
+    },
+    "1925-06-25.json": {
+      "koosolek_id": "K077",
+      "miks": "Protokolli OCR-tekstis on aastaarv 1925, CSV paneb koosoleku 25.06.1923 (koosseis 1921-1923, esmaspäev klapib 1923-ga). CSV loetakse õigeks."
+    },
+    "1930-09-08.json": {
+      "koosolek_id": "K174",
+      "miks": "Sama päeva paar: fail ilma sufiksita algab 'erakorraline koosolek' = K174 (erakorraline); automaatreegel annab sama."
+    },
+    "1930-09-08_2.json": {
+      "koosolek_id": "K175",
+      "miks": "Sama päeva paar: 'korraline koosolek' = K175 (korraline); automaatreegel annab sama."
+    },
+    "1940-09-26.json": {
+      "koosolek_id": "K315",
+      "miks": "O-03: tekst 'Protokoll nr. 14' = K315 protokolli_algus_txt 'Protokoll nr. 14'; automaatreegel annab sama."
+    },
+    "1940-09-26_2.json": {
+      "koosolek_id": "K316",
+      "miks": "O-03: 'Protokoll nr. 15' = K316; automaatreegel annab sama."
+    },
+    "1940-10-11.json": {
+      "koosolek_id": "K322",
+      "miks": "O-03: 'Protokoll nr. 21' = K322; automaatreegel annab sama."
+    },
+    "1940-10-11_2.json": {
+      "koosolek_id": "K323",
+      "miks": "O-03: 'Protokoll nr. 22' = K323; automaatreegel annab sama."
+    },
+    "1940-11-05.json": {
+      "koosolek_id": "K326",
+      "miks": "O-03: 'Protokoll nr.25' = K326; automaatreegel annab sama."
+    },
+    "1940-11-05_2.json": {
+      "koosolek_id": "K327",
+      "miks": "O-03: 'Protokoll nr. 26' = K327; automaatreegel annab sama."
+    },
+    "1940-11-13.json": {
+      "koosolek_id": "K338",
+      "miks": "AP-02: 'Protokoll nr. 28' — koosolekurida K338 lisati korpuse põhjal; automaatreegel annaks sama (K329 < K338), aga vaste on fikseeritud käsitsi."
+    },
+    "1940-11-13_2.json": {
+      "koosolek_id": "K329",
+      "miks": "'Protokoll nr. 29' = K329 protokolli_algus_txt 'Protokoll nr. 29'."
+    }
+  }
+}

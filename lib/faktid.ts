@@ -35,7 +35,7 @@ export function arvutaFaktid(andmed: Andmestik): Fakt[] {
     const isik = andmed.isikud.find((i) => i.isik_id === tippJuhatajaId);
     if (isik) {
       faktid.push({
-        tekst: `Kõige rohkem koosolekuid juhatas ${taisnimi(isik)} — ${tippArv} koosolekut 337-st.`,
+        tekst: `Kõige rohkem koosolekuid juhatas ${taisnimi(isik)} — ${tippArv} koosolekut ${andmed.koosolekud.length}-st.`,
         link: `/isikud/${tippJuhatajaId}/`,
       });
     }

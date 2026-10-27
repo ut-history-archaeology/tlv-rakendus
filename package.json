@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "npm run zip-data",
+    "predev": "npm run zip-data && npm run eeltootle:kui-vaja",
     "dev": "next dev",
-    "prebuild": "npm run zip-data",
+    "prebuild": "npm run zip-data && npm run eeltootle:kui-vaja",
     "build": "next build",
     "start": "npx serve out",
     "lint": "next lint",
     "test": "vitest run",
-    "zip-data": "mkdir -p public && cd data && zip -q -X -o ../public/tlv-andmestik.zip *.csv README.md"
+    "zip-data": "mkdir -p public && cd data && zip -q -X -o ../public/tlv-andmestik.zip *.csv README.md",
+    "eeltootle": "tsx scripts/eeltootle-protokollid.ts",
+    "eeltootle:kui-vaja": "node scripts/eeltootle-kui-vaja.mjs"
   },
   "dependencies": {
     "exceljs": "^4.4.0",
@@ -27,6 +29,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tailwindcss": "^4.0.0",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^3.0.0"
   }

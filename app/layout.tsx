@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s — Tartu Linnavolikogu 1917–1941",
   },
   description:
-    "Tartu Linnavolikogu ajalooandmestik 1917–1941: 404 isikut, 9 koosseisu, 337 koosolekut.",
+    "Tartu Linnavolikogu ajalooandmestik 1917–1941: 404 isikut, 9 koosseisu, 338 koosolekut.",
 };
 
 export default function RootLayout({

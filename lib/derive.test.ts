@@ -98,7 +98,7 @@ describe("päris andmed: valideerimiskontrollid", () => {
   it("andmestik on oodatud suurusega", () => {
     expect(andmed.isikud).toHaveLength(404);
     expect(andmed.koosseisud).toHaveLength(9);
-    expect(andmed.koosolekud).toHaveLength(337);
+    expect(andmed.koosolekud).toHaveLength(338); // 337 + K338 (AP-02)
     expect(andmed.muutused).toHaveLength(633);
     expect(andmed.valimised).toHaveLength(1092);
     expect(andmed.osavott).toHaveLength(5087);
@@ -126,5 +126,52 @@ describe("päris andmed: valideerimiskontrollid", () => {
     // Protokoll: 38 kohal; koosseis 1917-1919 andmed on auklikud, seega ainult
     // mõistlikkuse kontroll
     expect(tuletatud.length).toBeGreaterThan(0);
+  });
+});
+
+describe("TE-15: liikmelisus pärast andmeparandusi AP-01/AP-02", () => {
+  const andmed = loeAndmestik();
+
+  it("K026 on 29.–30.03.1920 (esmaspäev), koosseis 1919-1921", () => {
+    const k = andmed.koosolekud.find((x) => x.koosolek_id === "K026")!;
+    expect(k.kuupaev).toBe("1920-03-29");
+    expect(k.kuupaev_lopp).toBe("1920-03-30");
+    expect(k.nadalapaev).toBe("esmaspäev");
+    expect(k.koosseis_id).toBe("1919-1921");
+    const koosseis = andmed.koosseisud.find((x) => x.koosseis_id === "1919-1921")!;
+    expect(k.kuupaev >= koosseis.esimene_koosolek && k.kuupaev <= koosseis.viimane_koosolek).toBe(true);
+  });
+
+  it("K026 uuel kuupäeval annab tuletatud kohalolijad ja osavõtu kuupäev klapib", () => {
+    const k = andmed.koosolekud.find((x) => x.koosolek_id === "K026")!;
+    expect(tuletatudKohalolijad(andmed, k).length).toBeGreaterThan(0);
+    const os = andmed.osavott.filter((o) => o.koosolek_id === "K026");
+    expect(os).toHaveLength(13);
+    expect(os.every((o) => o.kuupaev === "1920-03-29")).toBe(true);
+    expect(andmed.osavott.some((o) => o.kuupaev === "1920-02-29")).toBe(false);
+  });
+
+  it("K338 (protokoll nr 28, 13.11.1940) kuulub koosseisu 1940-1941", () => {
+    const k = andmed.koosolekud.find((x) => x.koosolek_id === "K338")!;
+    expect(k).toBeDefined();
+    expect(k.kuupaev).toBe("1940-11-13");
+    expect(k.nadalapaev).toBe("kolmapäev");
+    expect(k.koosseis_id).toBe("1940-1941");
+    expect(k.vorm).toBe("linnavalitsus linnavolikogu ülesandeis");
+    expect(k.protokolli_algus_txt.startsWith("Protokoll nr. 28.")).toBe(true);
+    // K329 on sama päeva protokoll nr 29
+    const k329 = andmed.koosolekud.find((x) => x.koosolek_id === "K329")!;
+    expect(k329.kuupaev).toBe("1940-11-13");
+    expect(k329.protokolli_algus_txt).toContain("Protokoll nr. 29");
+  });
+
+  it("koosolek_id ei ole enam kronoloogiline: kuupäeva järgi on K338 K329 kõrval", () => {
+    const jarjestatud = [...andmed.koosolekud].sort((a, b) =>
+      a.kuupaev < b.kuupaev ? -1 : a.kuupaev > b.kuupaev ? 1 : a.koosolek_id.localeCompare(b.koosolek_id)
+    );
+    const i329 = jarjestatud.findIndex((x) => x.koosolek_id === "K329");
+    expect(jarjestatud[i329 + 1].koosolek_id).toBe("K338");
+    expect(jarjestatud[jarjestatud.length - 1].koosolek_id).toBe("K337");
+    expect(andmed.koosolekud.every((k) => k.kuupaev !== "" && !Number.isNaN(Date.parse(k.kuupaev)))).toBe(true);
   });
 });
