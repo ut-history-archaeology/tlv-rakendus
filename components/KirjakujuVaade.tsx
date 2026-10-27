@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ABI } from "@/lib/abitekstid";
 import { moderniseeri } from "@/lib/protokollid/kirjakuju";
 import { laeProtokollAndmed } from "@/lib/protokollid/laadi";
@@ -66,7 +66,17 @@ export default function KirjakujuVaade({
   }, [mod, andmed, id]);
 
   const nimedMap = new Map(Object.entries(nimed).map(([k, v]) => [Number(k), v]));
-  const naitaMod = mod && andmed && !viga;
+  const naitaMod = !!(mod && andmed && !viga);
+
+  // tekst renderdati ümber (kliendis või tagasi serveri omale) → ProtokollJuht rakendab #p, ?q, ?isik uuesti
+  const eelmineKuju = useRef<boolean | null>(null);
+  useEffect(() => {
+    if (!mounted) return;
+    if (eelmineKuju.current !== null && eelmineKuju.current !== naitaMod) {
+      window.dispatchEvent(new Event("tlv-tekst-uuendatud"));
+    }
+    eelmineKuju.current = naitaMod;
+  }, [naitaMod, mounted]);
 
   return (
     <div className="space-y-2">

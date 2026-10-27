@@ -18,7 +18,10 @@ korpus/json/<fail>.json ←── protokolli_lehed.csv (protokoll) ──→ pub
 ```
 
 Protokollide täistekst ja märgendused on eeltöödeldud kujul `public/protokollid/`
-(genereeritud, gitis ei ole; vt `README.md`).
+(genereeritud, gitis ei ole; vt `README.md`). Tüübid: `lib/protokollid/types.ts`
+(`ProtokollAndmed`; `lehed[].loend` = Transkribuse `page_class` "LIST OR TABULAR", mille
+puhul kuvas säilitatakse reavahetused). Otsingukillud `public/protokollid/otsing/<aasta>.json`
+sisaldavad ainult normaliseeritud teksti (väiketähed, diakriitikata, w→v).
 
 ## isikud.csv — 404 rida
 | Veerg | Kirjeldus |

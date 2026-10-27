@@ -239,11 +239,11 @@ export default function TaistekstOtsing({ q, setQ, algus, lopp, killud, tyybid, 
                   {tabamused.map((t, i) => (
                     <li key={i} className="text-sm">
                       <Link
-                        href={`/protokollid/${id}/?q=${encodeURIComponent(tulemus.q)}${t.punkt !== null ? `#p${t.punkt}` : "#tekst"}`}
+                        href={`/protokollid/${id}/?q=${encodeURIComponent(tulemus.q)}#${t.ankur}`}
                         className="mr-1.5 rounded bg-stone-100 px-1.5 py-0.5 text-xs text-stone-600 hover:bg-stone-200"
                         title="Ava protokoll selles kohas"
                       >
-                        {t.punkt !== null ? `p. ${t.punkt}` : "sissejuhatus / lõpuosa"}
+                        {t.punkt !== null ? `p. ${t.punkt}` : t.ankur === "sissejuhatus" ? "sissejuhatus" : t.ankur === "lopuosa" ? "lõpuosa / lisa" : "tekst"}
                       </Link>
                       <span className="text-stone-700">
                         {t.kontekst_tekst.slice(0, t.vaste_algus)}

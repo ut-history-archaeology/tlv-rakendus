@@ -41,6 +41,8 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
   const [aktiivne, setAktiivne] = useState<string>(lehed[0]?.lk ?? "");
   const [teade, setTeade] = useState<string | null>(null);
   const lukk = useRef(0);
+  /** scrollY lehe käsitsi valimisel: kerimissünk ei kirjuta valikut üle enne, kui kasutaja on tegelikult kerinud */
+  const valikuScrollY = useRef<number | null>(null);
   const wrapper = useRef<HTMLDivElement>(null);
   const paneel = useRef<HTMLElement>(null);
   const jaoturLohistus = useRef(false);
@@ -93,6 +95,7 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
     (lk: string, keri: boolean) => {
       if (!leiaLeht(lehed, lk)) return;
       lukk.current = Date.now() + LUKK_MS + (keri ? 600 : 0);
+      valikuScrollY.current = keri ? null : window.scrollY;
       setAktiivne(lk);
       setTeade(null);
       if (keri) keriMarkerile(lk);
@@ -133,9 +136,13 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
       raf = 0;
       if (Date.now() < lukk.current) return;
       if (!lai && sakk !== "tekst") return;
+      if (valikuScrollY.current !== null) {
+        if (Math.abs(window.scrollY - valikuScrollY.current) < 40) return;
+        valikuScrollY.current = null;
+      }
       const markerid: MarkeriKoht[] = [];
       document.querySelectorAll<HTMLElement>("a.lehemarker[data-lk]").forEach((el) => {
-        if (el.offsetParent === null) return; // kokkuklapitud punkti sees → nähtamatu
+        if (el.closest("details:not([open])")) return; // kokkuklapitud punkti sees → nähtamatu (Chrome'i content-visibility tõttu ei saa offsetParent-it usaldada)
         markerid.push({ lk: el.dataset.lk ?? "", offset: el.getBoundingClientRect().top });
       });
       const lk = aktiivneLeht(lehed, markerid, window.innerHeight / 3);
@@ -172,9 +179,13 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
     return () => document.removeEventListener("click", klikk);
   }, [valiLeht, lai]);
 
-  // --- naaberlehtede eellaadimine (ainult avatud paneelil) ---
+  // --- naaberlehtede eellaadimine: ainult avatud paneelil ja alles pärast esimest lehevahetust
+  // (lehe avamisel laetakse ≤ 1 suur pilt + nähtavad eelvaated) ---
+  const lehevahetusi = useRef(0);
   useEffect(() => {
     if (!paneelNahtav || !leht) return;
+    lehevahetusi.current++;
+    if (lehevahetusi.current <= 1) return;
     for (const suund of [-1, 1] as const) {
       const n = naaberLeht(lehed, leht.lk, suund);
       if (n) new Image().src = pildiUrl(BASE_PATH, 1200, n.pilt);

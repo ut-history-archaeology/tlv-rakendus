@@ -180,6 +180,7 @@ mark.otsing-vaste {
 .lehemarker:hover { background: #e7e5e4; color: #1c1917; }
 .lehemarker:target { outline: 2px solid #f59e0b; }
 
+details.plokk, .lehemarker { scroll-margin-top: 4.5rem; }
 details.plokk[open] > summary { border-bottom: 0; }
 details.plokk:target { outline: 2px solid #f59e0b; outline-offset: 2px; }
 

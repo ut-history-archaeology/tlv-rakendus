@@ -114,11 +114,11 @@ export default async function ProtokolliLeht({ params }: { params: Promise<{ id:
                 Rahvusarhiiv, {p.arhiiviviide}, lk {esimeneLk}
                 {viimaneLk !== esimeneLk && <>–{viimaneLk}</>}
                 {" · "}
-                <a href={p.transkribus_url} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                <a href={p.transkribus_url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                   Ava Transkribuses ↗
                 </a>
                 {" · "}
-                <a href={korpuseFailiUrl(p.fail)} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                <a href={korpuseFailiUrl(p.fail)} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                   Algne EstNLTK JSON (GitHub) ↗
                 </a>
               </dd>

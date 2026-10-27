@@ -28,6 +28,14 @@ export interface TabamusKuva extends Tabamus {
   vaste_pikkus: number;
   /** lause tekst */
   lause_tekst: string;
+  /** protokollilehe ankur: p<nr> / sissejuhatus / lopuosa / tekst (erireegel 10) */
+  ankur: string;
+}
+
+function ankur(paevakord: [number, number, number][], punkt: number | null, koht: number): string {
+  if (punkt !== null) return `p${punkt}`;
+  if (paevakord.length === 0) return "tekst";
+  return koht < paevakord[0][1] ? "sissejuhatus" : "lopuosa";
 }
 
 export type OtsinguVastus =
@@ -84,6 +92,7 @@ ctx.onmessage = async (e: MessageEvent<OtsinguParing>) => {
             vaste_algus: t.koht - v[0],
             vaste_pikkus: t.pikkus,
             lause_tekst: pr.tekst_norm.slice(lause[0], lause[1]),
+            ankur: ankur(pr.paevakord, t.punkt, t.koht),
           });
         }
       }

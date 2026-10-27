@@ -3,7 +3,9 @@
 Next.js (App Router) rakendus Tartu Linnavolikogu ajalooandmestiku sirvimiseks:
 404 isikut, 9 koosseisu, 338 koosolekut, 633 liikmesmuutust, 1092 valimiskirjet.
 
-Lähteülesanne: `CLAUDE_CODE_ULESANNE.md`. Andmesõnastik: `data/README.md`.
+Lähteülesanne: `CLAUDE_CODE_ULESANNE.md` (1. etapp) ja `CLAUDE_CODE_ULESANNE_2.md`
+(2. etapp: protokollide leht `/protokollid`, täistekstiotsing, paralleelvaade arhiivi
+originaaliga). Andmesõnastik: `data/README.md`.
 
 ## Käivitamine
 
@@ -126,19 +128,64 @@ Kuva eripärad: `tabelid` vahemikud ja `LIST OR TABULAR` lehed (`Leht.loend`, 1 
 säilitavad reavahetused (pre-wrap, monospace; E-09); kõne teise kõne sees (vahelehüüe)
 pesastatakse; K002 korduvate punktinumbrite id on `p<nr>-<jrk>` (L-03).
 
-## Teadlikud piirangud (vt lähteülesanne)
+## Teadlikud piirangud (vt lähteülesanded, 2. etapi ptk 13)
 
 - Kaardileht ja nimekirjade kanoniseerimine on välja jäetud (andmed pole valmis).
-  Protokollide leht `/protokollid` (nimekiri, täistekstiotsing) ja protokolli vaade
-  `/protokollid/[id]` on olemas (2. etapp).
-- Protokolli vaates on märgendus (olemid, isikuseosed, kõned) automaatne ja vigadega;
-  `?q=` esiletõst leiab vasted ainult ühe tekstisõlme sees (olemi piiri ületavat fraasi
-  ei märgita); tooltip on CSS-põhine (`data-tip`), ekraanilugejale on seletus legendis.
-- 1940–41 nõukogude perioodi linnavalitsuse liikmed puuduvad isikute
-  tabelist; sidumata nimed kuvatakse halli toortekstina.
-- Tuletatud kohalolijate arv võib protokolli omast erineda seal, kus
-  puudujakirjeid ei õnnestunud isikutega siduda — sellised loendid on alati
-  märgistatud sõnaga "tuletatud".
+- 1940–41 nõukogude perioodi linnavalitsuse liikmed puuduvad isikute tabelist; sidumata
+  nimed (Jalak, Taev, Johani, Lange, Mägi jt) kuvatakse halli toortekstina — teadlik andmelünk.
+  Samal perioodil kõnesid ei tuvastatud.
+- Tuletatud kohalolijate arv võib protokolli omast erineda seal, kus puudujakirjeid ei
+  õnnestunud isikutega siduda — sellised loendid on alati märgistatud sõnaga "tuletatud".
+- **Automaatmärgendus on vigadega**: nimeüksused (NER-mudel), kõnetuvastus ja isikute
+  linkimine on automaatsed; iga selline element kannab märget "automaatne" (legend, silt
+  või tooltip). Kindluse sõnavara: kõrge / keskmine / mitmene / puudub; registriväline
+  mitmesus (`N;None`) lingitakse `?`-märgiga, ≥ 4 kandidaati = sidumata. Sidumata
+  kõnelejad (~4 %, nt linnanõunikud Roo, Sinka) kuvatakse nimena ilma lingita.
+- `normalized_form` katab vaid osa vana kirjaviisi sõnu — moderniseeritud kuju on segakuju.
+- Täistekstiotsingu tulemused kuvatakse normaliseeritud kirjakujus (väiketähed,
+  diakriitikata, w→v), sest killud ei sisalda algteksti; algkuju on protokolli lehel.
+  `?q=` esiletõst protokolli lehel leiab vasted ainult ühe tekstisõlme sees ja ainult
+  ajaloolisel (serveris renderdatud) kujul.
+- Kuupäevi ei tõsteta esile ja kuupäeva-kategooriat otsingus ei ole (automaatkihis
+  DATE-tüüpi pole; heuristikat ei ehitata).
+- Kahe sama päeva protokolli vaste (1930-09-08, 1940-09-26, -10-11, -11-05, -11-13) tugineb
+  protokollinumbrile ja on fikseeritud käsitsi `scripts/protokollid-vasted.json`-is.
+- K026 kuupäev on parandatud korpuse teksti põhjal (29.–30.03.1920); K077 protokolli tekstis
+  on vale aastaarv (1925 pro 1923); K338 (protokoll nr 28, 13.11.1940) on lisatud korpuse,
+  mitte algse `TLV_koosolekud.xlsx` põhjal — kõigil kolmel lehel on märkus.
+- Lehepildid on 1200 px mustvalged koopiad (mitte arhiivikvaliteet); 28 tekstita lehte
+  kuvatakse pildina ilma tekstita; jagatud lehtedel (134/134a/134b, 254/254a/254b) on üks
+  pilt mitme tekstilõigu kohta; tekst–pilt sünk on lehe täpsusega (rea koordinaate pole);
+  Transkribuse lehenumber erineb arhiivi lk-st ja seda ei kuvata numbrina, ainult lingina.
+- Toor-EstNLTK-faile rakendus ei paku, ainult link GitHubi (`korpus/json/<fail>`).
+- Protokollidega sidumata pilte (kaaned, tiitellehed; 191 tk `public/pildid/`-s) ei kuvata
+  (vt L-02).
+
+## Käsitsi kontrollid (2. etapp, 27.10.2026)
+
+Genereeritud HTML-i põhjal kontrollitud: K174 (1 punkt) ja K175 (11 punkti, 40 kõnet) ning
+1940. a paarid õiges järjekorras protokollinumbri järgi; K329 "nr 29" 2 punkti + 1 lisa,
+K338 "nr 28" 1 punkt; K077 ja K026 lehel märkus; K026 kuvatakse 29.–30. märts 1920; K272
+"A. Piip" 2× isik 128, "J. Lill" 82 `?`-ga, "J. Roo" sidumata; K004 "Koppel" popover (58, 266)
+ja lehed 112–117 ↔ Transkribus 26–31 (lk 112 link `…/pages/26`); K143 lk 38 tekstita marker;
+K225 134/134a/134b eraldi markerid, sama pilt; K266 93 markerit, 2 348 olemit; K336-l
+"protokolli täistekst puudub"; suurima lehe `out/` maht 1,25 MB (< 2 MB); `du -sh out/`
+763 MB (< 1 GB), `out/pildid` 344 MB; SSR-HTML-is pilte ei laeta (`<img>` puudub).
+
+Headless Chrome'is (Puppeteer-skript `out/`-i peal, 27.10.2026) kontrollitud: `#p3` avab punkti;
+`?isik=116` tõstab olemid esile ja avab plokid; `?q=Piip` K272-l 2 vastet; lehe avamisel laetakse
+1 suur pilt + 6 eelvaadet; markeri klõps aktiveerib lehe (ka pärast sünkroonimislukku) ja kirjutab
+`?lk=`; "Koppel" popover kandidaatidega 58 ja 266; "Kopeeri viide" sisaldab arhiiviviidet, lk-d ja
+Transkribuse URL-i; `?lk=360` K178-l avab punkti ja marker on ekraanil; kirjakuju-lüliti annab
+"Tartu linnavolikogu erakorraline koosolek", olemid alles, `#p3`/`?q=` toimivad ka kliendirenderduse
+järel; otsing "walimine" = "valimine" = 1 274 tabamust 205 protokollis (kogu korpus külmalt
+≈ 1,0 s, killud puhvris 17–26 ms Workeris); "raekojas" 1937 laeb ainult `1937.json`; tulemuselt
+klõps avab K004 sissejuhatuse esiletõstuga; KO-11 link avab K175 punkti; mobiilis (375 px) sakid,
+"Originaal" laeb 1 pildi, enne seda 0; Markdown-eksport 11 pealkirja. Lighthouse (K004 `?lk=113`):
+ligipääsetavus 97, parimad tavad 96; konsoolis ainult `favicon.ico` 404. JS-vigu ei esinenud.
+
+Käsitsi (päris seadmes) veel kontrollimata: suurendus ja lohistamine puutel, kerimissünk K266-l
+pika lugemise jooksul, eksport-failide avanemine Excelis, trükieelvaade.
 
 ## Lahtised andmeküsimused
 

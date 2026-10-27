@@ -37,47 +37,56 @@ export default function ProtokollJuht({ viide }: { viide: ViiteBaas }) {
     return () => clearTimeout(t);
   }, [teade]);
 
-  // #p<nr>
+  // #p<nr>; ?q= ja ?isik=. Rakendatakse mount'is ja uuesti, kui tekst renderdatakse kliendis
+  // ümber (kirjakuju-lüliti saadab `tlv-tekst-uuendatud`), sest vana DOM koos märgistusega asendub.
   useEffect(() => {
-    function hash() {
+    function hash(keri: boolean) {
       const id = decodeURIComponent(window.location.hash.slice(1));
       if (!id) return;
       const el = document.getElementById(id);
       if (!el) return;
       const d = el.closest("details");
       if (d) d.open = true;
-      requestAnimationFrame(() => el.scrollIntoView({ block: "start" }));
+      if (keri) requestAnimationFrame(() => el.scrollIntoView({ block: "start" }));
     }
-    hash();
-    window.addEventListener("hashchange", hash);
-    return () => window.removeEventListener("hashchange", hash);
-  }, []);
-
-  // ?q= ja ?isik=
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const root = document.getElementById("protokoll-tekst");
-    if (!root) return;
-    const q = p.get("q");
-    if (q && normaliseeriParing(q).length >= OTSINGU_MIN_PIKKUS) {
-      const n = tostaEsile(root, q);
-      setOtsing({ q, vasteid: n });
-      const esimene = root.querySelector("mark.otsing-vaste");
-      if (esimene && !window.location.hash) requestAnimationFrame(() => esimene.scrollIntoView({ block: "center" }));
+    function paring(keri: boolean) {
+      const p = new URLSearchParams(window.location.search);
+      const root = document.getElementById("protokoll-tekst");
+      if (!root) return;
+      const q = p.get("q");
+      if (q && normaliseeriParing(q).length >= OTSINGU_MIN_PIKKUS) {
+        const n = tostaEsile(root, q);
+        setOtsing({ q, vasteid: n });
+        const esimene = root.querySelector("mark.otsing-vaste");
+        if (keri && esimene && !window.location.hash) requestAnimationFrame(() => esimene.scrollIntoView({ block: "center" }));
+      }
+      const isikId = p.get("isik");
+      if (isikId && /^\d+$/.test(isikId)) {
+        const olemid = root.querySelectorAll<HTMLElement>(`[data-isik="${isikId}"]`);
+        olemid.forEach((o) => {
+          o.classList.add("olem-aktiivne");
+          const d = o.closest("details");
+          if (d) d.open = true;
+        });
+        const tip = olemid[0]?.dataset.tip ?? "";
+        const nimi = /— (?:tõenäoliselt )?([^(]+?) \(/.exec(tip)?.[1] ?? `isik ${isikId}`;
+        setIsik({ id: isikId, nimi: nimi.trim(), arv: olemid.length });
+        if (keri && olemid[0] && !window.location.hash && !q) requestAnimationFrame(() => olemid[0].scrollIntoView({ block: "center" }));
+      }
     }
-    const isikId = p.get("isik");
-    if (isikId && /^\d+$/.test(isikId)) {
-      const olemid = root.querySelectorAll<HTMLElement>(`[data-isik="${isikId}"]`);
-      olemid.forEach((o) => {
-        o.classList.add("olem-aktiivne");
-        const d = o.closest("details");
-        if (d) d.open = true;
-      });
-      const tip = olemid[0]?.dataset.tip ?? "";
-      const nimi = /— (?:tõenäoliselt )?([^(]+?) \(/.exec(tip)?.[1] ?? `isik ${isikId}`;
-      setIsik({ id: isikId, nimi: nimi.trim(), arv: olemid.length });
-      if (olemid[0] && !window.location.hash && !q) requestAnimationFrame(() => olemid[0].scrollIntoView({ block: "center" }));
-    }
+    hash(true);
+    paring(true);
+    const hashMuutus = () => hash(true);
+    const tekstUuendatud = () => {
+      hash(false);
+      paring(false);
+    };
+    window.addEventListener("hashchange", hashMuutus);
+    window.addEventListener("tlv-tekst-uuendatud", tekstUuendatud);
+    return () => {
+      window.removeEventListener("hashchange", hashMuutus);
+      window.removeEventListener("tlv-tekst-uuendatud", tekstUuendatud);
+    };
   }, []);
 
   // print
@@ -151,9 +160,11 @@ export default function ProtokollJuht({ viide }: { viide: ViiteBaas }) {
   );
 }
 
-/** Päringu vasted tekstisõlmede sees → <mark>; tagastab vastete arvu. Avab sisaldavad plokid. */
+/** Päringu vasted tekstisõlmede sees → <mark>; tagastab vastete arvu. Avab sisaldavad plokid. Varasemad märgid eemaldatakse. */
 function tostaEsile(root: HTMLElement, q: string): number {
   const qn = normaliseeriParing(q);
+  root.querySelectorAll("mark.otsing-vaste").forEach((m) => m.replaceWith(...Array.from(m.childNodes)));
+  root.normalize();
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const solmed: Text[] = [];
   let n: Node | null;
