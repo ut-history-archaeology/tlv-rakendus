@@ -91,6 +91,9 @@ mount'is, lehevahetus kirjutab `replaceState`. Pildid laetakse alles paneeli ava
 
 ### Protokollide nimekiri ja täistekstiotsing `/protokollid` (samm 4)
 
+> **3. etapist (UX-09) alates elab PT-01 nimekiri ja PT-02 otsing lehel `/koosolekud`**;
+> `/protokollid/` on ümbersuunaja. Allolev kirjeldus on 2. etapi seis (ajalugu).
+
 `KoosolekudVaade` on üldistatud (`variant="protokollid"`, `protokollid`, `killud` propid):
 diagrammita, veerud Päevakorrapunkte ja Sõnu, rida → `/protokollid/<id>/`, eksport kõigi
 `protokollid.csv` veergudega, "Minu vaade" `tlv-vaade-protokollid`; koosolekute lehel lisandub
@@ -122,11 +125,48 @@ Kontroll kildude peal 27.10.2026: "walimine" = "valimine" = 1 274 tabamust 205 p
   rakendub ainult serveris renderdatud (ajaloolisele) tekstile.
 - **PT-07** otsingus nimeüksuse tüübifilter (`?tyybid=PER,ORG`, kiip tabeli kohal; päringuta =
   kõik laused, kus tüüp esineb). **IN-04** globaalses otsingus kolmas kategooria "Protokollid"
-  lingiga `/protokollid/?q=…`.
+  lingiga `/protokollid/?q=…` (3. etapist `/koosolekud/?q=…#otsing`).
 
 Kuva eripärad: `tabelid` vahemikud ja `LIST OR TABULAR` lehed (`Leht.loend`, 1 596 lehte)
 säilitavad reavahetused (pre-wrap, monospace; E-09); kõne teise kõne sees (vahelehüüe)
 pesastatakse; K002 korduvate punktinumbrite id on `p<nr>-<jrk>` (L-03).
+
+## 3. etapp: kasutajaliidese parandused (`CLAUDE_CODE_ULESANNE_3.md`)
+
+- **Isiku leht** (UX-01…UX-05): päis siltidega `dl`-loendina (sündinud/surnud, alternatiivkujud,
+  Wikidata, arhiiviviited). **Isanime ja AKL ID-d ei kuvata ega ekspordita kusagil** (andmestiku
+  omaniku otsus 28.10.2026; väljad on alles `data/*.csv`-s ja ZIP-is) — see tühistab UX-01
+  vastavad osad, E3-02 ja K3-01. `wikidataQid()` (`lib/format.ts`) parandab Wikidata lingi.
+  Valimised: `isikuValimisedKoos()` + `ValimisedKoos` — üks kaart aasta kohta; kandidaadi- ja
+  valitu rea erinevad väärtused kuvatakse mõlemad, ülaindeks ¹/² viitab jaluse allikareale
+  (vt L-04). Aadressid: `isikuAadressidKoos()` (võti = tõst ja tühikud ühtlustatud; `elukoht_muu`
+  eraldi aadress). Sektsioonide järjekord E3-03 järgi.
+- **Liikmesmuutused sündmustena** (UX-06): `koosseisuSyndmused()` — kinnitamine (esimese koosoleku
+  liitumised ilma asendatavata, isik valitud), vahetus (ainult täpne paar `lahkumine` A→B +
+  `liitumine` B←A; 123 paari), ülejäänud 1:1; kõik `muutus_id`-d säilivad. Ahelaid läbi
+  `liitumine&lahkumine` (15 juhtu) ei paarita. Esimese koosoleku liitumised, mille isik puudub
+  valimistulemustest (8), saavad märke "ei olnud valimistulemustes" — kõik on asendajad.
+  `SyndmusteTabel` koosseisu ja isiku lehel; eksport "Lae alla" (sündmused) + "Toorread".
+- **Ajatelg** (UX-07): `LiikmeteAjatelg` — liikmete arv (`liikmeteArvuSeeria()`, erireegel 1;
+  ühepäevase liikme järel lisapunkt järgmisel päeval) ja üks marker kuupäeva kohta
+  (`paigutaMarkerid()`, lähemal kui 14 px → teine rida); klõps filtreerib sündmuste tabeli
+  (`KoosseisuMuutused`). **UX-08**: aktiivse jaotussegmendi raam, liikmete tabelis
+  "Staatus koosseisus".
+- **Koosolekud ja protokollid** (UX-09…UX-11): üks nimekiri `/koosolekud` (KO-01 diagramm,
+  kokkuklapitav otsinguplokk `#otsing`, avatud kui `?q=`/`?tyybid=`; veerg "Avamine";
+  rea klõps → koosoleku leht; "Minu vaade" `tlv-vaade-koosolekud`, vana `tlv-vaade-protokollid`
+  migreeritakse `useTabeliSeis` 3. argumendiga). `/protokollid/` → `protokollideNimekirjaUusUrl()`
+  (säilitab `location.search`, lisab `#otsing`). Detaillehtedel ühine `KoosolekuPais` +
+  `ProtokolliSakid` (`?isik=` kantakse üle, protokolli sakil prefetch väljas) ja eelmine/järgmine
+  (`naaberKoosolekud()`; protokollilehel jäetakse protokollita koosolekud vahele). Koosoleku lehe
+  päevakorras punkti esimene lause (`punktiEelvaade()`, ≤ 160 märki).
+- Kontroll 28.10.2026 (headless Chrome `out/`-i peal): isikud 1, 2, 6, 12, 40, 217; koosseis
+  1927–1929 (34 sündmust, 07.02.1927 üks marker "6", klõps → 6 rida + kiip); `/koosolekud/?q=walimine`
+  1 274 tabamust 205 protokollis; `/protokollid/?q=walimine&algus=1930-01-01` → `/koosolekud/…#otsing`;
+  338 rida, K336 "protokoll puudub"; K178 päis/sakid mõlemal lehel, `/protokollid/K178/?lk=360`;
+  Lighthouse ligipääsetavus: koosseis 1927–1929 ja isik 1 96, `/koosolekud` 100, K178 koosolek 100,
+  protokoll 97. Build: 338 + 337 + 404 + 9 lehte + `/protokollid/`; `out/` 767 MB.
+- Viidete ühtne vormistus (UX-12) ootab omaniku juhist (`VIITED.md`); seni toorkujud.
 
 ## Teadlikud piirangud (vt lähteülesanded, 2. etapi ptk 13)
 

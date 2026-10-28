@@ -15,7 +15,9 @@ export interface SortVeerg {
  */
 export function useTabeliSeis(
   vaikeFiltrid: Record<string, string>,
-  storageKey: string
+  storageKey: string,
+  /** varasemad "Minu vaade" võtmed, mis migreeritakse üks kord `storageKey` alla (UX-09) */
+  vanadVotmed: string[] = []
 ) {
   const [filtrid, setFiltridRaw] = useState<Record<string, string>>(vaikeFiltrid);
   const [sort, setSort] = useState<SortVeerg[]>([]);
@@ -48,6 +50,20 @@ export function useTabeliSeis(
     }
     const l = Number(p.get("leht"));
     if (l > 1) setLeht(l);
+    try {
+      if (localStorage.getItem(storageKey) === null) {
+        for (const vana of vanadVotmed) {
+          const v = localStorage.getItem(vana);
+          if (v !== null) {
+            localStorage.setItem(storageKey, v);
+            break;
+          }
+        }
+      }
+      for (const vana of vanadVotmed) localStorage.removeItem(vana);
+    } catch {
+      /* localStorage pole saadaval */
+    }
     setSalvestatudOlemas(localStorage.getItem(storageKey) !== null);
     setLaetud(true);
   }, [storageKey]);
@@ -64,7 +80,7 @@ export function useTabeliSeis(
     }
     if (leht > 1) p.set("leht", String(leht));
     const qs = p.toString();
-    const url = window.location.pathname + (qs ? "?" + qs : "");
+    const url = window.location.pathname + (qs ? "?" + qs : "") + window.location.hash;
     window.history.replaceState(null, "", url);
   }, [filtrid, sort, leht, laetud]);
 

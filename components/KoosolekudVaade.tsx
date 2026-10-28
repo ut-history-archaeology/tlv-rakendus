@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import {
   Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from "recharts";
@@ -35,16 +36,10 @@ interface Props {
   juhatajaValikud: JuhatajaValik[];
   /** Ekspordi lisaväljad (kuupaev_txt, protokolli algus) koosoleku ID järgi. */
   ekstra: Record<string, { kuupaev_txt: string; protokolli_algus_txt: string }>;
-  /** data/protokollid.csv read koosoleku ID järgi (IN-03 veerg; PT-01 lisaveerud ja eksport). */
-  protokollid?: Record<string, ProtokolliRida>;
-  /**
-   * "koosolekud" (vaikimisi): KO-01 diagramm, rida → /koosolekud/<id>/.
-   * "protokollid" (PT-01): diagrammita, täistekstiotsing tabeli kohal, veerud Päevakorrapunkte + Sõnu,
-   * rida → /protokollid/<id>/, eksport kõigi protokollid.csv veergudega, "Minu vaade" tlv-vaade-protokollid.
-   */
-  variant?: "koosolekud" | "protokollid";
-  /** olemasolevad otsingukillud (aastad) — variant "protokollid" */
-  killud?: number[];
+  /** data/protokollid.csv read koosoleku ID järgi (ainult failiga protokollid). */
+  protokollid: Record<string, ProtokolliRida>;
+  /** olemasolevad täistekstiotsingu killud (aastad) */
+  killud: number[];
 }
 
 const PROTOKOLLI_VEERUD: { key: keyof ProtokolliRida; pealkiri: string }[] = [
@@ -68,17 +63,33 @@ const PROTOKOLLI_VEERUD: { key: keyof ProtokolliRida; pealkiri: string }[] = [
   { key: "markus", pealkiri: "Märkus" },
 ];
 
+/**
+ * UX-09: koosolekute ja protokollide ühine nimekiri (endised PT-01 ja KO-02): KO-01 diagramm,
+ * kokkuklapitav täistekstiotsing (PT-02), tabel kõigi koosolekutega; rida → koosoleku leht.
+ */
 export default function KoosolekudVaade({
-  read, juhatajaValikud, ekstra, protokollid = {}, variant = "koosolekud", killud = [],
+  read, juhatajaValikud, ekstra, protokollid, killud,
 }: Props) {
-  const onProtokollid = variant === "protokollid";
+  const router = useRouter();
   const seis = useTabeliSeis(
-    onProtokollid
-      ? { q: "", tyybid: "", aasta: "", algus: "", lopp: "", juhataja: "", vorm: "" }
-      : { aasta: "", algus: "", lopp: "", juhataja: "", vorm: "" },
-    onProtokollid ? "tlv-vaade-protokollid" : "tlv-vaade-koosolekud"
+    { q: "", tyybid: "", aasta: "", algus: "", lopp: "", juhataja: "", vorm: "" },
+    "tlv-vaade-koosolekud",
+    ["tlv-vaade-protokollid"]
   );
-  const reaLink = (id: string) => (onProtokollid ? `/protokollid/${id}/` : `/koosolekud/${id}/`);
+  const [otsingAvatud, setOtsingAvatud] = useState(false);
+
+  // Otsinguplokk avatakse, kui URL-is on päring/tüübid või ankur #otsing
+  useEffect(() => {
+    if (!seis.laetud) return;
+    if (seis.filtrid.q || seis.filtrid.tyybid || window.location.hash === "#otsing") {
+      setOtsingAvatud(true);
+      if (window.location.hash === "#otsing") {
+        requestAnimationFrame(() => document.getElementById("otsing")?.scrollIntoView());
+      }
+    }
+    // ainult esmasel laadimisel
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seis.laetud]);
 
   const filtreeritud = useMemo(() => {
     return read.filter((r) => {
@@ -127,7 +138,6 @@ export default function KoosolekudVaade({
             case "koosseis_arv": return r.koosseis_arv;
             case "paevakorrapunkte": return protokollid[r.koosolek_id]?.paevakorrapunkte ?? null;
             case "sonu": return protokollid[r.koosolek_id]?.sonu ?? null;
-            case "protokoll": return protokollid[r.koosolek_id]?.fail ? 1 : 0;
             default: return null;
           }
         }
@@ -159,18 +169,17 @@ export default function KoosolekudVaade({
     ...(valitudJuhataja
       ? [{ key: "j", silt: `Juhataja: ${valitudJuhataja.nimi}`, eemalda: () => seis.setFilter("juhataja", "") }]
       : []),
-    ...(onProtokollid && seis.filtrid.q
+    ...(seis.filtrid.q
       ? [{ key: "q", silt: `Otsing: „${seis.filtrid.q}“`, eemalda: () => seis.setFilter("q", "") }]
       : []),
-    ...(onProtokollid && seis.filtrid.tyybid
+    ...(seis.filtrid.tyybid
       ? [{ key: "t", silt: `Tüüp: ${seis.filtrid.tyybid.split(",").map((t) => OLEMI_NIMED[t as OlemiTyyp] ?? t).join(", ")}`, eemalda: () => seis.setFilter("tyybid", "") }]
       : []),
   ];
 
   const ekspordiRead = sorditud.map((r) => ({
-    ...(onProtokollid
-      ? Object.fromEntries(PROTOKOLLI_VEERUD.map((v) => [v.key, protokollid[r.koosolek_id]?.[v.key] ?? null]))
-      : { protokoll_olemas: protokollid[r.koosolek_id]?.fail ? "jah" : "ei" }),
+    ...Object.fromEntries(PROTOKOLLI_VEERUD.map((v) => [v.key, protokollid[r.koosolek_id]?.[v.key] ?? null])),
+    protokoll_olemas: protokollid[r.koosolek_id]?.fail ? "jah" : "ei",
     koosolek_id: r.koosolek_id,
     kuupaev: r.kuupaev,
     kuupaev_lopp: r.kuupaev_lopp,
@@ -187,19 +196,7 @@ export default function KoosolekudVaade({
 
   return (
     <div>
-      {onProtokollid && (
-        <TaistekstOtsing
-          q={seis.filtrid.q}
-          setQ={(q) => seis.setFilter("q", q)}
-          algus={seis.filtrid.algus}
-          lopp={seis.filtrid.lopp}
-          killud={killud}
-          tyybid={seis.filtrid.tyybid ?? ""}
-          setTyybid={(t) => seis.setFilter("tyybid", t)}
-        />
-      )}
       {/* KO-01 */}
-      {!onProtokollid && (
       <section aria-labelledby="sagedus" className="mb-6">
         <h2 id="sagedus" className="mb-1 text-lg font-semibold">
           Koosolekute sagedus aastate kaupa
@@ -243,7 +240,34 @@ export default function KoosolekudVaade({
           ülesandeis, pidulik, määramata). Sama info on all olevas tabelis.
         </p>
       </section>
-      )}
+
+      {/* PT-02 täistekstiotsing kokkuklapitava plokina (UX-09) */}
+      <details
+        id="otsing"
+        open={otsingAvatud}
+        onToggle={(e) => setOtsingAvatud((e.target as HTMLDetailsElement).open)}
+        className="mb-6 scroll-mt-20 rounded-lg border border-stone-200 bg-stone-50"
+      >
+        <summary className="cursor-pointer select-none px-4 py-2.5 font-semibold">
+          Otsi protokollide tekstist
+          <span className="ml-2 text-xs font-normal text-stone-500">
+            {Object.keys(protokollid).length} protokolli täistekst
+          </span>
+        </summary>
+        {otsingAvatud && (
+          <div className="px-2 pb-2">
+            <TaistekstOtsing
+              q={seis.filtrid.q}
+              setQ={(q) => seis.setFilter("q", q)}
+              algus={seis.filtrid.algus}
+              lopp={seis.filtrid.lopp}
+              killud={killud}
+              tyybid={seis.filtrid.tyybid ?? ""}
+              setTyybid={(t) => seis.setFilter("tyybid", t)}
+            />
+          </div>
+        )}
+      </details>
 
       {/* KO-03 + KO-05 filtrid */}
       <div className="mb-3 flex flex-wrap items-end gap-3">
@@ -307,7 +331,7 @@ export default function KoosolekudVaade({
             read={ekspordiRead}
             veerud={[
               { key: "koosolek_id", pealkiri: "koosolek_id" },
-              ...(onProtokollid ? [] : [{ key: "protokoll_olemas", pealkiri: "Protokolli täistekst olemas" }]),
+              { key: "protokoll_olemas", pealkiri: "Protokolli täistekst olemas" },
               { key: "kuupaev", pealkiri: "Kuupäev" },
               { key: "kuupaev_lopp", pealkiri: "Lõppkuupäev" },
               { key: "nadalapaev", pealkiri: "Nädalapäev" },
@@ -319,10 +343,10 @@ export default function KoosolekudVaade({
               { key: "kohal_arv_2paev", pealkiri: "Kohal (2. päev)" },
               { key: "kuupaev_txt", pealkiri: "Kuupäev (protokolli tekst)" },
               { key: "protokolli_algus_txt", pealkiri: "Protokolli algus (OCR)" },
-              ...(onProtokollid ? PROTOKOLLI_VEERUD.map((v) => ({ key: v.key, pealkiri: v.pealkiri })) : []),
+              ...PROTOKOLLI_VEERUD.map((v) => ({ key: v.key, pealkiri: v.pealkiri })),
             ]}
             meta={{
-              failinimi: onProtokollid ? "tlv-protokollid" : "tlv-koosolekud",
+              failinimi: "tlv-koosolekud",
               filtrid: Object.fromEntries(kiibid.map((k) => [k.key, k.silt])),
             }}
           />
@@ -339,23 +363,26 @@ export default function KoosolekudVaade({
             <SortPais veerg="nadalapaev" pealkiri="Nädalapäev" sort={seis.sort} sordi={seis.sordi} />
             <SortPais veerg="vorm" pealkiri="Vorm" sort={seis.sort} sordi={seis.sordi} />
             <SortPais veerg="juhataja" pealkiri="Juhataja" sort={seis.sort} sordi={seis.sordi} />
-            <SortPais veerg="kohal_arv" pealkiri="Kohalolnud" sort={seis.sort} sordi={seis.sordi} />
+            <SortPais veerg="kohal_arv" pealkiri="Kohal" sort={seis.sort} sordi={seis.sordi} />
             <SortPais veerg="koosseis_arv" pealkiri="Koosseisu suurus" sort={seis.sort} sordi={seis.sordi} />
-            {onProtokollid ? (
-              <>
-                <SortPais veerg="paevakorrapunkte" pealkiri="Päevakorrapunkte" sort={seis.sort} sordi={seis.sordi} />
-                <SortPais veerg="sonu" pealkiri="Sõnu" sort={seis.sort} sordi={seis.sordi} />
-              </>
-            ) : (
-              <SortPais veerg="protokoll" pealkiri="Protokoll" sort={seis.sort} sordi={seis.sordi} />
-            )}
+            <SortPais veerg="paevakorrapunkte" pealkiri="Päevakorrapunkte" sort={seis.sort} sordi={seis.sordi} />
+            <SortPais veerg="sonu" pealkiri="Sõnu" sort={seis.sort} sordi={seis.sordi} />
+            <th scope="col" className="px-3 py-2 text-left font-semibold">Avamine</th>
           </tr>
         </thead>
         <tbody>
           {nahtavad.map((r) => (
-            <tr key={r.koosolek_id} className="border-b border-stone-100 hover:bg-stone-50">
+            <tr
+              key={r.koosolek_id}
+              onClick={(e) => {
+                // rea klõps → koosoleku leht (E3-04); lingid ja nupud toimivad ise
+                if ((e.target as HTMLElement).closest("a, button")) return;
+                router.push(`/koosolekud/${r.koosolek_id}/`);
+              }}
+              className="cursor-pointer border-b border-stone-100 hover:bg-stone-50"
+            >
               <td className="whitespace-nowrap px-3 py-1.5 font-medium">
-                <Link href={reaLink(r.koosolek_id)} className="hover:underline">
+                <Link href={`/koosolekud/${r.koosolek_id}/`} className="hover:underline">
                   {kuupaevLyhike(r.kuupaev)}
                   {r.kuupaev_lopp && <>–{kuupaevLyhike(r.kuupaev_lopp)}</>}
                 </Link>
@@ -389,30 +416,39 @@ export default function KoosolekudVaade({
                 {r.kohal_arv_2paev !== null && ` / ${r.kohal_arv_2paev}`}
               </td>
               <td className="px-3 py-1.5 text-center">{r.koosseis_arv ?? "—"}</td>
-              {onProtokollid ? (
-                <>
-                  <td className="px-3 py-1.5 text-center">{protokollid[r.koosolek_id]?.paevakorrapunkte ?? "—"}</td>
-                  <td className="px-3 py-1.5 text-right tabular-nums">
-                    {protokollid[r.koosolek_id]?.sonu?.toLocaleString("et") ?? "—"}
-                  </td>
-                </>
-              ) : (
-                <td className="px-3 py-1.5 text-center">
-                  {protokollid[r.koosolek_id]?.fail ? (
-                    <Link href={`/protokollid/${r.koosolek_id}/`} className="text-blue-700 hover:underline" title="Protokolli täistekst">
-                      täistekst →
-                    </Link>
-                  ) : (
-                    <span className="text-stone-400" title="Protokolli täistekst puudub">—</span>
-                  )}
-                </td>
-              )}
+              <td className="px-3 py-1.5 text-center">{protokollid[r.koosolek_id]?.paevakorrapunkte ?? "—"}</td>
+              <td className="px-3 py-1.5 text-right tabular-nums">
+                {protokollid[r.koosolek_id]?.sonu?.toLocaleString("et") ?? "—"}
+              </td>
+              <td className="whitespace-nowrap px-3 py-1.5 text-xs">
+                <Link
+                  href={`/koosolekud/${r.koosolek_id}/`}
+                  className="mr-3 text-blue-700 underline decoration-blue-200 underline-offset-2 hover:decoration-blue-700"
+                  aria-label={`Koosolek ${kuupaevLyhike(r.kuupaev)}`}
+                >
+                  koosolek
+                </Link>
+                {protokollid[r.koosolek_id]?.fail ? (
+                  <Link
+                    href={`/protokollid/${r.koosolek_id}/`}
+                    prefetch={false}
+                    className="text-blue-700 underline decoration-blue-200 underline-offset-2 hover:decoration-blue-700"
+                    aria-label={`Protokoll ${kuupaevLyhike(r.kuupaev)}`}
+                  >
+                    protokoll
+                  </Link>
+                ) : (
+                  <span className="cursor-help text-stone-400" title="protokolli täistekst puudub">
+                    protokoll puudub
+                  </span>
+                )}
+              </td>
             </tr>
           ))}
           {nahtavad.length === 0 && (
             <tr>
-              <td colSpan={onProtokollid ? 8 : 7} className="px-3 py-6 text-center text-stone-500">
-                Filtritele vastavaid {onProtokollid ? "protokolle" : "koosolekuid"} ei leitud.
+              <td colSpan={9} className="px-3 py-6 text-center text-stone-500">
+                Filtritele vastavaid koosolekuid ei leitud.
               </td>
             </tr>
           )}

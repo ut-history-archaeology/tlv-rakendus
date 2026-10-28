@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import { loeAndmestik } from "@/lib/data";
 import { koosolekuRead } from "@/lib/derive";
 import { taisnimi } from "@/lib/format";
+import { loeProtokollideMeta } from "@/lib/protokollid/loe";
+import { ABI } from "@/lib/abitekstid";
+import HelpTip from "@/components/HelpTip";
 import KoosolekudVaade from "@/components/KoosolekudVaade";
 
-export const metadata: Metadata = { title: "Koosolekud" };
+export const metadata: Metadata = { title: "Koosolekud ja protokollid" };
 
 export default function KoosolekudLeht() {
   const andmed = loeAndmestik();
@@ -41,17 +44,24 @@ export default function KoosolekudLeht() {
     ])
   );
 
+  const protokollid = andmed.protokollid.filter((p) => p.fail);
+  const killud = loeProtokollideMeta()?.killud ?? Array.from({ length: 24 }, (_, i) => 1918 + i);
+
   return (
     <div>
-      <h1 className="mb-1 text-2xl font-bold">Koosolekud</h1>
+      <h1 className="mb-1 text-2xl font-bold">Koosolekud ja protokollid</h1>
       <p className="mb-4 text-sm text-stone-600">
-        {read.length} protokollitud koosolekut aastatest 1918–1941.
+        {read.length} protokollitud koosolekut aastatest 1918–1941; {protokollid.length} protokolli
+        täistekst koos arhiivi originaaliga. Tekst, päevakorrapunktid, nimeüksused ja kõned on
+        tuvastatud automaatselt.
+        <HelpTip tekst={ABI.automaatmargendus} />
       </p>
       <KoosolekudVaade
         read={read}
         juhatajaValikud={juhatajaValikud}
         ekstra={ekstra}
-        protokollid={Object.fromEntries(andmed.protokollid.filter((p) => p.fail).map((p) => [p.koosolek_id, p]))}
+        protokollid={Object.fromEntries(protokollid.map((p) => [p.koosolek_id, p]))}
+        killud={killud}
       />
     </div>
   );

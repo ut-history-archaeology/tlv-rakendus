@@ -10,8 +10,7 @@ const LEHED = [
   { href: "/", nimi: "Avaleht" },
   { href: "/isikud/", nimi: "Isikud" },
   { href: "/koosseisud/", nimi: "Koosseisud" },
-  { href: "/koosolekud/", nimi: "Koosolekud" },
-  { href: "/protokollid/", nimi: "Protokollid" },
+  { href: "/koosolekud/", nimi: "Koosolekud ja protokollid" },
 ];
 
 export default function Nav({ indeks }: { indeks: OtsinguIndeks }) {
@@ -20,6 +19,8 @@ export default function Nav({ indeks }: { indeks: OtsinguIndeks }) {
 
   function aktiivne(href: string) {
     if (href === "/") return pathname === "/";
+    // protokollilehed kuuluvad menüüpunkti "Koosolekud ja protokollid" alla (UX-09)
+    if (href === "/koosolekud/" && pathname.startsWith("/protokollid")) return true;
     return pathname.startsWith(href.replace(/\/$/, ""));
   }
 

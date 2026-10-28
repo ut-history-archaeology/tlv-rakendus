@@ -130,8 +130,8 @@ export default function TaistekstOtsing({ q, setQ, algus, lopp, killud, tyybid, 
   const lyhike = q.trim().length > 0 && !onKehtivParing(q);
 
   return (
-    <section aria-labelledby="otsing" className="mb-6 rounded-lg border border-stone-200 bg-white p-4">
-      <h2 id="otsing" className="mb-1 text-lg font-semibold">Täistekstiotsing protokollidest</h2>
+    <section aria-labelledby="otsing-pealkiri" className="rounded-lg border border-stone-200 bg-white p-4">
+      <h2 id="otsing-pealkiri" className="sr-only">Täistekstiotsing protokollidest</h2>
       <p className="mb-2 text-xs text-stone-500">
         Tekst on OCR-i ja automaatse normaliseeringu tulemus; osa sõnu võib olla valesti loetud.
         Otsing on tõstu-, diakriitika- ja w/v-tundetu („walimine“ = „valimine“); tulemused kuvatakse

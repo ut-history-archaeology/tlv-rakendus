@@ -68,10 +68,10 @@ export default function GlobalSearch({ indeks }: { indeks: OtsinguIndeks }) {
           {otsing.trim().length >= 3 && (
             <div>
               <p className="border-b border-stone-100 bg-stone-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-stone-500">
-                Protokollid
+                Protokollide täistekst
               </p>
               <Link
-                href={`/protokollid/?q=${encodeURIComponent(otsing.trim())}`}
+                href={`/koosolekud/?q=${encodeURIComponent(otsing.trim())}#otsing`}
                 onClick={() => setAvatud(false)}
                 className="block px-3 py-1.5 text-sm hover:bg-stone-100"
               >

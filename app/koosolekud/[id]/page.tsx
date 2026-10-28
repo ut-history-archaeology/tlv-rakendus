@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
-import { tuletatudKohalolijad } from "@/lib/derive";
-import { koosseisuVarv } from "@/lib/colors";
+import { naaberKoosolekud, tuletatudKohalolijad } from "@/lib/derive";
+import { loeProtokollAndmed } from "@/lib/protokollid/loe";
+import { punktiEelvaade } from "@/lib/protokollid/eelvaade";
 import { kuupaevEesti, taisnimi } from "@/lib/format";
 import { ABI } from "@/lib/abitekstid";
 import HelpTip from "@/components/HelpTip";
 import ProfiilTegevused from "@/components/ProfiilTegevused";
+import KoosolekuPais from "@/components/KoosolekuPais";
 
 export function generateStaticParams() {
   return loeAndmestik().koosolekud.map((k) => ({ id: k.koosolek_id }));
@@ -45,11 +47,17 @@ export default async function KoosolekuLeht({
   tuletatud.sort((a, b) => a.nimi.localeCompare(b.nimi, "et"));
 
   const on1940 = koosolek.koosseis_id === "1940-1941";
+  const naabrid = naaberKoosolekud(andmed, id);
   const protokoll = andmed.protokollid.find((p) => p.koosolek_id === id && p.fail) ?? null;
   // KO-11: päevakord (data/paevakorrapunktid.csv); korduva nr puhul (K002) on ankur p<nr>-<jrk>
   const paevakord = andmed.paevakord.filter((r) => r.koosolek_id === id).sort((a, b) => a.jrk - b.jrk);
   const nrLoend = new Map<number, number>();
   for (const r of paevakord) nrLoend.set(r.nr, (nrLoend.get(r.nr) ?? 0) + 1);
+  // UX-11: punkti esimene lause halli eelvaatena (build-ajal protokolli JSON-ist)
+  const pAndmed = protokoll ? loeProtokollAndmed(id) : null;
+  const eelvaated = new Map<number, string>(
+    (pAndmed?.paevakord ?? []).map((pk) => [pk.jrk, punktiEelvaade(pAndmed!.tekst, pAndmed!.laused, pk)])
+  );
   const punktiAnkur = (r: (typeof paevakord)[number]) => ((nrLoend.get(r.nr) ?? 0) > 1 ? `p${r.nr}-${r.jrk}` : `p${r.nr}`);
 
   const jsonEksport = {
@@ -106,66 +114,24 @@ export default async function KoosolekuLeht({
   }
 
   return (
-    <div className="space-y-8">
-      <nav aria-label="Asukoht" className="no-print text-sm text-stone-500">
-        <Link href="/koosolekud/" className="hover:underline">← Kõik koosolekud</Link>
-      </nav>
-
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">
-            Koosolek {kuupaevEesti(koosolek.kuupaev)}
-            {koosolek.kuupaev_lopp && <>–{kuupaevEesti(koosolek.kuupaev_lopp)}</>}
-          </h1>
-          <dl className="mt-3 grid gap-x-8 gap-y-1 text-sm sm:grid-cols-2">
-            <div>
-              <dt className="inline font-medium">Nädalapäev: </dt>
-              <dd className="inline">{koosolek.nadalapaev}</dd>
-            </div>
-            <div>
-              <dt className="inline font-medium">Vorm: </dt>
-              <dd className="inline">
-                {koosolek.vorm}
-                {koosolek.vorm === "erakorraline" && <HelpTip tekst={ABI.erakorraline} />}
-                {koosolek.vorm === "linnavalitsus linnavolikogu ülesandeis" && (
-                  <HelpTip tekst={ABI.linnavalitsusVolikoguYlesandeis} />
-                )}
-              </dd>
-            </div>
-            <div>
-              <dt className="inline font-medium">Koosseis: </dt>
-              <dd className="inline">
-                <Link
-                  href={`/koosseisud/${koosolek.koosseis_id}/`}
-                  className="inline-flex items-center gap-1.5 hover:underline"
-                >
-                  <span
-                    className="inline-block h-2.5 w-2.5 rounded-sm"
-                    style={{ backgroundColor: koosseisuVarv(koosolek.koosseis_id) }}
-                    aria-hidden
-                  />
-                  {koosolek.koosseis_id}
-                </Link>
-              </dd>
-            </div>
-            <div>
-              <dt className="inline font-medium">Juhataja: </dt>
-              <dd className="inline">
-                {juhatajad.length === 0 && (koosolek.juhataja || "—")}
-                {juhatajad.map((j, i) => (
-                  <span key={i}>
-                    {i > 0 && "; "}
-                    {j.isik_id !== null ? (
-                      <Link href={`/isikud/${j.isik_id}/`} className="text-blue-700 hover:underline">
-                        {j.juhataja_nimi}
-                      </Link>
-                    ) : (
-                      j.juhataja_nimi
-                    )}
-                  </span>
-                ))}
-              </dd>
-            </div>
+    <div className="space-y-6">
+      <KoosolekuPais
+        koosolek={koosolek}
+        juhatajad={juhatajad}
+        protokoll={protokoll}
+        aktiivne="koosolek"
+        eelmine={naabrid.eelmine}
+        jargmine={naabrid.jargmine}
+        arhiiviviide={
+          protokoll && (
+            <>
+              Rahvusarhiiv, {protokoll.arhiiviviide}, lk {protokoll.esimene_lk}
+              {protokoll.viimane_lk && protokoll.viimane_lk !== protokoll.esimene_lk && <>–{protokoll.viimane_lk}</>}
+            </>
+          )
+        }
+        lisaRead={
+          <>
             {koosolek.koosseis_arv !== null && (
               <div>
                 <dt className="inline font-medium">Koosseisu suurus: </dt>
@@ -176,31 +142,17 @@ export default async function KoosolekuLeht({
               <dt className="inline font-medium">Kohalolnuid protokolli järgi: </dt>
               <dd className="inline">
                 {koosolek.kohal_arv ?? "—"}
-                {koosolek.kohal_arv_2paev !== null && (
-                  <> (2. päeval {koosolek.kohal_arv_2paev})</>
-                )}
+                {koosolek.kohal_arv_2paev !== null && <> (2. päeval {koosolek.kohal_arv_2paev})</>}
               </dd>
             </div>
             <div>
               <dt className="inline font-medium">Protokollis nimetatud puudujaid: </dt>
               <dd className="inline">{puudub.length}</dd>
             </div>
-            <div>
-              <dt className="inline font-medium">Protokoll: </dt>
-              <dd className="inline">
-                {protokoll ? (
-                  <Link href={`/protokollid/${id}/`} className="text-blue-700 hover:underline">
-                    Täistekst →
-                  </Link>
-                ) : (
-                  <span className="text-stone-500">protokolli täistekst puudub</span>
-                )}
-              </dd>
-            </div>
-          </dl>
-        </div>
-        <ProfiilTegevused profiil={jsonEksport} failinimi={`tlv-koosolek-${id}`} />
-      </header>
+          </>
+        }
+        tegevused={<ProfiilTegevused profiil={jsonEksport} failinimi={`tlv-koosolek-${id}`} />}
+      />
 
       {on1940 && (
         <p className="rounded-md bg-amber-50 p-3 text-sm text-amber-900">
@@ -267,16 +219,21 @@ export default async function KoosolekuLeht({
               {paevakord.map((r) => (
                 <li key={r.jrk} className="flex gap-2">
                   <span className="w-7 shrink-0 text-right text-stone-500">{r.nr}.</span>
-                  <Link href={`/protokollid/${id}/#${punktiAnkur(r)}`} className="text-blue-700 hover:underline">
-                    {r.pealkiri || "(pealkirjata)"}
-                  </Link>
+                  <span className="min-w-0">
+                    <Link href={`/protokollid/${id}/#${punktiAnkur(r)}`} prefetch={false} className="text-blue-700 hover:underline">
+                      {r.pealkiri || "(pealkirjata)"}
+                    </Link>
+                    {eelvaated.get(r.jrk) && (
+                      <span className="block text-xs text-stone-500">{eelvaated.get(r.jrk)}</span>
+                    )}
+                  </span>
                 </li>
               ))}
             </ol>
           ) : (
             <p className="text-sm text-stone-600">
               Päevakorrapunkte ei ole eristatud; vt{" "}
-              <Link href={`/protokollid/${id}/`} className="text-blue-700 hover:underline">protokolli täistekst</Link>.
+              <Link href={`/protokollid/${id}/`} prefetch={false} className="text-blue-700 hover:underline">protokolli täistekst</Link>.
             </p>
           )}
           <p className="mt-1 text-xs text-stone-500">Pealkirjad on protokolli tekstist eraldatud automaatselt.</p>

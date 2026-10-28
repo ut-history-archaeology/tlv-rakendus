@@ -736,3 +736,17 @@ export function liikmeteArvuSeeria(
     arv: liikmedKuupaeval(andmed.valimised, andmed.muutused, koosseisId, kuupaev).size,
   }));
 }
+
+/** UX-10: eelmine/järgmine koosolek kronoloogiliselt (kuupaev, siis koosolek_id); `sobib` piirab valikut. */
+export function naaberKoosolekud(
+  andmed: Andmestik,
+  id: string,
+  sobib: (koosolekId: string) => boolean = () => true
+): { eelmine: Koosolek | null; jargmine: Koosolek | null } {
+  const jada = andmed.koosolekud
+    .filter((k) => k.koosolek_id === id || sobib(k.koosolek_id))
+    .sort((a, b) => a.kuupaev.localeCompare(b.kuupaev) || a.koosolek_id.localeCompare(b.koosolek_id));
+  const i = jada.findIndex((k) => k.koosolek_id === id);
+  if (i < 0) return { eelmine: null, jargmine: null };
+  return { eelmine: jada[i - 1] ?? null, jargmine: jada[i + 1] ?? null };
+}

@@ -11,7 +11,10 @@ export default function Avaleht() {
   const statistika = [
     { arv: andmed.koosseisud.length, silt: "koosseisu", href: "/koosseisud/" },
     { arv: andmed.isikud.length, silt: "isikut", href: "/isikud/" },
-    { arv: andmed.koosolekud.length, silt: "koosolekut", href: "/koosolekud/" },
+    {
+      arv: andmed.koosolekud.length, silt: "koosolekut", href: "/koosolekud/",
+      alamsilt: `${andmed.protokollid.filter((p) => p.fail).length} protokolli täistekstiga`,
+    },
     { arv: andmed.muutused.length, silt: "liikmesmuutust", href: "/koosseisud/" },
   ];
 
@@ -46,6 +49,9 @@ export default function Avaleht() {
           >
             <span className="block font-serif text-3xl font-bold">{s.arv}</span>
             <span className="text-sm text-stone-600">{s.silt}</span>
+            {"alamsilt" in s && s.alamsilt && (
+              <span className="mt-0.5 block text-xs text-stone-500">{s.alamsilt}</span>
+            )}
           </Link>
         ))}
       </section>
@@ -65,10 +71,10 @@ export default function Avaleht() {
           href="/koosolekud/"
           className="rounded-lg border border-stone-200 bg-white p-5 transition-shadow hover:shadow-md"
         >
-          <h3 className="text-lg font-semibold">Koosolekud →</h3>
+          <h3 className="text-lg font-semibold">Koosolekud ja protokollid →</h3>
           <p className="mt-1 text-sm text-stone-600">
             {andmed.koosolekud.length} protokollitud koosolekut aastatest
-            1918–1941: juhatajad, osavõtjad, vormid.
+            1918–1941: juhatajad, osavõtjad, vormid ning protokollide täistekst ja otsing.
           </p>
         </Link>
         <Link
