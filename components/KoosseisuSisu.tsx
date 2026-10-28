@@ -15,11 +15,12 @@ interface Props {
   /** "nimekiri" või "ringkond" — pealkirja ja siltide jaoks. */
   jaotuseAlus: "nimekiri" | "ringkond";
   jaotuseSelgitus?: string;
+  staatus?: Record<number, { tekst: string; voti: string }>;
 }
 
 /** KS-03 + KS-04: jaotusdiagramm, mille segmendiklõps filtreerib liikmete tabelit. */
 export default function KoosseisuSisu({
-  koosseisId, read, jaotus, jaotuseAlus, jaotuseSelgitus,
+  koosseisId, read, jaotus, jaotuseAlus, jaotuseSelgitus, staatus,
 }: Props) {
   const [valitud, setValitud] = useState<string | null>(null);
   const valitudSegment = jaotus.find((j) => j.nimi === valitud);
@@ -62,6 +63,7 @@ export default function KoosseisuSisu({
           koosseisud={[]}
           eelKoosseis={koosseisId}
           naitaAadressi
+          staatus={staatus}
           valisFilter={
             valitudSegment
               ? {

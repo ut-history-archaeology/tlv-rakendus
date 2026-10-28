@@ -706,3 +706,33 @@ export function isikuSyndmused(andmed: Andmestik, isikId: number): Syndmus[] {
     .filter((s) => syndmuseIsikud(s).includes(isikId))
     .sort((a, b) => a.kuupaev.localeCompare(b.kuupaev));
 }
+
+/**
+ * UX-07: liikmete arv ajas — väärtus koosseisu algusel, igal sündmuse kuupäeval ja lõpus
+ * (erireegel 1, `liikmedKuupaeval`). Kinnitamine arvu ei muuda: valitud on juba algushulgas.
+ */
+export function liikmeteArvuSeeria(
+  andmed: Andmestik,
+  koosseisId: string,
+  algus: string,
+  lopp: string
+): { kuupaev: string; arv: number }[] {
+  const kuupaevad = new Set<string>([algus]);
+  for (const m of andmed.muutused) {
+    if (m.koosseis_id === koosseisId && m.kuupaev && m.kuupaev >= algus && m.kuupaev <= lopp) {
+      kuupaevad.add(m.kuupaev);
+      // liitumine&lahkumine: liige ainult sel päeval → järgmisel päeval arv taastub
+      if (m.liik === "liitumine&lahkumine" && m.kuupaev.length === 10) {
+        const jargmine = new Date(m.kuupaev + "T00:00:00Z");
+        jargmine.setUTCDate(jargmine.getUTCDate() + 1);
+        const iso = jargmine.toISOString().slice(0, 10);
+        if (iso <= lopp) kuupaevad.add(iso);
+      }
+    }
+  }
+  kuupaevad.add(lopp);
+  return [...kuupaevad].sort().map((kuupaev) => ({
+    kuupaev,
+    arv: liikmedKuupaeval(andmed.valimised, andmed.muutused, koosseisId, kuupaev).size,
+  }));
+}

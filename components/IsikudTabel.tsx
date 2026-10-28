@@ -26,6 +26,8 @@ interface Props {
   valisFilter?: { silt: string; isikud: number[] } | null;
   eemaldaValisFilter?: () => void;
   storageKey?: string;
+  /** UX-08: staatus koosseisus (koosseisu leht); voti = sortimisvõti */
+  staatus?: Record<number, { tekst: string; voti: string }>;
 }
 
 const EKSPORDI_VEERUD: EkspordiVeerg[] = [
@@ -74,7 +76,7 @@ function ekspordiRida(r: IsikuRida) {
 
 export default function IsikudTabel({
   read, koosseisud, eelKoosseis, naitaAadressi,
-  valisFilter, eemaldaValisFilter, storageKey,
+  valisFilter, eemaldaValisFilter, storageKey, staatus,
 }: Props) {
   const seis = useTabeliSeis(
     { q: "", koosseisud: "", nimekirjad: "", juhataja: "" },
@@ -140,10 +142,11 @@ export default function IsikudTabel({
           case "viimane_koosseis": return r.viimane_koosseis || null;
           case "peamine_nimekiri": return r.peamine_nimekiri || null;
           case "aadress": return r.aadressid[0] ?? null;
+          case "staatus": return staatus?.[r.isik_id]?.voti ?? null;
           default: return null;
         }
       }),
-    [filtreeritud, seis.sort]
+    [filtreeritud, seis.sort, staatus]
   );
 
   const lehti = Math.max(1, Math.ceil(sorditud.length / LEHE_SUURUS));
@@ -219,8 +222,11 @@ export default function IsikudTabel({
             olemas={seis.salvestatudOlemas}
           />
           <ExportButton
-            read={sorditud.map(ekspordiRida)}
-            veerud={EKSPORDI_VEERUD}
+            read={sorditud.map((r) => ({
+              ...ekspordiRida(r),
+              ...(staatus && { staatus: staatus[r.isik_id]?.tekst ?? "" }),
+            }))}
+            veerud={staatus ? [...EKSPORDI_VEERUD, { key: "staatus", pealkiri: "Staatus koosseisus" }] : EKSPORDI_VEERUD}
             meta={{
               failinimi: eelKoosseis
                 ? `tlv-isikud-koosseis-${eelKoosseis}`
@@ -250,6 +256,9 @@ export default function IsikudTabel({
                 <HelpTip tekst={ABI.nimekiri} />
               </span>
             </th>
+            {staatus && (
+              <SortPais veerg="staatus" pealkiri="Staatus koosseisus" sort={seis.sort} sordi={seis.sordi} />
+            )}
             {naitaAadressi && (
               <SortPais veerg="aadress" pealkiri="Aadress" sort={seis.sort} sordi={seis.sordi} />
             )}
@@ -289,6 +298,9 @@ export default function IsikudTabel({
               <td className="max-w-xs truncate px-3 py-1.5" title={r.peamine_nimekiri}>
                 {r.peamine_nimekiri || "—"}
               </td>
+              {staatus && (
+                <td className="whitespace-nowrap px-3 py-1.5">{staatus[r.isik_id]?.tekst ?? "—"}</td>
+              )}
               {naitaAadressi && (
                 <td className="max-w-xs truncate px-3 py-1.5" title={r.aadressid.join("; ")}>
                   {r.aadressid.join("; ") || "—"}
@@ -298,7 +310,7 @@ export default function IsikudTabel({
           ))}
           {nahtavad.length === 0 && (
             <tr>
-              <td colSpan={naitaAadressi ? 7 : 6} className="px-3 py-6 text-center text-stone-500">
+              <td colSpan={6 + (naitaAadressi ? 1 : 0) + (staatus ? 1 : 0)} className="px-3 py-6 text-center text-stone-500">
                 Filtritele vastavaid isikuid ei leitud.
               </td>
             </tr>

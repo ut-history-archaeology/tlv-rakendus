@@ -46,7 +46,7 @@ export default function JaotusRiba({
             aria-pressed={valitud === s.nimi}
             className={`h-full transition-opacity ${
               valitud && valitud !== s.nimi ? "opacity-30" : ""
-            }`}
+            } ${valitud === s.nimi ? "relative z-10 outline outline-[3px] -outline-offset-[3px] outline-stone-900" : ""}`}
             style={{
               width: `${(s.arv / kokku) * 100}%`,
               backgroundColor: PALETT[i % PALETT.length],

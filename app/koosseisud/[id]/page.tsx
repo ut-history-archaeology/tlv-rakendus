@@ -2,16 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
-import { isikuRead, koosseisuLiikmedKokku, koosseisuSyndmused, syndmuseIsikud } from "@/lib/derive";
+import {
+  isikuRead, koosseisuLiikmedKokku, koosseisuSyndmused, liikmeteArvuSeeria, syndmuseIsikud,
+} from "@/lib/derive";
 import { koosseisuVarv } from "@/lib/colors";
 import { kuupaevEesti, kuupaevLyhike, taisnimi } from "@/lib/format";
 import { ABI } from "@/lib/abitekstid";
 import HelpTip from "@/components/HelpTip";
 import KoosseisuSisu from "@/components/KoosseisuSisu";
-import MuutusteAjatelg from "@/components/MuutusteAjatelg";
 import RingkonnaDiagramm from "@/components/RingkonnaDiagramm";
 import ExportButton from "@/components/ExportButton";
-import SyndmusteTabel from "@/components/SyndmusteTabel";
+import KoosseisuMuutused from "@/components/KoosseisuMuutused";
 import type { JaotuseSegment } from "@/components/JaotusRiba";
 
 const MUUTUSTE_VEERUD = [
@@ -132,6 +133,29 @@ export default async function KoosseisuLeht({
       .map((i) => [i, nimiMap.get(i)!])
   );
 
+  // UX-08: liikme staatus koosseisus sündmusmudeli põhjal
+  const valitudIdd = new Set(valitudRead.map((v) => v.isik_id));
+  const staatus: Record<number, { tekst: string; voti: string }> = {};
+  for (const isikId of liikmeIdd) {
+    let liitus = "";
+    let lahkus = "";
+    for (const s of syndmused) {
+      if (s.liik === "vahetus") {
+        if (s.asendaja === isikId) liitus ||= s.liitumiseKuupaev;
+        if (s.lahkuja === isikId) lahkus = s.lahkumiseKuupaev;
+      } else if (s.liik !== "kinnitamine" && s.isik === isikId) {
+        if (s.liik === "liitumine" || s.liik === "liitumine&lahkumine") liitus ||= s.kuupaev;
+        if (s.liik === "lahkumine" || s.liik === "peatamine" || s.liik === "liitumine&lahkumine") lahkus = s.kuupaev;
+      }
+    }
+    const osad = [valitudIdd.has(isikId) ? "valitud" : liitus ? `liitus ${kuupaevLyhike(liitus)}` : ""];
+    if (lahkus) osad.push(`lahkus ${kuupaevLyhike(lahkus)}`);
+    staatus[isikId] = {
+      tekst: liitus && liitus === lahkus ? `liitus ja lahkus ${kuupaevLyhike(lahkus)}` : osad.filter(Boolean).join(", "),
+      voti: `${lahkus ? 2 : valitudIdd.has(isikId) ? 0 : 1}|${lahkus || liitus}`,
+    };
+  }
+
   const muutusteEksport = muutused.map((m) => ({
     muutus_id: m.muutus_id,
     kuupaev: m.kuupaev,
@@ -246,6 +270,7 @@ export default async function KoosseisuLeht({
         jaotus={jaotus}
         jaotuseAlus={jaotuseAlus}
         jaotuseSelgitus={onNimekirjad ? ABI.nimekirjaHoiatus : undefined}
+        staatus={syndmused.length > 0 ? staatus : undefined}
       />
 
       {/* KS-07: 1939 valimiste erikuvar */}
@@ -258,46 +283,32 @@ export default async function KoosseisuLeht({
         </section>
       )}
 
-      {/* KS-05: muutuste ajatelg */}
-      {muutused.length > 0 && algus && lopp && (
-        <section aria-labelledby="muutuste-ajatelg">
-          <h2 id="muutuste-ajatelg" className="mb-2 text-xl font-semibold">
-            Liikmesmuutused ajateljel
-          </h2>
-          <MuutusteAjatelg
-            algus={algus}
-            lopp={lopp}
-            muutused={muutused.map((m) => ({ kuupaev: m.kuupaev, liik: m.liik }))}
-            koosolekud={koosolekud.map((k) => k.kuupaev)}
-          />
-        </section>
-      )}
-
-      {/* UX-06: liikmesmuutused sündmustena; toorridade eksport (KS-08) jääb */}
-      {syndmused.length > 0 && (
-        <section aria-labelledby="muutused">
-          <h2 id="muutused" className="mb-2 text-xl font-semibold">Liikmesmuutused</h2>
-          <SyndmusteTabel
-            syndmused={syndmused}
-            nimed={syndmusteNimed}
-            failinimi={`tlv-syndmused-koosseis-${id}`}
-            lisaTegevused={
-              <ExportButton
-                silt="Toorread"
-                read={muutusteEksport}
-                veerud={MUUTUSTE_VEERUD}
-                meta={{
-                  failinimi: `tlv-muutused-koosseis-${id}`,
-                  filtrid: { koosseis: id },
-                }}
-              />
-            }
-          />
-          <p className="mt-1 text-xs text-stone-500">
-            {muutused.length} muutuste rida on koondatud {syndmused.length} sündmuseks.
-            „Toorread“ laeb alla andmestiku read muutmata kujul.
-          </p>
-        </section>
+      {/* UX-07 + UX-06: liikmete arvu ajatelg ja sündmuste tabel (ühine kuupäevafilter) */}
+      {syndmused.length > 0 && algus && lopp && (
+        <KoosseisuMuutused
+          syndmused={syndmused}
+          nimed={syndmusteNimed}
+          algus={algus}
+          lopp={lopp}
+          seeria={liikmeteArvuSeeria(andmed, id, algus, lopp)}
+          valitudArv={valitudRead.length}
+          varv={koosseisuVarv(id)}
+          koosolekud={koosolekud.map((k) => k.kuupaev)}
+          failinimi={`tlv-syndmused-koosseis-${id}`}
+          muutusteRidu={muutused.length}
+          toorEksport={
+            <ExportButton
+              key="toorread"
+              silt="Toorread"
+              read={muutusteEksport}
+              veerud={MUUTUSTE_VEERUD}
+              meta={{
+                failinimi: `tlv-muutused-koosseis-${id}`,
+                filtrid: { koosseis: id },
+              }}
+            />
+          }
+        />
       )}
 
       {/* KS-06: koosolekute loetelu + eksport (KS-08) */}

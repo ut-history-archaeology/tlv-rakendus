@@ -32,7 +32,7 @@ const LIIGID: SyndmuseLiik[] = [
 function IsikuLink({ id, nimed }: { id: number | null; nimed: Record<number, string> }) {
   if (id === null || !nimed[id]) return <span className="text-stone-400">(isik teadmata)</span>;
   return (
-    <Link href={`/isikud/${id}/`} className="text-blue-700 hover:underline">
+    <Link href={`/isikud/${id}/`} className="text-blue-700 underline decoration-blue-200 underline-offset-2 hover:decoration-blue-700">
       {nimed[id]}
     </Link>
   );

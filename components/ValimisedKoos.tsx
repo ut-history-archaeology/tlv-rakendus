@@ -95,7 +95,7 @@ function ValimiseKaart({ k }: { k: ValimineKoos }) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-semibold">
           {k.aasta}. aasta valimised →{" "}
-          <Link href={`/koosseisud/${k.koosseis_id}/`} className="text-blue-700 hover:underline">
+          <Link href={`/koosseisud/${k.koosseis_id}/`} className="text-blue-700 underline decoration-blue-200 underline-offset-2 hover:decoration-blue-700">
             koosseis {koosseisuNimi(k.koosseis_id)}
           </Link>
         </h3>
