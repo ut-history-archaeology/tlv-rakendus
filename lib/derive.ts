@@ -527,3 +527,182 @@ export function mainimisedProfiilile(andmed: Andmestik, isikId: number): Mainimi
     loetelu,
   };
 }
+
+/* ───────────── UX-06: liikmesmuutused sündmustena ───────────── */
+
+interface SyndmuseAlus {
+  /** püsiv võti: "<liik>-<väikseim muutus_id>" */
+  id: string;
+  kuupaev: string;
+  koosseis_id: string;
+  /** kõik algsed muutus_id-d (eksport, test) */
+  muutus_idd: number[];
+  allikaviited: string[];
+  /** protokolliviited (kuupäevad) */
+  protokollid: string[];
+  /** liitumine esimesel koosolekul, kuid isik puudub valimistulemustes */
+  eiValitud?: boolean;
+}
+
+export interface UksikSyndmus extends SyndmuseAlus {
+  liik: "lahkumine" | "liitumine" | "liitumine&lahkumine" | "rühmavahetus" | "peatamine";
+  isik: number | null;
+  /** toorkuju, kui isik_id puudub */
+  toorNimi: string;
+  nimekiri: string;
+  tapsustus: string;
+  asendaja: number | null;
+  asendatav: number | null;
+  /** lahkumine: allikas ütleb, et asendajat ei nimetata */
+  asendajaPuudub: boolean;
+}
+
+export type Syndmus =
+  | (SyndmuseAlus & { liik: "kinnitamine"; isikud: number[] })
+  | (SyndmuseAlus & {
+      liik: "vahetus";
+      lahkuja: number;
+      asendaja: number;
+      lahkumiseKuupaev: string;
+      liitumiseKuupaev: string;
+      nimekiri: string;
+      tapsustus: string;
+    })
+  | UksikSyndmus;
+
+export type SyndmuseLiik = Syndmus["liik"];
+
+function muutuseProtokoll(m: Muutus): string[] {
+  switch (m.liik) {
+    case "liitumine": return [m.liitus_prot];
+    case "lahkumine": return [m.lahkus_prot];
+    case "liitumine&lahkumine": return [m.liitus_prot, m.lahkus_prot];
+    case "rühmavahetus": return [m.ryhmavahetus_prot];
+    case "peatamine": return [m.peatatud_prot];
+  }
+}
+
+const unikaalsed = (v: string[]) => [...new Set(v.filter(Boolean))];
+
+/**
+ * UX-06: koosseisu muutuste read sündmusteks.
+ * Reegel 1 — kinnitamine: `liitumine` esimese koosoleku kuupäeval, ilma asendatavata,
+ *   isik on valimistulemustes valitud → üks sündmus.
+ * Reegel 2 — vahetus: `lahkumine` A (asendaja B) + `liitumine` B (asendatav A) samas koosseisus.
+ *   Ainult täpne paar; ahelad läbi `liitumine&lahkumine` jäävad eraldi (andmeid ei tõlgendata).
+ * Reegel 3 — ülejäänud read 1:1.
+ */
+export function koosseisuSyndmused(andmed: Andmestik, koosseisId: string): Syndmus[] {
+  const koosseis = andmed.koosseisud.find((k) => k.koosseis_id === koosseisId);
+  const esimene = koosseis?.esimene_koosolek ?? "";
+  const valitud = new Set(
+    andmed.valimised
+      .filter((v) => v.koosseis_id === koosseisId && v.roll === "valitud")
+      .map((v) => v.isik_id)
+  );
+  const read = andmed.muutused
+    .filter((m) => m.koosseis_id === koosseisId)
+    .sort((a, b) => a.muutus_id - b.muutus_id);
+  const kasutatud = new Set<number>();
+  const syndmused: Syndmus[] = [];
+  const eiValitud = (m: Muutus) =>
+    m.liik === "liitumine" && !!esimene && m.kuupaev === esimene &&
+    m.isik_id !== null && !valitud.has(m.isik_id);
+
+  // Reegel 1
+  const kinnitus = read.filter(
+    (m) => m.liik === "liitumine" && esimene && m.kuupaev === esimene &&
+      m.asendatav_ID === null && m.isik_id !== null && valitud.has(m.isik_id)
+  );
+  if (kinnitus.length > 0) {
+    kinnitus.forEach((m) => kasutatud.add(m.muutus_id));
+    syndmused.push({
+      id: `kinnitamine-${kinnitus[0].muutus_id}`,
+      liik: "kinnitamine",
+      kuupaev: esimene,
+      koosseis_id: koosseisId,
+      isikud: kinnitus.map((m) => m.isik_id!),
+      muutus_idd: kinnitus.map((m) => m.muutus_id),
+      allikaviited: unikaalsed(kinnitus.map((m) => m.allikaviide)),
+      protokollid: unikaalsed(kinnitus.map((m) => m.liitus_prot)),
+    });
+  }
+
+  // Reegel 2
+  for (const a of read) {
+    if (a.liik !== "lahkumine" || a.asendaja_ID === null || a.isik_id === null) continue;
+    const b = read.find(
+      (m) => !kasutatud.has(m.muutus_id) && m.liik === "liitumine" &&
+        m.isik_id === a.asendaja_ID && m.asendatav_ID === a.isik_id
+    );
+    if (!b) continue;
+    kasutatud.add(a.muutus_id);
+    kasutatud.add(b.muutus_id);
+    syndmused.push({
+      id: `vahetus-${Math.min(a.muutus_id, b.muutus_id)}`,
+      liik: "vahetus",
+      kuupaev: a.kuupaev,
+      koosseis_id: koosseisId,
+      lahkuja: a.isik_id,
+      asendaja: b.isik_id!,
+      lahkumiseKuupaev: a.kuupaev,
+      liitumiseKuupaev: b.kuupaev,
+      nimekiri: unikaalsed([a.nimekiri, b.nimekiri]).join(" / "),
+      tapsustus: unikaalsed([a.tapsustus, b.tapsustus]).join(" / "),
+      muutus_idd: [a.muutus_id, b.muutus_id],
+      allikaviited: unikaalsed([a.allikaviide, b.allikaviide]),
+      protokollid: unikaalsed([a.lahkus_prot, b.liitus_prot]),
+      ...(eiValitud(b) && { eiValitud: true }),
+    });
+  }
+
+  // Reegel 3
+  for (const m of read) {
+    if (kasutatud.has(m.muutus_id)) continue;
+    syndmused.push({
+      id: `${m.liik}-${m.muutus_id}`,
+      liik: m.liik,
+      kuupaev: m.kuupaev,
+      koosseis_id: koosseisId,
+      isik: m.isik_id,
+      toorNimi: [m.eesnimi, m.perenimi].filter(Boolean).join(" "),
+      nimekiri: m.nimekiri,
+      tapsustus: m.tapsustus,
+      asendaja: m.asendaja_ID,
+      asendatav: m.asendatav_ID,
+      asendajaPuudub: m.liik === "lahkumine" && m.asendaja_ID === null,
+      muutus_idd: [m.muutus_id],
+      allikaviited: unikaalsed([m.allikaviide]),
+      protokollid: unikaalsed(muutuseProtokoll(m)),
+      ...(eiValitud(m) && { eiValitud: true }),
+    });
+  }
+
+  return syndmused.sort(
+    (a, b) =>
+      (a.kuupaev || "9999").localeCompare(b.kuupaev || "9999") ||
+      Math.min(...a.muutus_idd) - Math.min(...b.muutus_idd)
+  );
+}
+
+/** Sündmuses osalevad isikud (isiku lehe filter, eksport). */
+export function syndmuseIsikud(s: Syndmus): number[] {
+  switch (s.liik) {
+    case "kinnitamine": return s.isikud;
+    case "vahetus": return [s.lahkuja, s.asendaja];
+    default: return s.isik !== null ? [s.isik] : [];
+  }
+}
+
+/** PR-03 / UX-06: isiku sündmused kõigist koosseisudest (vahetus näidatakse mõlemal osapoolel). */
+export function isikuSyndmused(andmed: Andmestik, isikId: number): Syndmus[] {
+  const koosseisud = new Set(
+    andmed.muutused
+      .filter((m) => m.isik_id === isikId)
+      .map((m) => m.koosseis_id)
+  );
+  return [...koosseisud]
+    .flatMap((k) => koosseisuSyndmused(andmed, k))
+    .filter((s) => syndmuseIsikud(s).includes(isikId))
+    .sort((a, b) => a.kuupaev.localeCompare(b.kuupaev));
+}

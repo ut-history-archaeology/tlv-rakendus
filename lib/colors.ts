@@ -56,3 +56,24 @@ export const OLEMI_NIMED: Record<OlemiTyyp, string> = {
   MONEY: "rahasumma",
   POSITION: "ametinimetus",
 };
+
+/** Liikmesmuutuste sündmuste liigid (UX-06/UX-07); muutuste liikide värvid nagu varem. */
+export const LIIGI_VARV: Record<string, string> = {
+  kinnitamine: "#0f766e",
+  vahetus: "#0369a1",
+  liitumine: "#16a34a",
+  lahkumine: "#dc2626",
+  "liitumine&lahkumine": "#ca8a04",
+  rühmavahetus: "#7c3aed",
+  peatamine: "#6b7280",
+};
+
+export const LIIGI_NIMI: Record<string, string> = {
+  kinnitamine: "kinnitamine",
+  vahetus: "vahetus",
+  liitumine: "liitumine",
+  lahkumine: "lahkumine",
+  "liitumine&lahkumine": "liitus ja lahkus",
+  rühmavahetus: "rühmavahetus",
+  peatamine: "peatamine",
+};

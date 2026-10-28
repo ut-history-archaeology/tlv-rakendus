@@ -12,10 +12,12 @@ interface Props {
   meta: EkspordiMeta;
   /** Kui true, lisatakse valikusse ka "Prindi / PDF" (window.print). */
   print?: boolean;
+  /** Nupu tekst, kui samas kohas on mitu eksporti (vaikimisi "Lae alla"). */
+  silt?: string;
 }
 
 /** Eksport-nupp tabeli parem-ülanurgas (EX-01). */
-export default function ExportButton({ read, veerud, meta, print }: Props) {
+export default function ExportButton({ read, veerud, meta, print, silt = "Lae alla" }: Props) {
   const [avatud, setAvatud] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -40,7 +42,7 @@ export default function ExportButton({ read, veerud, meta, print }: Props) {
         aria-expanded={avatud}
         className="rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-50"
       >
-        ↓ Lae alla
+        ↓ {silt}
       </button>
       {avatud && (
         <div className="absolute right-0 z-40 mt-1 w-44 rounded-md border border-stone-200 bg-white py-1 shadow-lg">

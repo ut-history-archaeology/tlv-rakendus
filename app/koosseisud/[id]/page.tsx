@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
-import { isikuRead, koosseisuLiikmedKokku } from "@/lib/derive";
+import { isikuRead, koosseisuLiikmedKokku, koosseisuSyndmused, syndmuseIsikud } from "@/lib/derive";
 import { koosseisuVarv } from "@/lib/colors";
 import { kuupaevEesti, kuupaevLyhike, taisnimi } from "@/lib/format";
 import { ABI } from "@/lib/abitekstid";
@@ -11,7 +11,25 @@ import KoosseisuSisu from "@/components/KoosseisuSisu";
 import MuutusteAjatelg from "@/components/MuutusteAjatelg";
 import RingkonnaDiagramm from "@/components/RingkonnaDiagramm";
 import ExportButton from "@/components/ExportButton";
+import SyndmusteTabel from "@/components/SyndmusteTabel";
 import type { JaotuseSegment } from "@/components/JaotusRiba";
+
+const MUUTUSTE_VEERUD = [
+  { key: "muutus_id", pealkiri: "muutus_id" },
+  { key: "kuupaev", pealkiri: "Kuupäev" },
+  { key: "isik_id", pealkiri: "isik_id" },
+  { key: "isik", pealkiri: "Isik" },
+  { key: "liik", pealkiri: "Liik" },
+  { key: "nimekiri", pealkiri: "Nimekiri" },
+  { key: "liitus_prot", pealkiri: "Liitumise protokoll" },
+  { key: "lahkus_prot", pealkiri: "Lahkumise protokoll" },
+  { key: "ryhmavahetus_prot", pealkiri: "Rühmavahetuse protokoll" },
+  { key: "peatatud_prot", pealkiri: "Peatamise protokoll" },
+  { key: "asendaja", pealkiri: "Asendaja" },
+  { key: "asendatav", pealkiri: "Asendatav" },
+  { key: "allikaviide", pealkiri: "Allikaviide" },
+  { key: "tapsustus", pealkiri: "Täpsustus" },
+];
 
 export function generateStaticParams() {
   return loeAndmestik().koosseisud.map((k) => ({ id: k.koosseis_id }));
@@ -103,6 +121,17 @@ export default async function KoosseisuLeht({
         })
       : [];
 
+  const syndmused = koosseisuSyndmused(andmed, id);
+  const syndmusteNimed = Object.fromEntries(
+    [...new Set(syndmused.flatMap((s) => [
+      ...syndmuseIsikud(s),
+      ...("asendaja" in s && s.asendaja !== null ? [s.asendaja] : []),
+      ...("asendatav" in s && s.asendatav !== null ? [s.asendatav] : []),
+    ]))]
+      .filter((i) => nimiMap.has(i))
+      .map((i) => [i, nimiMap.get(i)!])
+  );
+
   const muutusteEksport = muutused.map((m) => ({
     muutus_id: m.muutus_id,
     kuupaev: m.kuupaev,
@@ -189,7 +218,7 @@ export default async function KoosseisuLeht({
           </div>
           <div>
             <dt className="inline font-medium">Liikmesmuutusi: </dt>
-            <dd className="inline">{muutused.length}</dd>
+            <dd className="inline">{syndmused.length} sündmust ({muutused.length} rida)</dd>
           </div>
           {(koosseis.valimised_allikas || koosseis.valimistulemuste_allikas) && (
             <div className="sm:col-span-2">
@@ -244,89 +273,30 @@ export default async function KoosseisuLeht({
         </section>
       )}
 
-      {/* Muutuste tabel + eksport (KS-08) */}
-      {muutused.length > 0 && (
+      {/* UX-06: liikmesmuutused sündmustena; toorridade eksport (KS-08) jääb */}
+      {syndmused.length > 0 && (
         <section aria-labelledby="muutused">
-          <div className="mb-2 flex items-center justify-between">
-            <h2 id="muutused" className="text-xl font-semibold">Liikmesmuutused</h2>
-            <ExportButton
-              read={muutusteEksport}
-              veerud={[
-                { key: "muutus_id", pealkiri: "muutus_id" },
-                { key: "kuupaev", pealkiri: "Kuupäev" },
-                { key: "isik_id", pealkiri: "isik_id" },
-                { key: "isik", pealkiri: "Isik" },
-                { key: "liik", pealkiri: "Liik" },
-                { key: "nimekiri", pealkiri: "Nimekiri" },
-                { key: "liitus_prot", pealkiri: "Liitumise protokoll" },
-                { key: "lahkus_prot", pealkiri: "Lahkumise protokoll" },
-                { key: "ryhmavahetus_prot", pealkiri: "Rühmavahetuse protokoll" },
-                { key: "peatatud_prot", pealkiri: "Peatamise protokoll" },
-                { key: "asendaja", pealkiri: "Asendaja" },
-                { key: "asendatav", pealkiri: "Asendatav" },
-                { key: "allikaviide", pealkiri: "Allikaviide" },
-                { key: "tapsustus", pealkiri: "Täpsustus" },
-              ]}
-              meta={{
-                failinimi: `tlv-muutused-koosseis-${id}`,
-                filtrid: { koosseis: id },
-              }}
-            />
-          </div>
-          <div className="max-h-[32rem] overflow-auto rounded-lg border border-stone-200 bg-white">
-            <table className="w-full min-w-max text-sm">
-              <thead className="sticky top-0 border-b border-stone-200 bg-stone-50">
-                <tr>
-                  <th className="px-3 py-2 text-left font-semibold">Kuupäev</th>
-                  <th className="px-3 py-2 text-left font-semibold">Isik</th>
-                  <th className="px-3 py-2 text-left font-semibold">Liik</th>
-                  <th className="px-3 py-2 text-left font-semibold">Nimekiri</th>
-                  <th className="px-3 py-2 text-left font-semibold">Asendussuhe</th>
-                </tr>
-              </thead>
-              <tbody>
-                {muutused.map((m) => (
-                  <tr key={m.muutus_id} className="border-b border-stone-100">
-                    <td className="whitespace-nowrap px-3 py-1.5">{kuupaevLyhike(m.kuupaev)}</td>
-                    <td className="px-3 py-1.5">
-                      {m.isik_id !== null && nimiMap.has(m.isik_id) ? (
-                        <Link href={`/isikud/${m.isik_id}/`} className="hover:underline">
-                          {nimiMap.get(m.isik_id)}
-                        </Link>
-                      ) : (
-                        <span className="text-stone-400">
-                          {[m.eesnimi, m.perenimi].filter(Boolean).join(" ") || "(isik teadmata)"}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-3 py-1.5">{m.liik}</td>
-                    <td className="max-w-[16rem] truncate px-3 py-1.5" title={m.nimekiri}>
-                      {m.nimekiri || "—"}
-                    </td>
-                    <td className="px-3 py-1.5 text-xs">
-                      {m.asendaja_ID !== null && nimiMap.has(m.asendaja_ID) && (
-                        <>
-                          asendaja:{" "}
-                          <Link href={`/isikud/${m.asendaja_ID}/`} className="text-blue-700 hover:underline">
-                            {nimiMap.get(m.asendaja_ID)}
-                          </Link>
-                        </>
-                      )}
-                      {m.asendatav_ID !== null && nimiMap.has(m.asendatav_ID) && (
-                        <>
-                          {m.asendaja_ID !== null && "; "}
-                          asendas:{" "}
-                          <Link href={`/isikud/${m.asendatav_ID}/`} className="text-blue-700 hover:underline">
-                            {nimiMap.get(m.asendatav_ID)}
-                          </Link>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <h2 id="muutused" className="mb-2 text-xl font-semibold">Liikmesmuutused</h2>
+          <SyndmusteTabel
+            syndmused={syndmused}
+            nimed={syndmusteNimed}
+            failinimi={`tlv-syndmused-koosseis-${id}`}
+            lisaTegevused={
+              <ExportButton
+                silt="Toorread"
+                read={muutusteEksport}
+                veerud={MUUTUSTE_VEERUD}
+                meta={{
+                  failinimi: `tlv-muutused-koosseis-${id}`,
+                  filtrid: { koosseis: id },
+                }}
+              />
+            }
+          />
+          <p className="mt-1 text-xs text-stone-500">
+            {muutused.length} muutuste rida on koondatud {syndmused.length} sündmuseks.
+            „Toorread“ laeb alla andmestiku read muutmata kujul.
+          </p>
         </section>
       )}
 

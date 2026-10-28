@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
 import {
-  isikuAadressidKoos, isikuKoosseisud, isikuValimisedKoos, juhatamiseStatistika, karjaariSegmendid,
+  isikuAadressidKoos, isikuKoosseisud, isikuSyndmused, isikuValimisedKoos, syndmuseIsikud, juhatamiseStatistika, karjaariSegmendid,
   mainimisedProfiilile, osavotuStatistika, peamineNimekiri,
 } from "@/lib/derive";
 import { kuupaevEesti, kuupaevLyhike, taisnimi, wikidataQid } from "@/lib/format";
@@ -14,6 +14,7 @@ import HelpTip from "@/components/HelpTip";
 import ProfiilTegevused from "@/components/ProfiilTegevused";
 import AsendusVork, { type VorguServ } from "@/components/AsendusVork";
 import ValimisedKoos from "@/components/ValimisedKoos";
+import SyndmusteTabel from "@/components/SyndmusteTabel";
 import type { Muutus } from "@/lib/types";
 import type { ReactNode } from "react";
 
@@ -63,6 +64,17 @@ export default async function IsikuProfiil({
     .filter((v) => v.isik_id === id)
     .sort((a, b) => a.aasta - b.aasta);
   const valimisedKoos = isikuValimisedKoos(andmed, id);
+  const syndmused = isikuSyndmused(andmed, id);
+  // kinnitamise sündmus kannab kogu koosseisu nimekirja; isiku lehel piisab tema enda nimest
+  const syndmusteNimed = Object.fromEntries(
+    [...new Set(syndmused.flatMap((s) => [
+      ...(s.liik === "kinnitamine" ? [id] : syndmuseIsikud(s)),
+      ...("asendaja" in s && s.asendaja !== null ? [s.asendaja] : []),
+      ...("asendatav" in s && s.asendatav !== null ? [s.asendatav] : []),
+    ]))]
+      .filter((i) => nimiMap.has(i))
+      .map((i) => [i, nimiMap.get(i)!])
+  );
   const aadressid = isikuAadressidKoos(andmed, id);
   const osavott = osavotuStatistika(andmed, id);
   const juhatamine = juhatamiseStatistika(andmed, id);
@@ -210,71 +222,18 @@ export default async function IsikuProfiil({
         </section>
       )}
 
-      {/* PR-03: kronoloogilised sündmused */}
-      {muutused.length > 0 && (
+      {/* PR-03 / UX-06: liikmesmuutused sündmustena */}
+      {syndmused.length > 0 && (
         <section aria-labelledby="syndmused">
           <h2 id="syndmused" className="mb-2 text-xl font-semibold">
             Liikmesmuutused
           </h2>
-          <div className="overflow-x-auto rounded-lg border border-stone-200 bg-white">
-            <table className="w-full min-w-max text-sm">
-              <thead className="border-b border-stone-200 bg-stone-50">
-                <tr>
-                  <th className="px-3 py-2 text-left font-semibold">Kuupäev</th>
-                  <th className="px-3 py-2 text-left font-semibold">Koosseis</th>
-                  <th className="px-3 py-2 text-left font-semibold">Liik</th>
-                  <th className="px-3 py-2 text-left font-semibold">Protokolliviide</th>
-                  <th className="px-3 py-2 text-left font-semibold">Asendussuhe</th>
-                  <th className="px-3 py-2 text-left font-semibold">Täpsustus</th>
-                </tr>
-              </thead>
-              <tbody>
-                {muutused.map((m) => (
-                  <tr key={m.muutus_id} className="border-b border-stone-100">
-                    <td className="px-3 py-1.5">{kuupaevLyhike(m.kuupaev)}</td>
-                    <td className="px-3 py-1.5">
-                      <Link
-                        href={`/koosseisud/${m.koosseis_id}/`}
-                        className="inline-flex items-center gap-1.5 hover:underline"
-                      >
-                        <span
-                          className="inline-block h-2.5 w-2.5 rounded-sm"
-                          style={{ backgroundColor: koosseisuVarv(m.koosseis_id) }}
-                          aria-hidden
-                        />
-                        {m.koosseis_id}
-                      </Link>
-                    </td>
-                    <td className="px-3 py-1.5">{m.liik}</td>
-                    <td className="px-3 py-1.5">{protokolliViide(m) || "—"}</td>
-                    <td className="px-3 py-1.5">
-                      {m.asendaja_ID !== null && nimiMap.has(m.asendaja_ID) && (
-                        <>
-                          asendaja:{" "}
-                          <Link href={`/isikud/${m.asendaja_ID}/`} className="text-blue-700 hover:underline">
-                            {nimiMap.get(m.asendaja_ID)}
-                          </Link>
-                        </>
-                      )}
-                      {m.asendatav_ID !== null && nimiMap.has(m.asendatav_ID) && (
-                        <>
-                          {m.asendaja_ID !== null && "; "}
-                          asendas:{" "}
-                          <Link href={`/isikud/${m.asendatav_ID}/`} className="text-blue-700 hover:underline">
-                            {nimiMap.get(m.asendatav_ID)}
-                          </Link>
-                        </>
-                      )}
-                      {m.asendaja_ID === null && m.asendatav_ID === null && "—"}
-                    </td>
-                    <td className="max-w-xs truncate px-3 py-1.5" title={m.tapsustus}>
-                      {m.tapsustus || "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <SyndmusteTabel
+            syndmused={syndmused}
+            nimed={syndmusteNimed}
+            isikId={id}
+            failinimi={`tlv-isik-${id}-syndmused`}
+          />
         </section>
       )}
 
