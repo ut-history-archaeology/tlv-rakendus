@@ -27,4 +27,11 @@ export const ABI = {
     "Lisa on protokolli juurde kuuluv eraldi dokument (nt eelarve, nimekiri), mille piirid on tuvastatud automaatselt.",
   lehemarker:
     "Lehemarker näitab, kust algab arhiivisäiliku järgmine lehekülg. Klõps markeril avab sama lehe originaalpildi.",
+  // 3. etapp
+  valimisteAllikad:
+    "Valimiste andmed pärinevad kahest allikast: kandidaatide nimekirjast ja valimistulemustest. Kui allikad erinevad, näidatakse mõlemad kujud ja ülaindeks viitab allikale.",
+  kinnitamine:
+    "Koosseisu esimesel koosolekul kinnitati valimistel valitud liikmed. Andmestikus on see iga liikme kohta eraldi liitumisrida; siin on need koondatud üheks sündmuseks.",
+  vahetus:
+    "Liikme lahkumine ja tema asemele tulnud liikme liitumine on andmestikus kaks rida; siin on need näidatud ühe vahetusena.",
 } as const;

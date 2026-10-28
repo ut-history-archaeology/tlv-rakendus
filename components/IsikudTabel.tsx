@@ -85,6 +85,8 @@ export default function IsikudTabel({
     storageKey ?? (eelKoosseis ? `tlv-vaade-liikmed-${eelKoosseis}` : "tlv-vaade-isikud")
   );
   const [hover, setHover] = useState<number | null>(null);
+  // UX-01: isanime veerg vaikimisi peidus
+  const [naitaIsanime, setNaitaIsanime] = useState(false);
   const otsing = useDebounce(seis.filtrid.q);
 
   const nimekirjad = useMemo(() => {
@@ -139,6 +141,7 @@ export default function IsikudTabel({
         switch (key) {
           case "perenimi": return r.perenimi;
           case "eesnimi": return r.eesnimi;
+          case "isanimi": return r.isanimi || null;
           case "koosseise": return r.koosseise;
           case "esimene_koosseis": return r.esimene_koosseis || null;
           case "viimane_koosseis": return r.viimane_koosseis || null;
@@ -216,6 +219,14 @@ export default function IsikudTabel({
           />
           Oli juhataja
         </label>
+        <label className="flex cursor-pointer items-center gap-1.5 text-sm">
+          <input
+            type="checkbox"
+            checked={naitaIsanime}
+            onChange={(e) => setNaitaIsanime(e.target.checked)}
+          />
+          Näita isanime
+        </label>
         <div className="ml-auto flex items-center gap-2">
           <MinuVaade
             salvesta={seis.salvestaVaade}
@@ -245,6 +256,9 @@ export default function IsikudTabel({
           <tr>
             <SortPais veerg="perenimi" pealkiri="Perenimi" sort={seis.sort} sordi={seis.sordi} />
             <SortPais veerg="eesnimi" pealkiri="Eesnimi" sort={seis.sort} sordi={seis.sordi} />
+            {naitaIsanime && (
+              <SortPais veerg="isanimi" pealkiri="Isanimi" sort={seis.sort} sordi={seis.sordi} />
+            )}
             <SortPais veerg="koosseise" pealkiri="Koosseise" sort={seis.sort} sordi={seis.sordi} />
             <SortPais veerg="esimene_koosseis" pealkiri="Esimene koosseis" sort={seis.sort} sordi={seis.sordi} />
             <SortPais veerg="viimane_koosseis" pealkiri="Viimane koosseis" sort={seis.sort} sordi={seis.sordi} />
@@ -277,6 +291,12 @@ export default function IsikudTabel({
                     {eluaastad(r.synd_kuupaev, r.surm_kuupaev) && (
                       <> · {eluaastad(r.synd_kuupaev, r.surm_kuupaev)}</>
                     )}
+                    {r.isanimi && (
+                      <>
+                        <br />
+                        Isanimi: {r.isanimi}
+                      </>
+                    )}
                     <br />
                     Koosseisud: {r.koosseisud.join(", ") || "—"}
                   </span>
@@ -287,6 +307,7 @@ export default function IsikudTabel({
                   {r.eesnimi || "—"}
                 </Link>
               </td>
+              {naitaIsanime && <td className="px-3 py-1.5">{r.isanimi || "—"}</td>}
               <td className="px-3 py-1.5 text-center">{r.koosseise}</td>
               <td className="px-3 py-1.5">{r.esimene_koosseis || "—"}</td>
               <td className="px-3 py-1.5">{r.viimane_koosseis || "—"}</td>
@@ -302,7 +323,7 @@ export default function IsikudTabel({
           ))}
           {nahtavad.length === 0 && (
             <tr>
-              <td colSpan={naitaAadressi ? 7 : 6} className="px-3 py-6 text-center text-stone-500">
+              <td colSpan={6 + (naitaAadressi ? 1 : 0) + (naitaIsanime ? 1 : 0)} className="px-3 py-6 text-center text-stone-500">
                 Filtritele vastavaid isikuid ei leitud.
               </td>
             </tr>

@@ -157,21 +157,175 @@ export function peamineNimekiri(andmed: Andmestik, isikId: number): string {
   );
 }
 
-/** Isiku teadaolevad aadressid tekstina, valimisaastate kaupa (PR-05). */
-export function isikuAadressid(andmed: Andmestik, isikId: number): string[] {
-  const read: string[] = [];
+/** Valimiste rea allikas (UX-03): valitav → kandidaatide_allikas, valitud → valimistulemuste_allikas. */
+export interface Allikas {
+  roll: "valitav" | "valitud";
+  viide: string;
+}
+
+export interface Vaartus {
+  vaartus: string;
+  allikad: Allikas[];
+}
+
+/** UX-03: ühe isiku ühe valimisaasta read koondatuna. */
+export interface ValimineKoos {
+  aasta: number;
+  koosseis_id: string;
+  tulemus: "valitud" | "kandidaat";
+  /** eri toorkujud eraldi, kumbki oma allikaga */
+  nimekiri: { nr: string; nimi: string; allikad: Allikas[] }[];
+  koht: { jrk_nimekiri?: string; jrk_uld?: string; jrk_ringkond?: string };
+  ringkond?: string;
+  haaled?: { jsk1?: string; jsk2?: string; kokku?: number };
+  amet: Vaartus[];
+  /** kandidaadirealt; mitu väärtust = allikad erinevad */
+  vanus: Vaartus[];
+  synniaeg: Vaartus[];
+  aadress: { tekst: string; allikad: Allikas[] }[];
+  markused: Vaartus[];
+  /** kõik read, millest kirje koosneb (valitav enne valitud) */
+  allikad: Allikas[];
+}
+
+function valimiseAllikas(andmed: Andmestik, v: Valimine): Allikas {
+  const k = andmed.koosseisud.find((x) => x.koosseis_id === v.koosseis_id);
+  const viide = !k ? "" : v.roll === "valitav" ? k.kandidaatide_allikas : k.valimistulemuste_allikas;
+  return { roll: v.roll, viide };
+}
+
+/** Rea aadressid: tänav+maja(+korter) ja `elukoht_muu` eraldi (UX-04). */
+function reaAadressid(v: Valimine): string[] {
+  const tulem: string[] = [];
+  if (v.elukoht_tanav || v.elukoht_majanr) {
+    let maja = v.elukoht_majanr;
+    if (maja && v.elukoht_korterinr) maja += "-" + v.elukoht_korterinr;
+    tulem.push([v.elukoht_tanav, maja].filter(Boolean).join(" "));
+  }
+  if (v.elukoht_muu) tulem.push(v.elukoht_muu);
+  return tulem;
+}
+
+/** Aadressi võrdlusvõti: ainult tõst ja tühikud ühtlustatud. */
+export function aadressiVoti(tekst: string): string {
+  return tekst.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+/** Sama väärtus mitmel real → üks kirje mitme allikaga; erinevad väärtused jäävad eraldi. */
+function kogu(read: { tekst: string; allikas: Allikas }[], voti: (s: string) => string = (s) => s.trim()): Vaartus[] {
+  const tulem: (Vaartus & { k: string })[] = [];
+  for (const { tekst, allikas } of read) {
+    if (!tekst.trim()) continue;
+    const k = voti(tekst);
+    const olemas = tulem.find((t) => t.k === k);
+    if (olemas) olemas.allikad.push(allikas);
+    else tulem.push({ k, vaartus: tekst.trim(), allikad: [allikas] });
+  }
+  return tulem.map(({ vaartus, allikad }) => ({ vaartus, allikad }));
+}
+
+/** Ühe väärtusega väli; kui ridadel siiski erineb, jäävad kõik kujud nähtavaks (" / "). */
+function yks(vaartused: string[]): string | undefined {
+  const eri = [...new Set(vaartused.map((v) => v.trim()).filter(Boolean))];
+  return eri.length ? eri.join(" / ") : undefined;
+}
+
+/**
+ * UX-03: isiku valimised ühe kirjena aasta kohta. Valitava (kandidaadi) ja valitu
+ * read ühendatakse; erinevaid väärtusi ei ühtlustata (CLAUDE.md: andmevastuolud jäävad nähtavaks).
+ */
+export function isikuValimisedKoos(andmed: Andmestik, isikId: number): ValimineKoos[] {
+  const aastati = new Map<number, Valimine[]>();
   for (const v of andmed.valimised) {
     if (v.isik_id !== isikId) continue;
-    const osad: string[] = [];
-    if (v.elukoht_tanav) {
-      let maja = v.elukoht_majanr;
-      if (maja && v.elukoht_korterinr) maja += "-" + v.elukoht_korterinr;
-      osad.push([v.elukoht_tanav, maja].filter(Boolean).join(" "));
-    }
-    if (v.elukoht_muu) osad.push(v.elukoht_muu);
-    if (osad.length > 0) read.push(`${v.aasta}: ${osad.join("; ")}`);
+    const list = aastati.get(v.aasta) ?? [];
+    list.push(v);
+    aastati.set(v.aasta, list);
   }
-  return read;
+  return [...aastati.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([aasta, read]) => {
+      read = [...read].sort((a, b) => (a.roll === b.roll ? 0 : a.roll === "valitav" ? -1 : 1));
+      const allikad = read.map((r) => valimiseAllikas(andmed, r));
+      const paar = read.map((r, i) => ({ r, allikas: allikad[i] }));
+
+      const nimekiri: ValimineKoos["nimekiri"] = [];
+      for (const { r, allikas } of paar) {
+        const nimi = r.nimekiri_nimi.trim();
+        const nr = r.nimekiri_nr.trim();
+        if (!nimi && !nr) continue;
+        const olemas = nimekiri.find(
+          (n) => n.nimi === nimi && (n.nr === nr || !n.nr || !nr)
+        );
+        if (olemas) {
+          olemas.nr ||= nr;
+          olemas.allikad.push(allikas);
+        } else {
+          nimekiri.push({ nr, nimi, allikad: [allikas] });
+        }
+      }
+
+      const koht: ValimineKoos["koht"] = {};
+      const jrkN = yks(read.map((r) => r.jrk_nimekiri));
+      const jrkU = yks(read.map((r) => r.jrk_uld));
+      const jrkR = yks(read.map((r) => r.jrk_ringkond));
+      if (jrkN) koht.jrk_nimekiri = jrkN;
+      if (jrkU) koht.jrk_uld = jrkU;
+      if (jrkR) koht.jrk_ringkond = jrkR;
+
+      const jsk1 = yks(read.map((r) => r.haaled_1_jsk));
+      const jsk2 = yks(read.map((r) => r.haaled_2_jsk));
+      const kokku = read.find((r) => r.haaled_kokku !== null)?.haaled_kokku ?? undefined;
+      const haaled = jsk1 || jsk2 || kokku !== undefined
+        ? { ...(jsk1 && { jsk1 }), ...(jsk2 && { jsk2 }), ...(kokku !== undefined && { kokku }) }
+        : undefined;
+
+      const aadress = kogu(
+        paar.flatMap(({ r, allikas }) => reaAadressid(r).map((tekst) => ({ tekst, allikas }))),
+        aadressiVoti
+      ).map(({ vaartus, allikad }) => ({ tekst: vaartus, allikad }));
+
+      // Vanus ja sünniaeg on kandidaadireal; valitu rida neid tavaliselt ei sisalda.
+      return {
+        aasta,
+        koosseis_id: read[0].koosseis_id,
+        tulemus: read.some((r) => r.roll === "valitud") ? "valitud" : "kandidaat",
+        nimekiri,
+        koht,
+        ...(yks(read.map((r) => r.ringkond_nr)) && { ringkond: yks(read.map((r) => r.ringkond_nr)) }),
+        ...(haaled && { haaled }),
+        amet: kogu(paar.map(({ r, allikas }) => ({ tekst: r.amet, allikas }))),
+        vanus: kogu(paar.map(({ r, allikas }) => ({ tekst: r.vanus, allikas }))),
+        synniaeg: kogu(paar.map(({ r, allikas }) => ({ tekst: r.synniaeg, allikas }))),
+        aadress,
+        markused: kogu(paar.map(({ r, allikas }) => ({ tekst: r.markused, allikas }))),
+        allikad,
+      };
+    });
+}
+
+/** UX-04: isiku aadressid koondatuna — sama aadress eri aastatel üks kord. */
+export function isikuAadressidKoos(
+  andmed: Andmestik,
+  isikId: number
+): { tekst: string; aastad: number[]; allikad: Allikas[] }[] {
+  const read = andmed.valimised
+    .filter((v) => v.isik_id === isikId)
+    .sort((a, b) => a.aasta - b.aasta || (a.roll === b.roll ? 0 : a.roll === "valitav" ? -1 : 1));
+  const tulem = new Map<string, { tekst: string; aastad: number[]; allikad: Allikas[] }>();
+  for (const v of read) {
+    const allikas = valimiseAllikas(andmed, v);
+    for (const tekst of reaAadressid(v)) {
+      const k = aadressiVoti(tekst);
+      const kirje = tulem.get(k) ?? { tekst, aastad: [], allikad: [] };
+      if (!kirje.aastad.includes(v.aasta)) kirje.aastad.push(v.aasta);
+      if (!kirje.allikad.some((a) => a.roll === allikas.roll && a.viide === allikas.viide)) {
+        kirje.allikad.push(allikas);
+      }
+      tulem.set(k, kirje);
+    }
+  }
+  return [...tulem.values()];
 }
 
 /** Isikute tabeli read (/isikud, IS-01). */
@@ -201,7 +355,7 @@ export function isikuRead(andmed: Andmestik): IsikuRida[] {
       viimane_koosseis: koosseisud[koosseisud.length - 1] ?? "",
       peamine_nimekiri: peamineNimekiri(andmed, i.isik_id),
       oli_juhataja: juhatajaIdd.has(i.isik_id),
-      aadressid: isikuAadressid(andmed, i.isik_id),
+      aadressid: isikuAadressidKoos(andmed, i.isik_id).map((a) => `${a.tekst} (${a.aastad.join(", ")})`),
     };
   });
 }

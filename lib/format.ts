@@ -48,3 +48,18 @@ export function taisnimi(p: { eesnimi: string; perenimi: string }): string {
 export function tanaISO(): string {
   return new Date().toISOString().slice(0, 10);
 }
+
+/**
+ * Wikidata QID mis tahes sisendkujust (UX-02): "Q123", "https://www.wikidata.org/wiki/Q123",
+ * "http://www.wikidata.org/entity/Q123" → "Q123". Muu → "".
+ */
+export function wikidataQid(v: string | null | undefined): string {
+  const s = (v ?? "").trim();
+  const m = /^(?:https?:\/\/(?:www\.)?wikidata\.org\/(?:wiki|entity)\/)?(Q\d+)\/?$/i.exec(s);
+  return m ? m[1].toUpperCase() : "";
+}
+
+/** AKL_ID kuvakuju: CSV-s ujukomaarvuna salvestatud "36.0" → "36" (väärtust ei muudeta). */
+export function aklKuva(v: string | null | undefined): string {
+  return (v ?? "").trim().replace(/\.0+$/, "");
+}

@@ -157,7 +157,7 @@ export interface IsikuRida {
   viimane_koosseis: string;
   peamine_nimekiri: string;
   oli_juhataja: boolean;
-  aadressid: string[]; // "aasta: aadress" tekstina
+  aadressid: string[]; // "aadress (aasta, aasta)" tekstina (UX-04)
 }
 
 /** Koosolekute tabeli tuletatud rida (/koosolekud vaade). */

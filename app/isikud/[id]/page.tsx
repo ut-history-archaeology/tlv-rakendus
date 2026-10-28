@@ -3,17 +3,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
 import {
-  isikuAadressid, isikuKoosseisud, juhatamiseStatistika, karjaariSegmendid,
+  isikuAadressidKoos, isikuKoosseisud, isikuValimisedKoos, juhatamiseStatistika, karjaariSegmendid,
   mainimisedProfiilile, osavotuStatistika, peamineNimekiri,
 } from "@/lib/derive";
-import { eluaastad, kuupaevEesti, kuupaevLyhike, taisnimi } from "@/lib/format";
+import { aklKuva, kuupaevEesti, kuupaevLyhike, taisnimi, wikidataQid } from "@/lib/format";
 import { koosseisuVarv } from "@/lib/colors";
 import { ABI } from "@/lib/abitekstid";
 import KarjaarRiba from "@/components/KarjaarRiba";
 import HelpTip from "@/components/HelpTip";
 import ProfiilTegevused from "@/components/ProfiilTegevused";
 import AsendusVork, { type VorguServ } from "@/components/AsendusVork";
+import ValimisedKoos from "@/components/ValimisedKoos";
 import type { Muutus } from "@/lib/types";
+import type { ReactNode } from "react";
 
 export function generateStaticParams() {
   return loeAndmestik().isikud.map((i) => ({ id: String(i.isik_id) }));
@@ -60,7 +62,8 @@ export default async function IsikuProfiil({
   const valimised = andmed.valimised
     .filter((v) => v.isik_id === id)
     .sort((a, b) => a.aasta - b.aasta);
-  const aadressid = isikuAadressid(andmed, id);
+  const valimisedKoos = isikuValimisedKoos(andmed, id);
+  const aadressid = isikuAadressidKoos(andmed, id);
   const osavott = osavotuStatistika(andmed, id);
   const juhatamine = juhatamiseStatistika(andmed, id);
   const mainimised = mainimisedProfiilile(andmed, id);
@@ -100,6 +103,7 @@ export default async function IsikuProfiil({
     synd_tuletatud: isik.synd_tuletatud,
     surm_kuupaev: isik.surm_kuupaev,
     wikidata: isik.wikidata,
+    wikidata_qid: wikidataQid(isik.wikidata),
     arhiiviviited: isik.arhiiviviited,
     AKL_ID: isik.AKL_ID,
     koosseisud,
@@ -118,16 +122,48 @@ export default async function IsikuProfiil({
       jrk_nimekiri: v.jrk_nimekiri, jrk_ringkond: v.jrk_ringkond,
       haaled_kokku: v.haaled_kokku, amet: v.amet,
     })),
-    aadressid,
+    valimised_koos: valimisedKoos,
+    aadressid: aadressid.map(({ tekst, aastad }) => ({ tekst, aastad })),
     osavotustatistika: osavott,
     juhatamine,
   };
 
   const altKujud = [isik.alt_eesnimi, isik.alt_perenimi].filter(Boolean).join(", ");
+  const qid = wikidataQid(isik.wikidata);
+
+  // UX-01: päise andmeplokk — ainult täidetud väljad (sugu ei kuvata, E3-01)
+  const paiseValjad: [string, ReactNode][] = [];
+  if (isik.synd_kuupaev) {
+    paiseValjad.push(["Sündinud", (
+      <>
+        {kuupaevEesti(isik.synd_kuupaev)}
+        {isik.synd_tuletatud && <span className="text-xs text-stone-400"> (tuletatud)</span>}
+      </>
+    )]);
+  }
+  if (isik.surm_kuupaev) paiseValjad.push(["Surnud", kuupaevEesti(isik.surm_kuupaev)]);
+  if (isik.isanimi) paiseValjad.push(["Isanimi", isik.isanimi]);
+  if (altKujud) paiseValjad.push(["Alternatiivkujud", altKujud]);
+  if (qid) {
+    paiseValjad.push(["Wikidata", (
+      <a
+        href={`https://www.wikidata.org/wiki/${qid}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-700 underline"
+        aria-label={`Wikidata: ${qid} (avaneb uues aknas)`}
+      >
+        {qid}<span aria-hidden> ↗</span>
+      </a>
+    )]);
+  }
+  if (isik.arhiiviviited) paiseValjad.push(["Arhiiviviited", isik.arhiiviviited]);
+  // E3-02: AKL ID lingita, kuni tähendus on selgitatud (K3-01)
+  if (aklKuva(isik.AKL_ID)) paiseValjad.push(["AKL ID", `AKL: ${aklKuva(isik.AKL_ID)}`]);
   const on1940 = koosseisud.includes("1940-1941");
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <nav aria-label="Asukoht" className="no-print text-sm text-stone-500">
         <Link href="/isikud/" className="hover:underline">← Kõik isikud</Link>
       </nav>
@@ -136,41 +172,16 @@ export default async function IsikuProfiil({
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">{taisnimi(isik)}</h1>
-          <p className="mt-1 text-stone-600">
-            {eluaastad(isik.synd_kuupaev, isik.surm_kuupaev) && (
-              <>
-                {isik.synd_kuupaev ? kuupaevEesti(isik.synd_kuupaev) : "?"}
-                {isik.synd_tuletatud && (
-                  <span className="text-xs text-stone-400"> (tuletatud)</span>
-                )}
-                {" – "}
-                {isik.surm_kuupaev ? kuupaevEesti(isik.surm_kuupaev) : "?"}
-              </>
-            )}
-            {isik.isanimi && <> · isanimi: {isik.isanimi}</>}
-          </p>
-          {altKujud && (
-            <p className="mt-1 text-sm text-stone-500">
-              Alternatiivkujud: {altKujud}
-            </p>
+          {paiseValjad.length > 0 && (
+            <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+              {paiseValjad.map(([silt, sisu]) => (
+                <div key={silt} className="contents">
+                  <dt className="font-medium text-stone-500">{silt}</dt>
+                  <dd className="text-stone-800">{sisu}</dd>
+                </div>
+              ))}
+            </dl>
           )}
-          <p className="mt-1 flex flex-wrap gap-3 text-sm">
-            {isik.wikidata && (
-              <a
-                href={`https://www.wikidata.org/wiki/${isik.wikidata}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-700 underline"
-              >
-                Wikidata: {isik.wikidata}
-              </a>
-            )}
-            {isik.arhiiviviited && (
-              <span className="text-stone-500">
-                Arhiiviviited: {isik.arhiiviviited}
-              </span>
-            )}
-          </p>
         </div>
         <ProfiilTegevused profiil={profiilJSON} failinimi={`tlv-isik-${id}`} />
       </header>
@@ -195,6 +206,14 @@ export default async function IsikuProfiil({
           </p>
         )}
       </section>
+
+      {/* PR-04 / UX-03: valimised ühe kirjena aasta kohta */}
+      {valimisedKoos.length > 0 && (
+        <section aria-labelledby="valimised">
+          <h2 id="valimised" className="mb-2 text-xl font-semibold">Valimised</h2>
+          <ValimisedKoos kirjed={valimisedKoos} />
+        </section>
+      )}
 
       {/* PR-03: kronoloogilised sündmused */}
       {muutused.length > 0 && (
@@ -261,101 +280,6 @@ export default async function IsikuProfiil({
               </tbody>
             </table>
           </div>
-        </section>
-      )}
-
-      {/* PR-04: valimised */}
-      {valimised.length > 0 && (
-        <section aria-labelledby="valimised">
-          <h2 id="valimised" className="mb-2 text-xl font-semibold">
-            Valimised
-            <HelpTip tekst={ABI.nimekiri} />
-          </h2>
-          <div className="grid gap-3 md:grid-cols-2">
-            {valimised.map((v, i) => (
-              <div key={i} className="rounded-lg border border-stone-200 bg-white p-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold">{v.aasta}. aasta valimised</h3>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                      v.roll === "valitud"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-stone-100 text-stone-600"
-                    }`}
-                  >
-                    {v.roll === "valitud" ? "valitud" : "kandidaat"}
-                  </span>
-                </div>
-                <dl className="mt-2 space-y-1 text-sm">
-                  <div>
-                    <dt className="inline font-medium">Koosseis: </dt>
-                    <dd className="inline">
-                      <Link href={`/koosseisud/${v.koosseis_id}/`} className="hover:underline">
-                        {v.koosseis_id}
-                      </Link>
-                    </dd>
-                  </div>
-                  {v.nimekiri_nimi && (
-                    <div>
-                      <dt className="inline font-medium">Nimekiri: </dt>
-                      <dd className="inline">
-                        {v.nimekiri_nr && <>nr {v.nimekiri_nr} — </>}
-                        {v.nimekiri_nimi}
-                      </dd>
-                    </div>
-                  )}
-                  {(v.jrk_nimekiri || v.jrk_uld) && (
-                    <div>
-                      <dt className="inline font-medium">Koht nimekirjas: </dt>
-                      <dd className="inline">
-                        {v.jrk_nimekiri || v.jrk_uld}
-                        {v.jrk_uld && v.jrk_nimekiri && ` (üldjärjestuses ${v.jrk_uld})`}
-                      </dd>
-                    </div>
-                  )}
-                  {v.aasta === 1939 && (
-                    <>
-                      {v.ringkond_nr && (
-                        <div>
-                          <dt className="inline font-medium">Ringkond: </dt>
-                          <dd className="inline">{v.ringkond_nr}</dd>
-                        </div>
-                      )}
-                      {v.haaled_kokku !== null && (
-                        <div>
-                          <dt className="inline font-medium">Hääli kokku: </dt>
-                          <dd className="inline">{v.haaled_kokku}</dd>
-                        </div>
-                      )}
-                    </>
-                  )}
-                  {v.amet && (
-                    <div>
-                      <dt className="inline font-medium">Amet: </dt>
-                      <dd className="inline">{v.amet}</dd>
-                    </div>
-                  )}
-                </dl>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* PR-05: aadressid tekstina */}
-      {aadressid.length > 0 && (
-        <section aria-labelledby="aadressid">
-          <h2 id="aadressid" className="mb-2 text-xl font-semibold">
-            Teadaolevad aadressid
-          </h2>
-          <ul className="list-inside list-disc text-sm text-stone-700">
-            {aadressid.map((a, i) => (
-              <li key={i}>{a}</li>
-            ))}
-          </ul>
-          <p className="mt-1 text-xs text-stone-500">
-            Valimisnimekirjade elukohaandmed (peamiselt 1926, 1929 ja 1934).
-          </p>
         </section>
       )}
 
@@ -453,6 +377,31 @@ export default async function IsikuProfiil({
             {kuupaevEesti(juhatamine.esimene)} – {kuupaevEesti(juhatamine.viimane)}.{" "}
             Vormide kaupa:{" "}
             {juhatamine.vormid.map(([vorm, arv]) => `${vorm} (${arv})`).join(", ")}.
+          </p>
+        </section>
+      )}
+
+      {/* PR-05 / UX-04: aadressid koondatuna */}
+      {aadressid.length > 0 && (
+        <section aria-labelledby="aadressid">
+          <h2 id="aadressid" className="mb-2 text-xl font-semibold">
+            Aadressid valimisnimekirjades
+          </h2>
+          {aadressid.length === 1 ? (
+            <p className="text-sm text-stone-700">
+              {aadressid[0].tekst} ({aadressid[0].aastad.join(", ")})
+            </p>
+          ) : (
+            <ul className="list-inside list-disc text-sm text-stone-700">
+              {aadressid.map((a) => (
+                <li key={a.tekst}>
+                  {a.tekst} ({a.aastad.join(", ")})
+                </li>
+              ))}
+            </ul>
+          )}
+          <p className="mt-1 text-xs text-stone-500">
+            Elukoht valimisnimekirjade ja -tulemuste järgi (1917–1939).
           </p>
         </section>
       )}
