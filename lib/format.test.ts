@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { aklKuva, wikidataQid } from "./format";
+import { wikidataQid } from "./format";
 
 describe("wikidataQid (TE3-01)", () => {
   it("tunneb ära kõik sisendkujud", () => {
@@ -15,13 +15,5 @@ describe("wikidataQid (TE3-01)", () => {
     expect(wikidataQid("n/a")).toBe("");
     expect(wikidataQid(null)).toBe("");
     expect(wikidataQid("https://example.org/wiki/Q1")).toBe("");
-  });
-});
-
-describe("aklKuva", () => {
-  it("eemaldab ujukoma-saba", () => {
-    expect(aklKuva("36.0")).toBe("36");
-    expect(aklKuva("48")).toBe("48");
-    expect(aklKuva("")).toBe("");
   });
 });

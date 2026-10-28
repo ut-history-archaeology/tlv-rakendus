@@ -6,7 +6,7 @@ import {
   isikuAadressidKoos, isikuKoosseisud, isikuValimisedKoos, juhatamiseStatistika, karjaariSegmendid,
   mainimisedProfiilile, osavotuStatistika, peamineNimekiri,
 } from "@/lib/derive";
-import { aklKuva, kuupaevEesti, kuupaevLyhike, taisnimi, wikidataQid } from "@/lib/format";
+import { kuupaevEesti, kuupaevLyhike, taisnimi, wikidataQid } from "@/lib/format";
 import { koosseisuVarv } from "@/lib/colors";
 import { ABI } from "@/lib/abitekstid";
 import KarjaarRiba from "@/components/KarjaarRiba";
@@ -98,14 +98,12 @@ export default async function IsikuProfiil({
     alt_perenimi: isik.alt_perenimi,
     alt_eesnimi: isik.alt_eesnimi,
     sugu: isik.sugu,
-    isanimi: isik.isanimi,
     synd_kuupaev: isik.synd_kuupaev,
     synd_tuletatud: isik.synd_tuletatud,
     surm_kuupaev: isik.surm_kuupaev,
     wikidata: isik.wikidata,
     wikidata_qid: wikidataQid(isik.wikidata),
     arhiiviviited: isik.arhiiviviited,
-    AKL_ID: isik.AKL_ID,
     koosseisud,
     peamine_nimekiri: peamineNimekiri(andmed, id),
     karjaar: segmendid,
@@ -131,7 +129,7 @@ export default async function IsikuProfiil({
   const altKujud = [isik.alt_eesnimi, isik.alt_perenimi].filter(Boolean).join(", ");
   const qid = wikidataQid(isik.wikidata);
 
-  // UX-01: päise andmeplokk — ainult täidetud väljad (sugu ei kuvata, E3-01)
+  // UX-01: päise andmeplokk — ainult täidetud väljad (sugu, isanimi ja AKL ID ei kuvata)
   const paiseValjad: [string, ReactNode][] = [];
   if (isik.synd_kuupaev) {
     paiseValjad.push(["Sündinud", (
@@ -142,7 +140,6 @@ export default async function IsikuProfiil({
     )]);
   }
   if (isik.surm_kuupaev) paiseValjad.push(["Surnud", kuupaevEesti(isik.surm_kuupaev)]);
-  if (isik.isanimi) paiseValjad.push(["Isanimi", isik.isanimi]);
   if (altKujud) paiseValjad.push(["Alternatiivkujud", altKujud]);
   if (qid) {
     paiseValjad.push(["Wikidata", (
@@ -158,8 +155,6 @@ export default async function IsikuProfiil({
     )]);
   }
   if (isik.arhiiviviited) paiseValjad.push(["Arhiiviviited", isik.arhiiviviited]);
-  // E3-02: AKL ID lingita, kuni tähendus on selgitatud (K3-01)
-  if (aklKuva(isik.AKL_ID)) paiseValjad.push(["AKL ID", `AKL: ${aklKuva(isik.AKL_ID)}`]);
   const on1940 = koosseisud.includes("1940-1941");
 
   return (

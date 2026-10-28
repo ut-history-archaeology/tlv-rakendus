@@ -58,8 +58,3 @@ export function wikidataQid(v: string | null | undefined): string {
   const m = /^(?:https?:\/\/(?:www\.)?wikidata\.org\/(?:wiki|entity)\/)?(Q\d+)\/?$/i.exec(s);
   return m ? m[1].toUpperCase() : "";
 }
-
-/** AKL_ID kuvakuju: CSV-s ujukomaarvuna salvestatud "36.0" → "36" (väärtust ei muudeta). */
-export function aklKuva(v: string | null | undefined): string {
-  return (v ?? "").trim().replace(/\.0+$/, "");
-}

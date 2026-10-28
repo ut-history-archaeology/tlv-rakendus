@@ -144,13 +144,11 @@ export interface IsikuRida {
   alt_perenimi: string;
   alt_eesnimi: string;
   sugu: string;
-  isanimi: string;
   synd_kuupaev: string;
   synd_tuletatud: string;
   surm_kuupaev: string;
   wikidata: string;
   arhiiviviited: string;
-  AKL_ID: string;
   koosseisud: string[]; // koosseis_id-d, milles isik on olnud liige
   koosseise: number;
   esimene_koosseis: string;
