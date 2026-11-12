@@ -16,7 +16,20 @@ npm run build      # staatiline eksport kausta out/
 npm start          # serveerib out/ kausta (npx serve)
 npm test           # ühiktestid (liikmelisuse tuletamise reegel, protokollide sidumine jm)
 npm run eeltootle  # protokollikorpuse eeltöötlus (vt all); lipud: --kontrolli, --ilma-piltideta
+npm run kontroll   # andmete kontrollide kokkuvõte (sama mis lehel /kontroll)
 ```
+
+### Andmete kontrollleht `/kontroll` (4. etapp, ptk 5a)
+
+Andmestiku omaniku tööriist tabelite omavahelise vastavuse kontrolliks: avaneb otse
+aadressilt `/kontroll/`, ei ole menüüs, otsingus ega sisemistes linkides (`noindex`).
+Kontrollid (`lib/kontroll.ts`, liikmelisus erireegli 1 järgi nagu mujal rakenduses):
+KT-01 liikmete arv vs protokolli `koosseis_arv`; KT-02 kohalolu bilanss; KT-03 muutuste
+loogika (a–e); KT-04 osavõtt vs liikmelisus; KT-05 isikud; KT-06 kokkuvõte koosseisu kaupa.
+Koosseis 1940–1941 on kontrollidest väljas (linnavalitsuse liikmeid pole isikute tabelis).
+KT-04b arvestab liikmeid, kes olid liikmed vähemalt ühel nimelise kohalolijate loeteluga
+koosolekul. `TLV_DATA_DIR=<kaust> npm run kontroll` arvutab kokkuvõtte teise andmekausta
+peal (nt uue Exceli väljund enne commiti).
 
 ### Protokollikorpuse eeltöötlus (2. etapp)
 
@@ -240,3 +253,5 @@ kui otsus on tehtud, liigub kirje `data/README.md` jaotisse "Andmeparandused".
 | L-01 | 27.10.2026 | K338 (protokoll nr 28, 13.11.1940) on lisatud ainult `koosolekud.csv`-sse; `osavott.csv`-s selle koosoleku kohalolijaid ("Koos on: K. Jalak, A. Taev, V. Irs, H. Johani, F. Lange") ei ole, sest teiste 1940–41 ridade osavõtt on parsitud algsest `TLV_koosolekud.xlsx`-ist, mitte korpusest. Kas lisada käsitsi (kõik sidumata, nagu teistel 1940–41 ridadel)? | lahtine |
 | L-04 | 28.10.2026 | `koosseisud.csv` `kandidaatide_allikas` on tühi koosseisudes 1921–1923, 1927–1929 ja 1930–1934, kuigi neil on vastavalt 91, 74 ja 76 `roll=valitav` rida `valimised.csv`-s. 3. etapi lähteülesande näide (UX-03: "kandidaatide nimekiri — Riigi Teataja, nr. 6 …; valimistulemused — ERA.2966.2.200") ei vasta andmetele: 1927–1929 "Riigi Teataja, nr. 6, 24 jaanuar 1927" on `valimistulemuste_allikas` ja ERA.2966.2.200,…201 on `valimised_allikas`. Rakendus kuvab valimiste kaardil valitava rea allikana "allikas märkimata". Kas kandidaatide allikaks on neis koosseisudes `valimised_allikas` (arhiivitoimik) ja kas see tuleks `kandidaatide_allikas` veergu lisada? | lahtine |
 | L-05 | 28.10.2026 | 11 `lahkumine`-rida `muutused.csv`-s käib isiku kohta, kes erireegli 1 järgi (valitud + varasemad liitumised) ei olnud lahkumise eelõhtul koosseisu liige: #3 (1917–1919, isik 389), #95 (1921–1923, isik 301), #233, #242–#248, #272 (1924–1926; isikud 228, 325, 331, 337, 333, 347, 328, 366, 362). Nende asendajate liitumine suurendab liikmete arvu, lahkumine seda ei vähenda — UX-07 ajateljel tõuseb 1924–1926 koosseisu liikmete arv 26.03.1925 60-lt 68-le. Kas neil isikutel puudub `liitumine`-rida (või `valimised.csv` `roll=valitud` rida) või on lahkumise isik vale? Rakendus arvutab liikmelisust edasi erireegli 1 järgi. | lahtine |
+| L-07 | 12.11.2026 | Kontrollleht KT-05c: `koosolek_juhatajad.csv` seob 18 koosoleku (K283–K301, 30.05.1938–27.11.1939, koosseis 1934–1939) juhataja "Aleksander Tõnisson" isikuga 209, kes on valitud alles 1939 (koosseis 1940, liitumine #632 19.01.1940); koosseisus 1934–1939 tal liikmelisuse kirjet pole. Samuti juhatab K223 (1934-03-02, koosseisu 1934–1939 esimene koosolek) Villem Tubin (180), kes 1934 valitute hulgas pole. Kas juhataja on õige isik / kas liikmelisuse kirje puudub, või juhatas ta mitte-liikmena (nt vanema liikme või linnapeana)? | lahtine |
+| L-08 | 12.11.2026 | Kontrollleht KT-03b: #634 (Ants Piip, 128) ja #635 (Viktor Hion, 193) on `liitumine` 29.01.1940, kuigi mõlemad on 1939 valimistel `valitud` (koosseis 1940) ja seega juba liikmed. Esimese koosoleku (19.01.1940) kinnitusread need ei ole (kuupäev erineb). Kas tegu on hilisema kinnitamisega (nt puudusid esimesel koosolekul) või peaks valitud-rida puuduma? | lahtine |

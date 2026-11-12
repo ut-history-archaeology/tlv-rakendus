@@ -6,7 +6,8 @@ import type {
 } from "./types";
 import type { MainimiseRida, PaevakorraRida, ProtokolliRida } from "./protokollid/types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+/** `TLV_DATA_DIR` võimaldab kontrollskriptidel lugeda teist andmekausta (nt uuenduse eelvaade). */
+const DATA_DIR = process.env.TLV_DATA_DIR ?? path.join(process.cwd(), "data");
 
 function loeCSV<T = Record<string, string>>(fail: string): T[] {
   const sisu = fs.readFileSync(path.join(DATA_DIR, fail), "utf-8");
