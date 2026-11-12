@@ -9,6 +9,7 @@ import {
   FiltriKiibid, MinuVaade, MitmikValik, Paginatsioon, SortPais, TabeliYmbris,
 } from "./TabeliOsad";
 import ExportButton from "./ExportButton";
+import KontrollimiselMark from "./KontrollimiselMark";
 import HelpTip from "./HelpTip";
 import { ABI } from "@/lib/abitekstid";
 import type { EkspordiVeerg } from "@/lib/export";
@@ -42,7 +43,10 @@ const EKSPORDI_VEERUD: EkspordiVeerg[] = [
   { key: "koosseisud", pealkiri: "Koosseisud" },
   { key: "esimene_koosseis", pealkiri: "Esimene koosseis" },
   { key: "viimane_koosseis", pealkiri: "Viimane koosseis" },
-  { key: "peamine_nimekiri", pealkiri: "Peamine nimekiri (toorkuju)" },
+  { key: "peamine_nimekiri", pealkiri: "Peamine nimekiri" },
+  { key: "peamine_nimekiri_id", pealkiri: "nimekiri_id" },
+  { key: "peamine_nimekiri_toor", pealkiri: "Peamine nimekiri (toorkuju)" },
+  { key: "peamine_nimekiri_kontrollida", pealkiri: "Nimekirja vaste kontrollimisel" },
   { key: "oli_juhataja", pealkiri: "Oli juhataja" },
   { key: "aadressid", pealkiri: "Teadaolevad aadressid" },
   { key: "wikidata", pealkiri: "Wikidata" },
@@ -65,6 +69,9 @@ function ekspordiRida(r: IsikuRida) {
     esimene_koosseis: r.esimene_koosseis,
     viimane_koosseis: r.viimane_koosseis,
     peamine_nimekiri: r.peamine_nimekiri,
+    peamine_nimekiri_id: r.peamine_nimekiri_id,
+    peamine_nimekiri_toor: r.peamine_nimekiri_toor,
+    peamine_nimekiri_kontrollida: r.peamine_nimekiri_kontrollida ? "jah" : "",
     oli_juhataja: r.oli_juhataja ? "jah" : "ei",
     aadressid: r.aadressid.join(" | "),
     wikidata: r.wikidata,
@@ -83,17 +90,21 @@ export default function IsikudTabel({
   const [hover, setHover] = useState<number | null>(null);
   const otsing = useDebounce(seis.filtrid.q);
 
+  // NK-03: filter kanoonilise nimekirja ID järgi
   const nimekirjad = useMemo(() => {
-    const loend = new Map<string, number>();
+    const loend = new Map<string, { nimi: string; arv: number }>();
     for (const r of read) {
-      if (r.peamine_nimekiri) {
-        loend.set(r.peamine_nimekiri, (loend.get(r.peamine_nimekiri) ?? 0) + 1);
+      if (r.peamine_nimekiri_id !== null) {
+        const id = String(r.peamine_nimekiri_id);
+        const olemas = loend.get(id);
+        loend.set(id, { nimi: r.peamine_nimekiri, arv: (olemas?.arv ?? 0) + 1 });
       }
     }
     return [...loend.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .map(([nimi, arv]) => ({ id: nimi, nimi, arv }));
+      .sort((a, b) => b[1].arv - a[1].arv || a[1].nimi.localeCompare(b[1].nimi, "et"))
+      .map(([id, { nimi, arv }]) => ({ id, nimi, arv }));
   }, [read]);
+  const nimekirjaNimi = (id: string) => nimekirjad.find((n) => n.id === id)?.nimi ?? id;
 
   const valitudKoosseisud = seis.filtrid.koosseisud
     ? seis.filtrid.koosseisud.split(",")
@@ -119,7 +130,7 @@ export default function IsikudTabel({
       }
       if (
         valitudNimekirjad.length > 0 &&
-        !valitudNimekirjad.includes(r.peamine_nimekiri)
+        !valitudNimekirjad.includes(String(r.peamine_nimekiri_id))
       ) {
         return false;
       }
@@ -162,7 +173,7 @@ export default function IsikudTabel({
     })),
     ...valitudNimekirjad.map((n) => ({
       key: "n" + n,
-      silt: `Nimekiri: ${n.length > 40 ? n.slice(0, 40) + "…" : n}`,
+      silt: `Nimekiri: ${nimekirjaNimi(n).length > 40 ? nimekirjaNimi(n).slice(0, 40) + "…" : nimekirjaNimi(n)}`,
       eemalda: () =>
         seis.setFilter("nimekirjad", valitudNimekirjad.filter((x) => x !== n).join("|")),
     })),
@@ -202,7 +213,6 @@ export default function IsikudTabel({
           valikud={nimekirjad}
           valitud={valitudNimekirjad}
           muuda={(uus) => seis.setFilter("nimekirjad", uus.join("|"))}
-          hoiatus={ABI.nimekirjaHoiatus}
         />
         <label className="flex cursor-pointer items-center gap-1.5 text-sm">
           <input
@@ -289,8 +299,12 @@ export default function IsikudTabel({
               <td className="px-3 py-1.5 text-center">{r.koosseise}</td>
               <td className="px-3 py-1.5">{r.esimene_koosseis || "—"}</td>
               <td className="px-3 py-1.5">{r.viimane_koosseis || "—"}</td>
-              <td className="max-w-xs truncate px-3 py-1.5" title={r.peamine_nimekiri}>
+              <td
+                className="max-w-xs truncate px-3 py-1.5"
+                title={r.peamine_nimekiri_toor ? `Allikas: ${r.peamine_nimekiri_toor}` : undefined}
+              >
                 {r.peamine_nimekiri || "—"}
+                {r.peamine_nimekiri_kontrollida && <KontrollimiselMark />}
               </td>
               {staatus && (
                 <td className="whitespace-nowrap px-3 py-1.5">{staatus[r.isik_id]?.tekst ?? "—"}</td>

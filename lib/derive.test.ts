@@ -6,7 +6,7 @@ import type { Muutus, Valimine } from "./types";
 function valitud(isik_id: number, koosseis_id = "K"): Valimine {
   return {
     aasta: 1921, koosseis_id, roll: "valitud", isik_id,
-    nimekiri_nr: "", nimekiri_nimi: "", ringkond_nr: "",
+    nimekiri_nr: "", nimekiri_nimi: "", nimekiri_id: null, nimekiri_kontrollida: false, ringkond_nr: "",
     perenimi: "", alt_perenimi: "", eesnimi: "", alt_eesnimi: "", isanimi: "",
     vanus: "", synniaeg: "", synniaeg_tuletatud: "",
     elukoht_tanav: "", elukoht_majanr: "", elukoht_korterinr: "", elukoht_muu: "",

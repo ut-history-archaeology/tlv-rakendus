@@ -129,32 +129,155 @@ export function isikuKoosseisud(
   return [...hulk].sort((a, b) => (jark.get(a) ?? 99) - (jark.get(b) ?? 99));
 }
 
-/** Isiku peamine nimekiri (toorkuju): sagedasim valimiste kirjetes; eelistab valitud-ridu. */
-export function peamineNimekiri(andmed: Andmestik, isikId: number): string {
-  const loenda = (read: Valimine[]): string => {
-    const loend = new Map<string, number>();
+/** NK-03: isiku peamine nimekiri kanoonilise nimekirja järgi. */
+export interface PeamineNimekiri {
+  id: number;
+  nimi: string;
+  /** isiku valimisridade toorkujud selle nimekirja kohta (allika järjekorras, kordumatud) */
+  toor: string[];
+  /** vähemalt üks vaste on ajutine (NK-02) */
+  kontrollida: boolean;
+}
+
+/** Kanooniliste nimekirjade nimed ID järgi. */
+export function nimekirjaNimed(andmed: Andmestik): Map<number, string> {
+  return new Map(andmed.nimekirjad.map((n) => [n.nimekiri_id, n.nimi]));
+}
+
+/**
+ * Isiku peamine nimekiri (NK-03): sagedasim kanooniline nimekiri valimiste kirjetes; eelistab
+ * valitud-ridu. Ilma kanoonilise vasteta read (1919 valitud, 1939) ei loe.
+ */
+export function peamineNimekiri(
+  andmed: Andmestik, isikId: number, nimed: Map<number, string> = nimekirjaNimed(andmed)
+): PeamineNimekiri | null {
+  const loenda = (read: Valimine[]): number | null => {
+    const loend = new Map<number, number>();
     for (const r of read) {
-      if (r.nimekiri_nimi) {
-        loend.set(r.nimekiri_nimi, (loend.get(r.nimekiri_nimi) ?? 0) + 1);
-      }
+      if (r.nimekiri_id !== null) loend.set(r.nimekiri_id, (loend.get(r.nimekiri_id) ?? 0) + 1);
     }
-    let parim = "";
+    let parim: number | null = null;
     let max = 0;
-    for (const [nimi, arv] of loend) {
+    for (const [id, arv] of loend) {
       if (arv > max) {
         max = arv;
-        parim = nimi;
+        parim = id;
       }
     }
     return parim;
   };
   const oma = andmed.valimised.filter((v) => v.isik_id === isikId);
-  return (
-    loenda(oma.filter((v) => v.roll === "valitud")) ||
-    loenda(oma) ||
-    andmed.muutused.find((m) => m.isik_id === isikId && m.nimekiri)?.nimekiri ||
-    ""
-  );
+  const id = loenda(oma.filter((v) => v.roll === "valitud")) ?? loenda(oma);
+  if (id === null) return null;
+  const read = oma.filter((v) => v.nimekiri_id === id);
+  return {
+    id,
+    nimi: nimed.get(id) ?? "",
+    toor: [...new Set(read.map((r) => r.nimekiri_nimi.trim()).filter(Boolean))],
+    kontrollida: read.some((r) => r.nimekiri_kontrollida),
+  };
+}
+
+/** NK-03: koosseisu jaotusdiagrammi segment kanoonilise nimekirja järgi. */
+export interface NimekirjaSegment {
+  /** kanooniline nimi */
+  nimi: string;
+  nimekiri_id: number | null;
+  arv: number;
+  isikud: number[];
+  /** ametlike (alam)nimekirjade häälte summa sel aastal; null = hääli pole teada */
+  haaled: number | null;
+  kontrollida: boolean;
+  wikidata: string;
+  mitu_osapoolt: boolean;
+}
+
+/** KS-03 + NK-03: valitute jaotus kanoonilise nimekirja järgi. Tühi, kui valitutel nimekirju pole. */
+export function koosseisuNimekirjaJaotus(andmed: Andmestik, koosseisId: string): NimekirjaSegment[] {
+  const valitud = andmed.valimised.filter((v) => v.koosseis_id === koosseisId && v.roll === "valitud");
+  if (!valitud.some((v) => v.nimekiri_id !== null)) return [];
+  const nimekirjad = new Map(andmed.nimekirjad.map((n) => [n.nimekiri_id, n]));
+  const grupid = new Map<number | null, Valimine[]>();
+  for (const v of valitud) grupid.set(v.nimekiri_id, [...(grupid.get(v.nimekiri_id) ?? []), v]);
+  return [...grupid.entries()]
+    .map(([id, read]) => {
+      const n = id !== null ? nimekirjad.get(id) : undefined;
+      const ametlikud = id === null ? [] : andmed.valimisnimekirjad.filter(
+        (a) => a.aasta === read[0].aasta && a.nimekiri_id === id && a.haaled !== null
+      );
+      return {
+        nimi: n?.nimi ?? "(nimekiri teadmata)",
+        nimekiri_id: id,
+        arv: read.length,
+        isikud: read.map((r) => r.isik_id),
+        haaled: ametlikud.length ? ametlikud.reduce((s, a) => s + (a.haaled ?? 0), 0) : null,
+        kontrollida: read.some((r) => r.nimekiri_kontrollida),
+        wikidata: n?.wikidata ?? "",
+        mitu_osapoolt: n?.mitu_osapoolt ?? false,
+      };
+    })
+    .sort((a, b) => b.arv - a.arv);
+}
+
+/** NK-03: koosseisu nimekirjade tabeli rida (ametlik nimekiri, Sheet1). */
+export interface KoosseisuNimekiriRida {
+  nr: string;
+  nimi: string;
+  haaled: number | null;
+  wikidata: string[];
+  nimekiri_id: number | null;
+  kanooniline: string;
+  /** valituid kanoonilise nimekirja kohta; null = valimistulemustes nimekirju pole */
+  valituid: number | null;
+  /** mitu järjestikust rida jagavad sama kanoonilist nimekirja (valituid ühine); 0 = jätkurida */
+  ryhm: number;
+  kontrollida: boolean;
+}
+
+/**
+ * Koosseisu valimiste ametlikud nimekirjad. Valituid loetakse kanoonilise nimekirja kaupa —
+ * valimistulemused ei ütle, millisest 1929. a alamnimekirjast isik valiti.
+ */
+export function koosseisuNimekirjad(andmed: Andmestik, koosseisId: string): KoosseisuNimekiriRida[] {
+  const k = andmed.koosseisud.find((x) => x.koosseis_id === koosseisId);
+  if (!k) return [];
+  const aasta = Number(k.aasta_valimised);
+  const ametlikud = andmed.valimisnimekirjad.filter((a) => a.aasta === aasta);
+  if (ametlikud.length === 0) return [];
+  const nimed = nimekirjaNimed(andmed);
+  const valitud = andmed.valimised.filter((v) => v.koosseis_id === koosseisId && v.roll === "valitud");
+  const onTulemused = valitud.some((v) => v.nimekiri_id !== null);
+  const jrk = ametlikud.every((a) => a.nr)
+    ? [...ametlikud].sort((a, b) => Number(a.nr) - Number(b.nr))
+    : [...ametlikud].sort((a, b) => (b.haaled ?? -1) - (a.haaled ?? -1));
+  // sama kanoonilise nimekirja alamnimekirjad kõrvuti (järjestus esimese järgi)
+  const esimene = new Map<number | null, number>();
+  jrk.forEach((a, i) => { if (a.nimekiri_id !== null && !esimene.has(a.nimekiri_id)) esimene.set(a.nimekiri_id, i); });
+  const jarjestatud = jrk
+    .map((a, i) => ({ a, i, g: a.nimekiri_id !== null ? esimene.get(a.nimekiri_id)! : i }))
+    .sort((x, y) => x.g - y.g || x.i - y.i)
+    .map((x) => x.a);
+  const samaRyhm = (i: number) =>
+    i > 0 && jarjestatud[i].nimekiri_id !== null && jarjestatud[i - 1].nimekiri_id === jarjestatud[i].nimekiri_id;
+  return jarjestatud.map((a, i) => {
+    let ryhm = 0;
+    if (!samaRyhm(i)) {
+      ryhm = 1;
+      while (i + ryhm < jarjestatud.length && samaRyhm(i + ryhm)) ryhm++;
+    }
+    const omad = a.nimekiri_id === null ? [] : valitud.filter((v) => v.nimekiri_id === a.nimekiri_id);
+    return {
+      nr: a.nr,
+      nimi: a.nimi,
+      haaled: a.haaled,
+      wikidata: a.wikidata,
+      nimekiri_id: a.nimekiri_id,
+      kanooniline: a.nimekiri_id !== null ? nimed.get(a.nimekiri_id) ?? "" : "",
+      valituid: onTulemused ? omad.length : null,
+      ryhm,
+      kontrollida: omad.some((v) => v.nimekiri_kontrollida),
+    };
+  });
 }
 
 /** Valimiste rea allikas (UX-03): valitav → kandidaatide_allikas, valitud → valimistulemuste_allikas. */
@@ -173,8 +296,14 @@ export interface ValimineKoos {
   aasta: number;
   koosseis_id: string;
   tulemus: "valitud" | "kandidaat";
-  /** eri toorkujud eraldi, kumbki oma allikaga */
-  nimekiri: { nr: string; nimi: string; allikad: Allikas[] }[];
+  /**
+   * NK-03: kanoonilise nimekirja kaupa (nimi = kanooniline, toor = allika nimekujud); ilma
+   * kanoonilise vasteta read toorkuju kaupa. Eri kanoonilised nimekirjad jäävad eraldi.
+   */
+  nimekiri: {
+    nr: string; nimi: string; toor: string[]; nimekiri_id: number | null; kontrollida: boolean;
+    allikad: Allikas[];
+  }[];
   koht: { jrk_nimekiri?: string; jrk_uld?: string; jrk_ringkond?: string };
   ringkond?: string;
   haaled?: { jsk1?: string; jsk2?: string; kokku?: number };
@@ -249,19 +378,28 @@ export function isikuValimisedKoos(andmed: Andmestik, isikId: number): ValimineK
       const allikad = read.map((r) => valimiseAllikas(andmed, r));
       const paar = read.map((r, i) => ({ r, allikas: allikad[i] }));
 
+      const nimed = nimekirjaNimed(andmed);
       const nimekiri: ValimineKoos["nimekiri"] = [];
       for (const { r, allikas } of paar) {
-        const nimi = r.nimekiri_nimi.trim();
+        const toor = r.nimekiri_nimi.trim();
         const nr = r.nimekiri_nr.trim();
-        if (!nimi && !nr) continue;
-        const olemas = nimekiri.find(
-          (n) => n.nimi === nimi && (n.nr === nr || !n.nr || !nr)
+        if (!toor && !nr) continue;
+        const id = r.nimekiri_id;
+        const nimi = id !== null ? nimed.get(id) ?? toor : toor;
+        const olemas = nimekiri.find((n) =>
+          (id !== null ? n.nimekiri_id === id : n.nimekiri_id === null && n.nimi === nimi) &&
+          (n.nr === nr || !n.nr || !nr)
         );
         if (olemas) {
           olemas.nr ||= nr;
+          if (toor && !olemas.toor.includes(toor)) olemas.toor.push(toor);
+          olemas.kontrollida ||= r.nimekiri_kontrollida;
           olemas.allikad.push(allikas);
         } else {
-          nimekiri.push({ nr, nimi, allikad: [allikas] });
+          nimekiri.push({
+            nr, nimi, toor: toor ? [toor] : [], nimekiri_id: id, kontrollida: r.nimekiri_kontrollida,
+            allikad: [allikas],
+          });
         }
       }
 
@@ -328,8 +466,21 @@ export function isikuAadressidKoos(
   return [...tulem.values()];
 }
 
+/** IsikuRida nimekirjaväljad (NK-03). */
+export function peamiseNimekirjaValjad(p: PeamineNimekiri | null): Pick<
+  IsikuRida, "peamine_nimekiri" | "peamine_nimekiri_id" | "peamine_nimekiri_toor" | "peamine_nimekiri_kontrollida"
+> {
+  return {
+    peamine_nimekiri: p?.nimi ?? "",
+    peamine_nimekiri_id: p?.id ?? null,
+    peamine_nimekiri_toor: p?.toor.join("; ") ?? "",
+    peamine_nimekiri_kontrollida: p?.kontrollida ?? false,
+  };
+}
+
 /** Isikute tabeli read (/isikud, IS-01). */
 export function isikuRead(andmed: Andmestik): IsikuRida[] {
+  const nimed = nimekirjaNimed(andmed);
   const juhatajaIdd = new Set(
     andmed.juhatajad.filter((j) => j.isik_id !== null).map((j) => j.isik_id!)
   );
@@ -351,7 +502,7 @@ export function isikuRead(andmed: Andmestik): IsikuRida[] {
       koosseise: koosseisud.length,
       esimene_koosseis: koosseisud[0] ?? "",
       viimane_koosseis: koosseisud[koosseisud.length - 1] ?? "",
-      peamine_nimekiri: peamineNimekiri(andmed, i.isik_id),
+      ...peamiseNimekirjaValjad(peamineNimekiri(andmed, i.isik_id, nimed)),
       oli_juhataja: juhatajaIdd.has(i.isik_id),
       aadressid: isikuAadressidKoos(andmed, i.isik_id).map((a) => `${a.tekst} (${a.aastad.join(", ")})`),
     };

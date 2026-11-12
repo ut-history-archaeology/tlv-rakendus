@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
 import {
-  isikuRead, koosseisuLiikmedKokku, koosseisuSyndmused, liikmeteArvuSeeria, syndmuseIsikud,
+  isikuRead, koosseisuLiikmedKokku, koosseisuNimekirjaJaotus, koosseisuNimekirjad, koosseisuSyndmused,
+  liikmeteArvuSeeria, syndmuseIsikud,
 } from "@/lib/derive";
 import { koosseisuVarv } from "@/lib/colors";
 import { kuupaevEesti, kuupaevLyhike, taisnimi } from "@/lib/format";
@@ -11,6 +12,7 @@ import { ABI } from "@/lib/abitekstid";
 import { kuupaevadEesti } from "@/lib/protokollid/viide";
 import HelpTip from "@/components/HelpTip";
 import KoosseisuSisu from "@/components/KoosseisuSisu";
+import KoosseisuNimekirjad from "@/components/KoosseisuNimekirjad";
 import RingkonnaDiagramm from "@/components/RingkonnaDiagramm";
 import ExportButton from "@/components/ExportButton";
 import KoosseisuMuutused from "@/components/KoosseisuMuutused";
@@ -66,20 +68,13 @@ export default async function KoosseisuLeht({
   const valitudRead = andmed.valimised.filter(
     (v) => v.koosseis_id === id && v.roll === "valitud"
   );
-  const onNimekirjad = valitudRead.some((v) => v.nimekiri_nimi);
+  // NK-03: kanoonilise nimekirja järgi (toorkujud ühendatud)
+  const nimekirjaJaotus = koosseisuNimekirjaJaotus(andmed, id);
+  const onNimekirjad = nimekirjaJaotus.length > 0;
   const onRingkonnad = valitudRead.some((v) => v.ringkond_nr);
-  let jaotus: (JaotuseSegment & { isikud: number[] })[] = [];
+  let jaotus: (JaotuseSegment & { isikud: number[] })[] = nimekirjaJaotus;
   let jaotuseAlus: "nimekiri" | "ringkond" = "nimekiri";
-  if (onNimekirjad) {
-    const grupid = new Map<string, number[]>();
-    for (const v of valitudRead) {
-      const nimi = v.nimekiri_nimi || "(nimekiri teadmata)";
-      grupid.set(nimi, [...(grupid.get(nimi) ?? []), v.isik_id]);
-    }
-    jaotus = [...grupid.entries()]
-      .map(([nimi, isikud]) => ({ nimi, arv: isikud.length, isikud }))
-      .sort((a, b) => b.arv - a.arv);
-  } else if (onRingkonnad) {
+  if (!onNimekirjad && onRingkonnad) {
     jaotuseAlus = "ringkond";
     const grupid = new Map<string, number[]>();
     for (const v of valitudRead) {
@@ -266,7 +261,9 @@ export default async function KoosseisuLeht({
         read={liikmeRead}
         jaotus={jaotus}
         jaotuseAlus={jaotuseAlus}
-        jaotuseSelgitus={onNimekirjad ? ABI.nimekirjaHoiatus : undefined}
+        nimekirjad={
+          <KoosseisuNimekirjad read={koosseisuNimekirjad(andmed, id)} aasta={koosseis.aasta_valimised} />
+        }
         staatus={syndmused.length > 0 ? staatus : undefined}
       />
 

@@ -2,7 +2,8 @@ import fs from "fs";
 import path from "path";
 import Papa from "papaparse";
 import type {
-  Andmestik, Isik, Koosolek, KoosolekJuhataja, Koosseis, Muutus, Osavott, Valimine,
+  Andmestik, Isik, Koosolek, KoosolekJuhataja, Koosseis, Muutus, Nimekiri, Osavott, Valimine,
+  Valimisnimekiri,
 } from "./types";
 import type { MainimiseRida, PaevakorraRida, ProtokolliRida } from "./protokollid/types";
 
@@ -116,6 +117,8 @@ export function loeAndmestik(): Andmestik {
     isik_id: Number(r.isik_id),
     nimekiri_nr: puhastaAasta(r.nimekiri_nr),
     nimekiri_nimi: r.nimekiri_nimi ?? "",
+    nimekiri_id: num(r.nimekiri_id),
+    nimekiri_kontrollida: r.nimekiri_kontrollida === "jah",
     ringkond_nr: puhastaAasta(r.ringkond_nr),
     perenimi: r.perenimi ?? "",
     alt_perenimi: r.alt_perenimi ?? "",
@@ -191,9 +194,25 @@ export function loeAndmestik(): Andmestik {
     arv: Number(r.arv),
   }));
 
+  const nimekirjad: Nimekiri[] = loeCSV("nimekirjad.csv").map((r) => ({
+    nimekiri_id: Number(r.nimekiri_id),
+    nimi: r.nimi ?? "",
+    mitu_osapoolt: r.mitu_osapoolt === "jah",
+    wikidata: r.wikidata ?? "",
+  }));
+
+  const valimisnimekirjad: Valimisnimekiri[] = loeCSV("valimisnimekirjad.csv").map((r) => ({
+    aasta: Number(r.aasta),
+    nr: r.nr ?? "",
+    nimi: r.nimi ?? "",
+    haaled: num(r.haaled),
+    wikidata: [r.wikidata_1, r.wikidata_2, r.wikidata_3, r.wikidata_4].filter((w): w is string => !!w),
+    nimekiri_id: num(r.nimekiri_id),
+  }));
+
   cache = {
     isikud, koosseisud, koosolekud, juhatajad, muutused, valimised, osavott,
-    protokollid, paevakord, mainimised,
+    protokollid, paevakord, mainimised, nimekirjad, valimisnimekirjad,
   };
   return cache;
 }

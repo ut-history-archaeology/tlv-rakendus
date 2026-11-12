@@ -9,7 +9,8 @@ Kõik failid on UTF-8 kodeeringus CSV-d (komaeraldajaga). Kuupäevad ISO-vormis
 ## Failid ja seosed
 
 ```
-isikud.csv (isik_id) ←── valimised.csv (isik_id, koosseis_id)
+isikud.csv (isik_id) ←── valimised.csv (isik_id, koosseis_id, nimekiri_id) ──→ nimekirjad.csv (nimekiri_id)
+                                          valimisnimekirjad.csv (nimekiri_id) ──→ nimekirjad.csv
         ↑                muutused.csv (isik_id, asendaja_ID, asendatav_ID, koosseis_id)
         ↑                osavott.csv (isik_id, koosolek_id, koosseis_id)
         ↑                koosolek_juhatajad.csv (isik_id, koosolek_id)
@@ -81,8 +82,12 @@ või `valitav` (719 — oli kandidaat; 1917 on igal kandidaadil kaks rida: eesti
 venekeelne kandidaatide nimekiri, viimane kirillitsas). `koosseis_id` lisatud. 1939. aastal on
 ringkonnad (1–4) ja häältearvud (`hääled_kokku` jt), nimekirjanimed puuduvad.
 Aadressiväljad (`elukoht_tänav` jne) on täidetud 713 real (peamiselt 1926,
-1929, 1934 valimistelt). **NB: `nimekiri_nimi` on KANONISEERIMATA toorkuju**
-(134 varianti) — vt nimekirjad_variandid_TAITMISEKS.csv.
+1929, 1934 valimistelt). `nimekiri_nimi` on allika toorkuju; **`nimekiri_id`** viitab
+kanoonilisele nimekirjale (`nimekirjad.csv`, NK-01), seotud `scripts/nimekirjad-vasted.csv`
+järgi (aasta + nr + toorkuju; alguse/lõpu tühikud ei loe). Tühi: 1919 valitud (nimekiri
+allikas puudub) ja 1939 (ringkonnad). **`nimekiri_kontrollida`** = `jah` 3 real, kus vaste
+on ajutine (NK-02, koosolekule): 1923 Aleksander Tamm (362) → 20; 1926 Peeter Kase (49) ja
+Karl Unt (183) → 24 (võimalik 25).
 
 ## osavott.csv — 5087 rida (TULETATUD tabel)
 Parsitud koosolekute kohal/puudub-stringidest (`scripts/excel-csv.py`; reeglid `README.md`
@@ -138,9 +143,24 @@ registriväline mitmesus "N;None": volinik klapib, aga sama nimega võib esineda
 mitte-volinik). Mitme kandidaadiga olemid ei loe ühelegi isikule. Sidumine on
 automaatne (keelemudel) ja võib sisaldada vigu.
 
-## nimekirjad_variandid_TAITMISEKS.csv — 140 rida
-Tööfail nimekirjade kanoniseerimiseks (Sven/Liisi täidavad veerud
-`kanooniline_nimi` ja `kanooniline_id`). Rakendus kasutab seni toorkujusid.
+## nimekirjad.csv — 35 rida (NK-01)
+Kanoonilised (ühtlustatud) nimekirjad, `TLV_nimekirjad.xlsx` Sheet2.
+| Veerg | Kirjeldus |
+|---|---|
+| nimekiri_id | 1–35 |
+| nimi | Ühtlustatud nimi (rakenduses filtrites, jaotusdiagrammis, isikute tabelis) |
+| mitu_osapoolt | `jah` = mitme osapoole ühisnimekiri (Wikidata kirje võib olla ühe osapoole kohta) |
+| wikidata | Wikidata URL (kui on) |
+| nr_<aasta>, nimi_<aasta> | Nimekirja number ja ametlik nimi aastate 1917, 1919, 1921, 1923, 1926, 1929, 1934 valimistel (1926–1934 numbreid pole) |
+
+## valimisnimekirjad.csv — 78 rida (NK-01)
+Ametlikud valimisnimekirjad aastate kaupa, `TLV_nimekirjad.xlsx` Sheet1: `aasta, nr, nimi,
+haaled, wikidata_1…wikidata_4, nimekiri_id`. 1929 alamnimekirjad ("… (eesotsas X)") on eraldi
+ridadena, kuid sama `nimekiri_id`-ga. `haaled` puudub 1917. `nimekiri_id` tuletab
+`scripts/excel-csv.py` Sheet2 aastaveergudest: 1917–1923 numbri järgi, 1926–1934 ametliku nime
+järgi (1929 ilma sulgudes "eesotsas …" osata). Ainus vasteta rida: 1917 nr 3 "Tagasi võetud".
+Valimistulemused ei ütle, millisest 1929 alamnimekirjast isik valiti — valituid saab lugeda
+ainult kanoonilise nimekirja kaupa.
 
 ## Andmeparandused (2. etapp, 27.10.2026)
 

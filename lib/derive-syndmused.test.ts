@@ -6,7 +6,7 @@ import type { Andmestik, Koosseis, Muutus, Valimine } from "./types";
 function valitud(isik_id: number): Valimine {
   return {
     aasta: 1926, koosseis_id: "K", roll: "valitud", isik_id,
-    nimekiri_nr: "", nimekiri_nimi: "", ringkond_nr: "",
+    nimekiri_nr: "", nimekiri_nimi: "", nimekiri_id: null, nimekiri_kontrollida: false, ringkond_nr: "",
     perenimi: "", alt_perenimi: "", eesnimi: "", alt_eesnimi: "", isanimi: "",
     vanus: "", synniaeg: "", synniaeg_tuletatud: "",
     elukoht_tanav: "", elukoht_majanr: "", elukoht_korterinr: "", elukoht_muu: "",
@@ -38,7 +38,7 @@ const KOOSSEIS: Koosseis = {
 function andmestik(muutused: Muutus[], valimised: Valimine[] = [], koosseis = KOOSSEIS): Andmestik {
   return {
     isikud: [], koosseisud: [koosseis], koosolekud: [], juhatajad: [], muutused,
-    valimised, osavott: [], protokollid: [], paevakord: [], mainimised: [],
+    valimised, osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [],
   };
 }
 

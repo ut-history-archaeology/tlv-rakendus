@@ -139,5 +139,46 @@ class Osavott(unittest.TestCase):
         self.assertEqual(self.siduja([]).seo("Kleement", "K"), ("", "puudub"))
 
 
+class Nimekirjad(unittest.TestCase):
+    """TE4-03: nimekirjade sidumine vastete tabeli järgi."""
+    VASTED = {("1926", "", "Eesti rahvaerakonna nimekiri"): {"id": "7", "kontrollida": False},
+              ("1923", "7", "Linna rentnikute rühm"): {"id": "20", "kontrollida": True}}
+
+    def rida(self, aasta, nr, nimi):
+        return {"aasta": aasta, "nimekiri_nr": nr, "nimekiri_nimi": nimi}
+
+    def test_seotakse_ja_tuhikud_ei_sega(self):
+        v = [self.rida("1926", "", " Eesti rahvaerakonna nimekiri\xa0"), self.rida("1923", "7", "Linna rentnikute rühm")]
+        x.seo_nimekirjad(v, self.VASTED)
+        self.assertEqual([(r["nimekiri_id"], r["nimekiri_kontrollida"]) for r in v], [("7", ""), ("20", "jah")])
+
+    def test_puuduv_toorkuju_katkestab(self):
+        v = [self.rida("1926", "", "Rahvaerakonna uus kuju")]
+        with self.assertRaises(x.NimekirjaViga) as e:
+            x.seo_nimekirjad(v, self.VASTED)
+        self.assertIn("Rahvaerakonna uus kuju", str(e.exception))
+
+    def test_1939_tuhi(self):
+        v = [{"aasta": "1939", "nimekiri_nr": "", "nimekiri_nimi": "", "ringkond_nr": "2"}]
+        x.seo_nimekirjad(v, self.VASTED)
+        self.assertEqual(v[0]["nimekiri_id"], "")
+
+    def test_vastete_fail_kehtib(self):
+        vasted = x.loe_nimekirjade_vasted()
+        self.assertEqual(len(vasted), 139)
+        self.assertEqual(sum(v["kontrollida"] for v in vasted.values()), 3)
+
+    def test_ametlikud_nimekirjad_1929_alamnimekirjad(self):
+        kan = [{"nimekiri_id": "26", **{f"{v}_{a}": "" for a in x.NIMEKIRJAD_AASTAD for v in ("nr", "nimi")}}]
+        kan[0]["nimi_1929"] = "Tartu majaomanikud"
+        kan[0]["nr_1923"] = "5"
+        read = [{"aasta_valimised": 1929, "nimekiri_nr": None, "nimekiri_nimi": "Tartu majaomanikud (eesotsas J. O. Rütli)",
+                 "hääled": 736, **{f"wikidata_{i}": None for i in range(1, 5)}},
+                {"aasta_valimised": 1923, "nimekiri_nr": 5, "nimekiri_nimi": "Majaomanikud", "hääled": 3126,
+                 **{f"wikidata_{i}": None for i in range(1, 5)}}]
+        out = x.tee_valimisnimekirjad(read, kan)
+        self.assertEqual([r["nimekiri_id"] for r in out], ["26", "26"])
+
+
 if __name__ == "__main__":
     unittest.main()

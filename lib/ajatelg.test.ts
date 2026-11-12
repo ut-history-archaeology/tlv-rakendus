@@ -6,7 +6,7 @@ import type { Andmestik, Koosseis, Muutus, Valimine } from "./types";
 function valitud(isik_id: number): Valimine {
   return {
     aasta: 1926, koosseis_id: "K", roll: "valitud", isik_id,
-    nimekiri_nr: "", nimekiri_nimi: "", ringkond_nr: "",
+    nimekiri_nr: "", nimekiri_nimi: "", nimekiri_id: null, nimekiri_kontrollida: false, ringkond_nr: "",
     perenimi: "", alt_perenimi: "", eesnimi: "", alt_eesnimi: "", isanimi: "",
     vanus: "", synniaeg: "", synniaeg_tuletatud: "",
     elukoht_tanav: "", elukoht_majanr: "", elukoht_korterinr: "", elukoht_muu: "",
@@ -40,7 +40,7 @@ describe("liikmeteArvuSeeria (TE3-05)", () => {
         m(3, 4, "1928-02-01", "liitumine"),
       ],
       valimised: [valitud(1), valitud(2), valitud(3)],
-      osavott: [], protokollid: [], paevakord: [], mainimised: [],
+      osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [],
     };
     expect(liikmeteArvuSeeria(andmed, "K", "1926-12-01", "1929-12-30")).toEqual([
       { kuupaev: "1926-12-01", arv: 3 },
@@ -58,7 +58,7 @@ describe("liikmeteArvuSeeria: liitumine&lahkumine", () => {
       isikud: [], koosseisud: [KOOSSEIS], koosolekud: [], juhatajad: [],
       muutused: [m(1, 9, "1928-01-31", "liitumine&lahkumine")],
       valimised: [valitud(1), valitud(2)],
-      osavott: [], protokollid: [], paevakord: [], mainimised: [],
+      osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [],
     };
     expect(liikmeteArvuSeeria(andmed, "K", "1926-12-01", "1929-12-30").map((x) => [x.kuupaev, x.arv])).toEqual([
       ["1926-12-01", 2], ["1928-01-31", 3], ["1928-02-01", 2], ["1929-12-30", 2],

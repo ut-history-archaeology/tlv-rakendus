@@ -6,7 +6,7 @@ import type { Andmestik, Koosseis, Valimine } from "./types";
 function rida(roll: Valimine["roll"], lisa: Partial<Valimine> = {}): Valimine {
   return {
     aasta: 1926, koosseis_id: "K", roll, isik_id: 1,
-    nimekiri_nr: "", nimekiri_nimi: "", ringkond_nr: "",
+    nimekiri_nr: "", nimekiri_nimi: "", nimekiri_id: null, nimekiri_kontrollida: false, ringkond_nr: "",
     perenimi: "", alt_perenimi: "", eesnimi: "", alt_eesnimi: "", isanimi: "",
     vanus: "", synniaeg: "", synniaeg_tuletatud: "",
     elukoht_tanav: "", elukoht_majanr: "", elukoht_korterinr: "", elukoht_muu: "",
@@ -26,6 +26,10 @@ function andmestik(valimised: Valimine[], koosseisud: Koosseis[] = [KOOSSEIS]): 
   return {
     isikud: [], koosseisud, koosolekud: [], juhatajad: [], muutused: [],
     valimised, osavott: [], protokollid: [], paevakord: [], mainimised: [],
+    nimekirjad: [
+      { nimekiri_id: 7, nimi: "Rahvaerakond", mitu_osapoolt: false, wikidata: "" },
+    ],
+    valimisnimekirjad: [],
   };
 }
 
@@ -37,7 +41,9 @@ describe("isikuValimisedKoos (TE3-02)", () => {
     const [k] = isikuValimisedKoos(andmestik([rida("valitav", { nimekiri_nimi: "A" })]), 1);
     expect(k.tulemus).toBe("kandidaat");
     expect(k.allikad).toEqual([KAND]);
-    expect(k.nimekiri).toEqual([{ nr: "", nimi: "A", allikad: [KAND] }]);
+    expect(k.nimekiri).toEqual([
+      { nr: "", nimi: "A", toor: ["A"], nimekiri_id: null, kontrollida: false, allikad: [KAND] },
+    ]);
   });
 
   it("valitud + kandidaat võrdsete väljadega → üks väärtus kahe allikaga", () => {
@@ -47,7 +53,9 @@ describe("isikuValimisedKoos (TE3-02)", () => {
     ]), 1);
     expect(k).toHaveLength(1);
     expect(k[0].tulemus).toBe("valitud");
-    expect(k[0].nimekiri).toEqual([{ nr: "3", nimi: "A", allikad: [KAND, TUL] }]);
+    expect(k[0].nimekiri).toEqual([
+      { nr: "3", nimi: "A", toor: ["A"], nimekiri_id: null, kontrollida: false, allikad: [KAND, TUL] },
+    ]);
     expect(k[0].amet).toEqual([{ vaartus: "kaupmees", allikad: [KAND, TUL] }]);
     expect(k[0].koht).toEqual({ jrk_nimekiri: "6", jrk_uld: "46" });
     expect(k[0].allikad).toEqual([KAND, TUL]);
@@ -58,10 +66,21 @@ describe("isikuValimisedKoos (TE3-02)", () => {
       rida("valitav", { nimekiri_nimi: "Majaomanikud" }),
       rida("valitud", { nimekiri_nimi: "Majaomanikkude selts" }),
     ]), 1);
-    expect(k.nimekiri).toEqual([
-      { nr: "", nimi: "Majaomanikud", allikad: [KAND] },
-      { nr: "", nimi: "Majaomanikkude selts", allikad: [TUL] },
+    expect(k.nimekiri.map((n) => [n.nimi, n.allikad])).toEqual([
+      ["Majaomanikud", [KAND]],
+      ["Majaomanikkude selts", [TUL]],
     ]);
+  });
+
+  it("NK-03: eri toorkujud sama kanoonilise nimekirjaga → üks kanooniline nimi, toorkujud alles", () => {
+    const [k] = isikuValimisedKoos(andmestik([
+      rida("valitav", { nimekiri_nimi: "Eesti rahvaerakonna nimekiri", nimekiri_id: 7 }),
+      rida("valitud", { nimekiri_nimi: "Rahvaerakonna nimekiri", nimekiri_id: 7, nimekiri_kontrollida: true }),
+    ]), 1);
+    expect(k.nimekiri).toEqual([{
+      nr: "", nimi: "Rahvaerakond", toor: ["Eesti rahvaerakonna nimekiri", "Rahvaerakonna nimekiri"],
+      nimekiri_id: 7, kontrollida: true, allikad: [KAND, TUL],
+    }]);
   });
 
   it("vanus kandidaadirealt", () => {

@@ -83,7 +83,12 @@ export interface Valimine {
   roll: "valitud" | "valitav";
   isik_id: number;
   nimekiri_nr: string;
+  /** toorkuju (nagu allikas) */
   nimekiri_nimi: string;
+  /** NK-01: kanooniline nimekiri (data/nimekirjad.csv); null = toorkuju puudub (1919 valitud, 1939) */
+  nimekiri_id: number | null;
+  /** NK-02: vaste on ajutine (scripts/nimekirjad-vasted.csv staatus KONTROLLIDA) */
+  nimekiri_kontrollida: boolean;
   ringkond_nr: string;
   perenimi: string;
   alt_perenimi: string;
@@ -120,6 +125,26 @@ export interface Osavott {
 }
 
 /** Kõik andmestiku tabelid koos. */
+/** NK-01: kanooniline nimekiri (data/nimekirjad.csv, 35). */
+export interface Nimekiri {
+  nimekiri_id: number;
+  nimi: string;
+  /** mitme osapoole ühisnimekiri */
+  mitu_osapoolt: boolean;
+  wikidata: string;
+}
+
+/** NK-01: ametlik valimisnimekiri (data/valimisnimekirjad.csv, 78); 1929 alamnimekirjad eraldi. */
+export interface Valimisnimekiri {
+  aasta: number;
+  nr: string;
+  nimi: string;
+  haaled: number | null;
+  wikidata: string[];
+  /** null = kanooniline puudub (1917 nr 3 "Tagasi võetud") */
+  nimekiri_id: number | null;
+}
+
 export interface Andmestik {
   isikud: Isik[];
   koosseisud: Koosseis[];
@@ -134,6 +159,9 @@ export interface Andmestik {
   paevakord: PaevakorraRida[];
   /** data/protokolli_mainimised.csv */
   mainimised: MainimiseRida[];
+  /** NK-01 */
+  nimekirjad: Nimekiri[];
+  valimisnimekirjad: Valimisnimekiri[];
 }
 
 /** Isikute tabeli tuletatud rida (/isikud vaade). */
@@ -153,7 +181,12 @@ export interface IsikuRida {
   koosseise: number;
   esimene_koosseis: string;
   viimane_koosseis: string;
+  /** NK-03: kanoonilise nimekirja nimi; toorkujud eraldi */
   peamine_nimekiri: string;
+  peamine_nimekiri_id: number | null;
+  /** isiku toorkujud selle nimekirja kohta ("; "-ga) */
+  peamine_nimekiri_toor: string;
+  peamine_nimekiri_kontrollida: boolean;
   oli_juhataja: boolean;
   aadressid: string[]; // "aadress (aasta, aasta)" tekstina (UX-04)
 }

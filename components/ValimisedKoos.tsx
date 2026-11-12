@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { Allikas, ValimineKoos } from "@/lib/derive";
 import { ABI } from "@/lib/abitekstid";
 import HelpTip from "./HelpTip";
+import KontrollimiselMark from "./KontrollimiselMark";
 
 const ULAINDEKS = ["¹", "²", "³", "⁴", "⁵", "⁶"];
 
@@ -45,7 +46,13 @@ function ValimiseKaart({ k }: { k: ValimineKoos }) {
     read.push(["Nimekiri", k.nimekiri.map((n, i) => (
       <span key={i} className="block">
         {n.nr && <>nr {n.nr} — </>}
-        {n.nimi}
+        <span
+          title={n.toor.length && n.toor.join() !== n.nimi ? `Allikas: ${n.toor.join("; ")}` : undefined}
+          className={n.toor.length && n.toor.join() !== n.nimi ? "cursor-help underline decoration-dotted decoration-stone-400" : ""}
+        >
+          {n.nimi}
+        </span>
+        {n.kontrollida && <KontrollimiselMark />}
         {viited(n.allikad, k.nimekiri.length > 1)}
       </span>
     ))]);

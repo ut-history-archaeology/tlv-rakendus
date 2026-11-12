@@ -6,9 +6,9 @@
     python3 scripts/excel-csv.py andmed_excel data --raport fail.md
 
 Sisend: andmed_excel/TLV_*.xlsx, scripts/andmeparandused.json (AN-02),
-        scripts/isik-aliased.json (AN-02).
+        scripts/isik-aliased.json (AN-02), scripts/nimekirjad-vasted.csv (NK-01).
 Väljund (data/README.md skeem): isikud, koosseisud, koosolekud, koosolek_juhatajad,
-        muutused, valimised, osavott.
+        muutused, valimised, osavott, nimekirjad, valimisnimekirjad.
 Teisendusreeglid = augusti korrastus (ANDMEKORRASTUSE_RAPORT.md). Võrdlus vana
 data/*.csv ↔ uus (AN-03 p 1) prinditakse alati; erinevused peavad vastama
 ANDMEUUENDUS_*_RAPORT.md-le. Buildis seda skripti ei käivitata.
@@ -29,6 +29,7 @@ from collections import Counter, defaultdict
 JUUR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PARANDUSED = os.path.join(JUUR, "scripts", "andmeparandused.json")
 ALIASED = os.path.join(JUUR, "scripts", "isik-aliased.json")
+NIMEKIRJAD_VASTED = os.path.join(JUUR, "scripts", "nimekirjad-vasted.csv")
 
 NADALAPAEVAD = ["esmaspäev", "teisipäev", "kolmapäev", "neljapäev", "reede", "laupäev", "pühapäev"]
 EXCELI_VEAD = {"#REF!", "#VALUE!", "#N/A", "#DIV/0!", "#NAME?", "#NULL!", "#NUM!"}
@@ -171,7 +172,8 @@ MUUTUSED_VEERUD = ["muutus_id", "isik_id", "perenimi", "eesnimi", "nimekiri", "k
                    "liik", "liitus_prot", "lahkus_prot", "ryhmavahetus_prot", "peatatud_prot",
                    "allikaviide", "täpsustus", "asendaja_ID", "asendatav_ID", "asendaja_puudub",
                    "asendatav_puudub"]
-VALIMISED_VEERUD = ["aasta", "koosseis_id", "roll", "isik_id", "nimekiri_nr", "nimekiri_nimi",
+VALIMISED_VEERUD = ["aasta", "koosseis_id", "roll", "isik_id", "nimekiri_nr", "nimekiri_nimi", "nimekiri_id",
+                    "nimekiri_kontrollida",
                     "ringkond_nr", "perenimi", "alt_perenimi", "eesnimi", "alt_eesnimi", "isanimi",
                     "vanus", "sünniaeg", "sünniaeg_tuletatud", "elukoht_tänav", "elukoht_majanr",
                     "elukoht_korterinr", "elukoht_muu", "amet", "märkused", "jrk_üld", "jrk_nimekiri",
@@ -321,8 +323,102 @@ def tee_valimised(read, koosseisud, aliased, loendur) -> list[dict]:
             "nimekiri_nr": tekst(r["nimekiri_nr"]),
             "nimekiri_nimi": tekst(r["nimekiri_nimi"]),
             "ringkond_nr": tekst(r["ringkond_nr"]),
-            **{v: tekst(r[v]) for v in VALIMISED_VEERUD[7:]},
+            **{v: tekst(r[v]) for v in VALIMISED_VEERUD[9:]},
         })
+    return out
+
+
+# ---------------------------------------------------------------- nimekirjad (NK-01)
+
+NIMEKIRJAD_AASTAD = ["1917", "1919", "1921", "1923", "1926", "1929", "1934"]
+NIMEKIRJAD_VEERUD = ["nimekiri_id", "nimi", "mitu_osapoolt", "wikidata",
+                     *[f"{v}_{a}" for a in NIMEKIRJAD_AASTAD for v in ("nr", "nimi")]]
+VALIMISNIMEKIRJAD_VEERUD = ["aasta", "nr", "nimi", "haaled", "wikidata_1", "wikidata_2", "wikidata_3",
+                            "wikidata_4", "nimekiri_id"]
+EESOTSAS = re.compile(r"\s*\(eesotsas [^)]*\)$")
+
+
+class NimekirjaViga(Exception):
+    """Valimiste toorkuju, mida vastete tabelis pole — skript katkeb (NK-01)."""
+
+
+def toorkuju(s: str) -> str:
+    """Võrdluskuju vastete tabeliga: alguse/lõpu tühikud (ka NBSP) maha, sisu muutmata."""
+    return s.strip()
+
+
+def loe_nimekirjade_vasted(tee: str = NIMEKIRJAD_VASTED) -> dict[tuple[str, str, str], dict]:
+    """(aasta, nr, toorkuju) → {"id", "kontrollida"}. Staatus "KONTROLLIDA…" → kontrollida (NK-02)."""
+    with open(tee, encoding="utf-8-sig", newline="") as f:
+        read = list(csv.DictReader(f, delimiter=";"))
+    vasted = {}
+    for r in read:
+        voti = (r["aasta"].strip(), r["nimekiri_nr"].strip(), toorkuju(r["nimekiri_nimi_toor"]))
+        if voti in vasted:
+            raise NimekirjaViga(f"nimekirjad-vasted.csv: korduv rida {voti}")
+        vasted[voti] = {"id": r["nimekiri_id"].strip(),
+                        "kontrollida": r["staatus"].strip().upper().startswith("KONTROLLIDA")}
+    return vasted
+
+
+def seo_nimekirjad(valimised: list[dict], vasted: dict) -> list[str]:
+    """valimised += nimekiri_id, nimekiri_kontrollida. Tühi toorkuju (1919 valitud, 1939
+    ringkonnad) → tühi id. Toorkuju, mida vastete tabelis pole → NimekirjaViga (kõik korraga)."""
+    puudu: Counter = Counter()
+    for v in valimised:
+        nimi = toorkuju(v["nimekiri_nimi"])
+        v["nimekiri_id"], v["nimekiri_kontrollida"] = "", ""
+        if not nimi:
+            continue
+        vaste = vasted.get((v["aasta"], v["nimekiri_nr"].strip(), nimi))
+        if vaste is None:
+            puudu[(v["aasta"], v["nimekiri_nr"], nimi)] += 1
+            continue
+        v["nimekiri_id"] = vaste["id"]
+        v["nimekiri_kontrollida"] = "jah" if vaste["kontrollida"] else ""
+    if puudu:
+        raise NimekirjaViga("valimiste nimekirja toorkujud puuduvad scripts/nimekirjad-vasted.csv-st — lisa read:\n"
+                            + "\n".join(f"  {a};{n};{t} ({k} rida)" for (a, n, t), k in sorted(puudu.items())))
+    return []
+
+
+def tee_nimekirjad(read) -> list[dict]:
+    """TLV_nimekirjad.xlsx Sheet2 → kanoonilised nimekirjad (35)."""
+    out = []
+    for r in read:
+        rida = {"nimekiri_id": tekst(r["id"]), "nimi": tekst(r["nimi_korrastatud"]).strip(),
+                "mitu_osapoolt": tekst(r["mitu_osapoolt"]).strip(), "wikidata": tekst(r["wikidata"]).strip()}
+        for a in NIMEKIRJAD_AASTAD:
+            rida[f"nr_{a}"] = tekst(r.get(f"{a}_nr"))
+            rida[f"nimi_{a}"] = tekst(r.get(f"{a}_nimi")).strip()
+        out.append(rida)
+    return out
+
+
+def tee_valimisnimekirjad(read, nimekirjad: list[dict]) -> list[dict]:
+    """TLV_nimekirjad.xlsx Sheet1 → ametlikud nimekirjad (78) + nimekiri_id Sheet2 aastaveergude
+    järgi: kui aastal on numbrid (1917–1923), siis nr järgi; muidu nime järgi (täpne vaste;
+    1929 alamnimekirjad "… (eesotsas X)" = Sheet2 nimi ilma sulgudeta). Vasteta → tühi + hoiatus."""
+    nr_jargi: dict[tuple[str, str], str] = {}
+    nime_jargi: dict[tuple[str, str], str] = {}
+    for n in nimekirjad:
+        for a in NIMEKIRJAD_AASTAD:
+            if n[f"nr_{a}"]:
+                nr_jargi[(a, n[f"nr_{a}"])] = n["nimekiri_id"]
+            if n[f"nimi_{a}"]:
+                nime_jargi[(a, n[f"nimi_{a}"])] = n["nimekiri_id"]
+    out = []
+    for r in read:
+        aasta, nr, nimi = tekst(r["aasta_valimised"]), tekst(r["nimekiri_nr"]), tekst(r["nimekiri_nimi"]).strip()
+        if nr:
+            nid = nr_jargi.get((aasta, nr), "")
+        else:
+            nid = nime_jargi.get((aasta, nimi)) or nime_jargi.get((aasta, EESOTSAS.sub("", nimi)), "")
+        if not nid:
+            hoiata(f"valimisnimekirjad: {aasta} nr {nr or '—'} \"{nimi}\" — kanoonilist nimekirja ei leitud")
+        out.append({"aasta": aasta, "nr": nr, "nimi": nimi, "haaled": tekst(r["hääled"]),
+                    **{f"wikidata_{i}": tekst(r[f"wikidata_{i}"]).strip() for i in range(1, 5)},
+                    "nimekiri_id": nid})
     return out
 
 
@@ -520,6 +616,12 @@ def kontrolli_viiteid(t: dict[str, list[dict]]) -> list[str]:
         for r in t[tabel]:
             if r["koosolek_id"] not in koosolekud:
                 vead.append(f"{tabel}: koosolek_id={r['koosolek_id']} tundmatu")
+    if "nimekirjad" in t:
+        nimekirjad = {r["nimekiri_id"] for r in t["nimekirjad"]}
+        for tabel in ("valimised", "valimisnimekirjad"):
+            for r in t[tabel]:
+                if r.get("nimekiri_id") and r["nimekiri_id"] not in nimekirjad:
+                    vead.append(f"{tabel}: nimekiri_id={r['nimekiri_id']} puudub nimekirjade tabelist")
     return vead
 
 
@@ -533,6 +635,8 @@ VOTMED = {
     "muutused": ["muutus_id"],
     "valimised": ["aasta", "roll", "isik_id"],
     "osavott": ["koosolek_id", "staatus", "nimi_toor"],
+    "nimekirjad": ["nimekiri_id"],
+    "valimisnimekirjad": ["aasta", "nr", "nimi"],
 }
 
 
@@ -632,6 +736,8 @@ def teisenda(kaust: str) -> tuple[dict[str, list[dict]], list[str], Counter]:
     _, koosolekud_x, _ = loe_leht(kaust, "TLV_koosolekud.xlsx")
     _, muutused_x, _ = loe_leht(kaust, "TLV_muutused_protokollides.xlsx")
     _, valimised_x, _ = loe_leht(kaust, "TLV_valimised.xlsx")
+    _, nimekirjad_x, _ = loe_leht(kaust, "TLV_nimekirjad.xlsx", "Sheet2")
+    _, valimisnimekirjad_x, _ = loe_leht(kaust, "TLV_nimekirjad.xlsx", "Sheet1")
 
     isikud = tee_isikud(isikud_x, aliased, alias_loendur)
     koosseisud = tee_koosseisud(koosseisud_x)
@@ -648,12 +754,16 @@ def teisenda(kaust: str) -> tuple[dict[str, list[dict]], list[str], Counter]:
         k["koosseis_id"] = maara(k["kuupaev"])
     tabelid["koosolek_juhatajad"] = tee_juhatajad(koosolekud, isikud)
     tabelid["osavott"] = tee_osavott(koosolekud, isikud, valimised, muutused)
+    seo_nimekirjad(valimised, loe_nimekirjade_vasted())
+    tabelid["nimekirjad"] = tee_nimekirjad(nimekirjad_x)
+    tabelid["valimisnimekirjad"] = tee_valimisnimekirjad(valimisnimekirjad_x, tabelid["nimekirjad"])
     return tabelid, logi, alias_loendur
 
 
 VALJUNDID = [("isikud", ISIKUD_VEERUD), ("koosseisud", KOOSSEISUD_VEERUD), ("koosolekud", KOOSOLEKUD_VEERUD),
              ("koosolek_juhatajad", JUHATAJAD_VEERUD), ("muutused", MUUTUSED_VEERUD),
-             ("valimised", VALIMISED_VEERUD), ("osavott", OSAVOTT_VEERUD)]
+             ("valimised", VALIMISED_VEERUD), ("osavott", OSAVOTT_VEERUD),
+             ("nimekirjad", NIMEKIRJAD_VEERUD), ("valimisnimekirjad", VALIMISNIMEKIRJAD_VEERUD)]
 
 
 def main(argv=None) -> int:
@@ -665,7 +775,11 @@ def main(argv=None) -> int:
     ap.add_argument("--detail", type=int, default=40, help="mitu rida iga liigi kohta raportis")
     a = ap.parse_args(argv)
 
-    tabelid, logi, aliasi = teisenda(a.sisend)
+    try:
+        tabelid, logi, aliasi = teisenda(a.sisend)
+    except NimekirjaViga as e:
+        print(f"VIGA: {e}", file=sys.stderr)
+        return 2
     vead = kontrolli_viiteid(tabelid)
 
     tulemused = {}

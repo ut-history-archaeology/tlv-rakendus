@@ -13,7 +13,7 @@ const KOOSSEIS: Koosseis = {
 function valitud(isik_id: number): Valimine {
   return {
     aasta: 1926, koosseis_id: "K", roll: "valitud", isik_id,
-    nimekiri_nr: "", nimekiri_nimi: "", ringkond_nr: "",
+    nimekiri_nr: "", nimekiri_nimi: "", nimekiri_id: null, nimekiri_kontrollida: false, ringkond_nr: "",
     perenimi: "", alt_perenimi: "", eesnimi: "", alt_eesnimi: "", isanimi: "",
     vanus: "", synniaeg: "", synniaeg_tuletatud: "",
     elukoht_tanav: "", elukoht_majanr: "", elukoht_korterinr: "", elukoht_muu: "",
@@ -33,7 +33,7 @@ function m(muutus_id: number, isik_id: number, kuupaev: string, liik: Muutus["li
 function andmestik(muutused: Muutus[], valimised: Valimine[]): Andmestik {
   return {
     isikud: [], koosseisud: [KOOSSEIS], koosolekud: [], juhatajad: [], muutused, valimised,
-    osavott: [], protokollid: [], paevakord: [], mainimised: [],
+    osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [],
   };
 }
 

@@ -22,7 +22,7 @@ function isik(isik_id: number): Isik {
 function valitud(isik_id: number): Valimine {
   return {
     aasta: 1926, koosseis_id: "K", roll: "valitud", isik_id,
-    nimekiri_nr: "", nimekiri_nimi: "", ringkond_nr: "",
+    nimekiri_nr: "", nimekiri_nimi: "", nimekiri_id: null, nimekiri_kontrollida: false, ringkond_nr: "",
     perenimi: "", alt_perenimi: "", eesnimi: "", alt_eesnimi: "", isanimi: "",
     vanus: "", synniaeg: "", synniaeg_tuletatud: "",
     elukoht_tanav: "", elukoht_majanr: "", elukoht_korterinr: "", elukoht_muu: "",
@@ -54,7 +54,7 @@ function o(koosolek_id: string, kuupaev: string, staatus: Osavott["staatus"], is
 function andmestik(osa: Partial<Andmestik>): Andmestik {
   return {
     isikud: [1, 2, 3, 4, 5, 6].map(isik), koosseisud: [KOOSSEIS], koosolekud: [], juhatajad: [], muutused: [],
-    valimised: [1, 2, 3].map(valitud), osavott: [], protokollid: [], paevakord: [], mainimised: [], ...osa,
+    valimised: [1, 2, 3].map(valitud), osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [], ...osa,
   };
 }
 

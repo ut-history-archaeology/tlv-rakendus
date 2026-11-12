@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
 import {
   isikuAadressidKoos, isikuKoosseisud, isikuSyndmused, isikuValimisedKoos, syndmuseIsikud, juhatamiseStatistika, karjaariSegmendid,
-  mainimisedProfiilile, osavotuStatistika, peamineNimekiri,
+  mainimisedProfiilile, nimekirjaNimed, osavotuStatistika, peamineNimekiri,
 } from "@/lib/derive";
 import { kuupaevEesti, kuupaevLyhike, taisnimi, wikidataQid } from "@/lib/format";
 import { koosseisuVarv } from "@/lib/colors";
@@ -129,6 +129,8 @@ export default async function IsikuProfiil({
     valimised: valimised.map((v) => ({
       aasta: v.aasta, koosseis_id: v.koosseis_id, roll: v.roll,
       nimekiri_nr: v.nimekiri_nr, nimekiri_nimi: v.nimekiri_nimi,
+      nimekiri_id: v.nimekiri_id, nimekiri_kanooniline: v.nimekiri_id !== null ? nimekirjaNimed(andmed).get(v.nimekiri_id) ?? "" : "",
+      nimekiri_kontrollida: v.nimekiri_kontrollida,
       ringkond_nr: v.ringkond_nr, jrk_uld: v.jrk_uld,
       jrk_nimekiri: v.jrk_nimekiri, jrk_ringkond: v.jrk_ringkond,
       haaled_kokku: v.haaled_kokku, amet: v.amet,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import KontrollimiselMark from "./KontrollimiselMark";
 
 /** Kategooriate värvipalett jaotusdiagrammile (nimekirjad/ringkonnad). */
 const PALETT = [
@@ -11,6 +12,16 @@ const PALETT = [
 export interface JaotuseSegment {
   nimi: string;
   arv: number;
+  /** NK-03: nimekirja hääled (ametlike alamnimekirjade summa) */
+  haaled?: number | null;
+  /** NK-02: ajutine vaste */
+  kontrollida?: boolean;
+  wikidata?: string;
+  mitu_osapoolt?: boolean;
+}
+
+function haaledTekst(s: JaotuseSegment): string {
+  return s.haaled != null ? `; ${s.haaled.toLocaleString("et-EE")} häält` : "";
 }
 
 /** KS-03: poliitilise jaotuse 100% lintdiagramm. Klõps segmendil filtreerib
@@ -42,7 +53,7 @@ export default function JaotusRiba({
             onClick={() => vali(valitud === s.nimi ? null : s.nimi)}
             onMouseEnter={() => setHover(s.nimi)}
             onMouseLeave={() => setHover(null)}
-            title={`${s.nimi}: ${s.arv} (${((s.arv / kokku) * 100).toFixed(1)}%)`}
+            title={`${s.nimi}: ${s.arv} (${((s.arv / kokku) * 100).toFixed(1)}%)${haaledTekst(s)}`}
             aria-pressed={valitud === s.nimi}
             className={`h-full transition-opacity ${
               valitud && valitud !== s.nimi ? "opacity-30" : ""
@@ -56,7 +67,7 @@ export default function JaotusRiba({
       </div>
       <p className="mt-1 min-h-5 text-xs text-stone-600">
         {hoverSeg
-          ? `${hoverSeg.nimi}: ${hoverSeg.arv} liiget (${((hoverSeg.arv / kokku) * 100).toFixed(1)}%)`
+          ? `${hoverSeg.nimi}: ${hoverSeg.arv} liiget (${((hoverSeg.arv / kokku) * 100).toFixed(1)}%)${haaledTekst(hoverSeg)}`
           : "Liigu hiirega segmendile või klõpsa, et filtreerida liikmete tabelit."}
       </p>
       <ul className="mt-2 space-y-0.5 text-xs text-stone-700">
@@ -76,6 +87,18 @@ export default function JaotusRiba({
               />
               {s.nimi} — {s.arv} ({((s.arv / kokku) * 100).toFixed(1)}%)
             </button>
+            {s.kontrollida && <KontrollimiselMark />}
+            {s.wikidata && (
+              <a
+                href={s.wikidata}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-1.5 text-blue-700 underline"
+                title={s.mitu_osapoolt ? "Mitme osapoole ühisnimekiri; Wikidata kirje on osapoole kohta" : "Wikidata"}
+              >
+                Wikidata<span aria-hidden> ↗</span>
+              </a>
+            )}
           </li>
         ))}
       </ul>

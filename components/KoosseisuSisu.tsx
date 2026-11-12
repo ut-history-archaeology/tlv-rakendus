@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { IsikuRida } from "@/lib/types";
 import JaotusRiba, { type JaotuseSegment } from "./JaotusRiba";
 import IsikudTabel from "./IsikudTabel";
@@ -15,12 +15,14 @@ interface Props {
   /** "nimekiri" või "ringkond" — pealkirja ja siltide jaoks. */
   jaotuseAlus: "nimekiri" | "ringkond";
   jaotuseSelgitus?: string;
+  /** NK-03: valimiste nimekirjade tabel (jaotuse ja liikmete vahel) */
+  nimekirjad?: ReactNode;
   staatus?: Record<number, { tekst: string; voti: string }>;
 }
 
 /** KS-03 + KS-04: jaotusdiagramm, mille segmendiklõps filtreerib liikmete tabelit. */
 export default function KoosseisuSisu({
-  koosseisId, read, jaotus, jaotuseAlus, jaotuseSelgitus, staatus,
+  koosseisId, read, jaotus, jaotuseAlus, jaotuseSelgitus, nimekirjad, staatus,
 }: Props) {
   const [valitud, setValitud] = useState<string | null>(null);
   const valitudSegment = jaotus.find((j) => j.nimi === valitud);
@@ -53,6 +55,8 @@ export default function KoosseisuSisu({
           />
         </section>
       )}
+
+      {nimekirjad}
 
       <section aria-labelledby="liikmed">
         <h2 id="liikmed" className="mb-2 text-xl font-semibold">

@@ -3,7 +3,9 @@ export const ABI = {
   koosseis:
     "Koosseis on ühe valimisperioodi volikogu — nt 1921–1923 koosseis valiti 1921. aasta valimistel ja töötas kuni järgmiste valimisteni.",
   nimekiri:
-    "Valimisnimekiri, milles isik kandideeris. Nimekujud on ühtlustamata — sama nimekiri võib esineda mitme variandina.",
+    "Valimisnimekiri, milles isik kandideeris. Näidatakse ühtlustatud (kanoonilist) nime; allikas esinev nimekuju on näha hiirega osutades ja ekspordis.",
+  nimekiriKontrollimisel:
+    "Selle nimekirjanime vaste ühtlustatud nimekirjaga on ajutine ja ootab kontrolli (nimekirja number ja nimi allikates ei klapi üheselt).",
   erakorraline:
     "Erakorraline koosolek kutsuti kokku väljaspool tavapärast graafikut kiireloomuliste küsimuste arutamiseks.",
   linnavalitsusVolikoguYlesandeis:
@@ -12,8 +14,6 @@ export const ABI = {
     "Enamik protokolle loetleb ainult puudujaid. Kohalolijad on tuletatud: koosseisu sel kuupäeval kehtinud liikmed miinus protokollis nimetatud puudujad.",
   sidumiseKindlus:
     "Protokollis olev nimekuju on isikuga seotud automaatselt. Kõrge = klapib koosseisu liikmega; keskmine = klapib üldnimestikuga; mitmene = mitu võimalikku isikut.",
-  nimekirjaHoiatus:
-    "Nimekirjade nimekujud on ühtlustamata — sama nimekiri võib esineda mitme variandina.",
   // 2. etapp (IN-05)
   automaatmargendus:
     "Isikud, organisatsioonid, kohad, rahasummad ja ametinimetused on tuvastatud automaatselt keelemudeliga ja võivad sisaldada vigu; isikute seosed profiilidega on samuti automaatsed.",
