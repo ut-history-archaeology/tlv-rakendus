@@ -10,6 +10,7 @@ import { ABI } from "@/lib/abitekstid";
 import ExportButton from "./ExportButton";
 import HelpTip from "./HelpTip";
 import { FiltriKiibid } from "./TabeliOsad";
+import ArhiiviViited from "./ArhiiviViited";
 
 interface Props {
   syndmused: Syndmus[];
@@ -267,7 +268,7 @@ export default function SyndmusteTabel({
                   {("nimekiri" in s && s.nimekiri) || "—"}
                 </td>
                 <td className="whitespace-nowrap px-3 py-1.5 text-xs">
-                  {s.allikaviited.join("; ") || "—"}
+                  {s.allikaviited.length ? <ArhiiviViited tekst={s.allikaviited.join("; ")} eraldaja="; " /> : "—"}
                   {s.protokollid.length > 0 && (
                     <span className="block text-stone-500">prot. {s.protokollid.join(", ")}</span>
                   )}

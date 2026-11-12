@@ -12,6 +12,7 @@ interface Props {
   lopp: string;
   seeria: { kuupaev: string; arv: number }[];
   valitudArv: number;
+  suurus?: { kuupaev: string; arv: number }[];
   varv: string;
   koosolekud: string[];
   failinimi: string;
@@ -35,7 +36,7 @@ function tooltipTekst(s: Syndmus, nimed: Record<number, string>): string {
 
 /** UX-07 + UX-06: ajatelg ja sündmuste tabel ühise kuupäevafiltriga. */
 export default function KoosseisuMuutused({
-  syndmused, nimed, algus, lopp, seeria, valitudArv, varv, koosolekud, failinimi, toorEksport, muutusteRidu,
+  syndmused, nimed, algus, lopp, seeria, valitudArv, suurus, varv, koosolekud, failinimi, toorEksport, muutusteRidu,
 }: Props) {
   const [kuupaev, setKuupaev] = useState<string | null>(null);
 
@@ -68,6 +69,7 @@ export default function KoosseisuMuutused({
           lopp={lopp}
           seeria={seeria}
           valitudArv={valitudArv}
+          suurus={suurus}
           varv={varv}
           paevad={paevad}
           koosolekud={koosolekud}

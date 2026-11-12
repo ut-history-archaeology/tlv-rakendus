@@ -1,5 +1,22 @@
 # Rakenduses kasutatud viited — loetelu vormistusreeglite küsimiseks
 
+> **Uuendus 12.11.2026 (4. etapp, PA-10, PA-05, VK-03).** Otsus: arhiiviviide on link
+> `https://www.ra.ee/dgs/_purl.php?shc=<viide>` (`lib/viited.ts: arhiiviUrl`). Number pärast
+> `:` on **Rahvusarhiivi digikaader, mitte leht** — allolev eeldus „L = leht“ on vale.
+> Kaadrivahemik (`ERA.2966.2.74:339–387`) → link esimesele kaadrile, kuvatekst vahemikuga;
+> `ERA.5130.4.481>817` → `>` loetakse kaadri eraldajaks (`…481:817`); säilik ilma kaadrita
+> (`ERA.2966.2.200`) → `shc=ERA.2966.2.200`; mitu viidet lahtris (`,`/`;`) → igaüks oma link;
+> jagatud lehed `134a`/`134b` (sama pilt) → kaader `134`.
+>
+> Rakendatud: A1 isiku päis (lingid); A2 koosseisu päis "Arhiiviviited: valimised …; hääled …"
+> (uus veerg `haaled_allikas`); A3/A4 koosseisu päis "Trükiallikad" Exceli hüperlinkidena
+> (`*_allikas_url`, DIGAR) ja isiku valimiste kaardil iga väärtuse järel (VK-03; viite
+> puudumisel **VIIDE PUUDU**; 1917 venekeelne kandidaatide nimekiri viiteta); A5 sündmuste
+> tabeli allikaviited (lingid); A7 protokolli/koosoleku päis, pildipaneel, tsitaat ja eksport:
+> "kaader 112" / "kaadrid 112–117" + link esimesele kaadrile (`protokolli_lehed.lehekulg` =
+> kaader). Transkribuse lehe number jääb ainult Transkribuse lingi sisse. A6 (protokolliviide
+> koosolekule) — PA-07, töö järjekorra 6. samm.
+
 Seis 28.10.2026, repo commit `96d119f`. Iga rea kohta on vaja andmestiku omanikult
 vastust veergu **„Kuidas viidata?“**: kuidas viide kuvada (täiskuju / lühend / seletus),
 kas ja kuhu linkida, kuidas see peaks välja nägema tsitaadis („Kopeeri viide“) ja

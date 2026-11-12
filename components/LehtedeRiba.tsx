@@ -24,7 +24,7 @@ export default function LehtedeRiba({
   }, [aktiivne]);
 
   return (
-    <div ref={riba} className="flex gap-1.5 overflow-x-auto py-1" role="listbox" aria-label="Protokolli leheküljed">
+    <div ref={riba} className="flex gap-1.5 overflow-x-auto py-1" role="listbox" aria-label="Protokolli kaadrid">
       {lehed.map((l) => {
         const on = l.lk === aktiivne;
         return (
@@ -35,7 +35,7 @@ export default function LehtedeRiba({
             aria-selected={on}
             data-lk={l.lk}
             onClick={() => vali(l.lk)}
-            title={`lk ${l.lk}${l.tekstita ? " (tekstita leht)" : ""}`}
+            title={`kaader ${l.lk}${l.tekstita ? " (tekstita)" : ""}`}
             className={`shrink-0 rounded border-2 bg-white p-0.5 text-[10px] leading-tight text-stone-600 ${
               on ? "border-amber-500" : "border-transparent hover:border-stone-300"
             }`}
@@ -43,7 +43,7 @@ export default function LehtedeRiba({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={pildiUrl(BASE_PATH, 300, l.pilt)}
-              alt={`Protokolli ${kuupaev} originaal, lk ${l.lk}, eelvaade`}
+              alt={`Protokolli ${kuupaev} originaal, kaader ${l.lk}, eelvaade`}
               loading="lazy"
               width={56}
               height={80}

@@ -66,6 +66,13 @@ export function loeAndmestik(): Andmestik {
     valimised_allikas: r.valimised_allikas ?? "",
     valimistulemuste_allikas: r.valimistulemuste_allikas ?? "",
     kandidaatide_allikas: r.kandidaatide_allikas ?? "",
+    volikogu_suurus: r.volikogu_suurus ?? "",
+    volikogu_suurus_algne: num(r.volikogu_suurus_algne),
+    volikogu_suurus_hiljem: num(r.volikogu_suurus_hiljem),
+    volikogu_suurus_muutus: r.volikogu_suurus_muutus ?? "",
+    haaled_allikas: r.haaled_allikas ?? "",
+    valimistulemuste_allikas_url: r.valimistulemuste_allikas_url ?? "",
+    kandidaatide_allikas_url: r.kandidaatide_allikas_url ?? "",
   }));
 
   const koosolekud: Koosolek[] = loeCSV("koosolekud.csv").map((r) => ({
@@ -114,6 +121,7 @@ export function loeAndmestik(): Andmestik {
     aasta: Number(r.aasta),
     koosseis_id: r.koosseis_id ?? "",
     roll: r.roll as Valimine["roll"],
+    allikas: (r.allikas || (r.roll === "valitud" ? "tulemused" : "kandidaadid")) as Valimine["allikas"],
     isik_id: Number(r.isik_id),
     nimekiri_nr: puhastaAasta(r.nimekiri_nr),
     nimekiri_nimi: r.nimekiri_nimi ?? "",

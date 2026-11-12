@@ -2,6 +2,7 @@
  * PT-09 "Kopeeri viide" (TE-09).
  */
 import { kuupaevEesti } from "../format";
+import { kaadridTekst } from "../viited";
 
 export interface ViiteAndmed {
   /** 1 või 2 ISO-kuupäeva */
@@ -31,8 +32,7 @@ export function kuupaevadEesti(kuupaevad: string[]): string {
 
 export function koostaViide(v: ViiteAndmed): string {
   const punkt = v.punktNr !== undefined && v.punktNr !== null ? `, päevakorrapunkt ${v.punktNr}` : "";
-  const lk =
-    v.viimaneLk && v.viimaneLk !== v.esimeneLk ? `lk ${v.esimeneLk}–${v.viimaneLk}` : `lk ${v.esimeneLk}`;
+  const lk = kaadridTekst(v.esimeneLk, v.viimaneLk);
   const ankur = v.punktNr !== undefined && v.punktNr !== null ? `#p${v.punktNr}` : "";
   const vaadatud = kuupaevEesti(v.vaadatud ?? new Date().toISOString().slice(0, 10));
   return (

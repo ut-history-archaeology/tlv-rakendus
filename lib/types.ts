@@ -26,6 +26,15 @@ export interface Koosseis {
   valimised_allikas: string;
   valimistulemuste_allikas: string;
   kandidaatide_allikas: string;
+  /** AN-04: toortekst ("65/33", "-") */
+  volikogu_suurus: string;
+  volikogu_suurus_algne: number | null;
+  volikogu_suurus_hiljem: number | null;
+  /** kuupäev, millest kehtib `volikogu_suurus_hiljem` */
+  volikogu_suurus_muutus: string;
+  haaled_allikas: string;
+  valimistulemuste_allikas_url: string;
+  kandidaatide_allikas_url: string;
 }
 
 export interface Koosolek {
@@ -81,6 +90,8 @@ export interface Valimine {
   aasta: number;
   koosseis_id: string;
   roll: "valitud" | "valitav";
+  /** VK-02: rea allikas */
+  allikas: "tulemused" | "kandidaadid" | "kandidaadid_vene";
   isik_id: number;
   nimekiri_nr: string;
   /** toorkuju (nagu allikas) */

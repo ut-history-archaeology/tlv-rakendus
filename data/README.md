@@ -44,6 +44,14 @@ sisaldavad ainult normaliseeritud teksti (väiketähed, diakriitikata, w→v).
 valimiste algus/lõpu-kuupäeva (mitmepäevased valimised!), esimese ja viimase
 koosoleku kuupäeva ning arhiiviviiteid. Viimane rida on erikoosseis
 "linnavalitsus linnavolikogu ülesandeis" (1940–1941, nõukogude periood).
+| Veerg | Kirjeldus |
+|---|---|
+| valimised_allikas, haaled_allikas | Arhiiviviited (säilikud, `,`-ga); rakenduses lingid `https://www.ra.ee/dgs/_purl.php?shc=<viide>` (PA-10) |
+| valimistulemuste_allikas, kandidaatide_allikas | Trükiallikas tekstina (Riigi Teataja jt) |
+| valimistulemuste_allikas_url, kandidaatide_allikas_url | Exceli lahtri hüperlink (DIGAR) |
+| volikogu_suurus | Toortekst Excelist ("60", "65/33", "-") |
+| volikogu_suurus_algne, volikogu_suurus_hiljem | "65/33" → 65 ja 33 (OTSUS K-06: valiti 65, hiljem 33); muidu ainult algne; "-" → tühi |
+| volikogu_suurus_muutus | Kuupäev, millest kehtib hilisem suurus = koosseisu esimene koosolek, mille `koosseis_arv` võrdub hilisema suurusega (1934-1939: 1934-04-09) |
 
 ## koosolekud.csv — 338 rida
 | Veerg | Kirjeldus |
@@ -79,7 +87,10 @@ Koosoleku × juhataja sidumine: `koosolek_id`, `juhataja_nimi`, `isik_id`.
 ## valimised.csv — 1174 rida
 Iga rida = (isik, valimisaasta, roll). `roll`: `valitud` (455 — sai volikokku)
 või `valitav` (719 — oli kandidaat; 1917 on igal kandidaadil kaks rida: eestikeelne ja
-venekeelne kandidaatide nimekiri, viimane kirillitsas). `koosseis_id` lisatud. 1939. aastal on
+venekeelne kandidaatide nimekiri, viimane kirillitsas). **`allikas`** (VK-02, skript tuletab;
+kui Excelisse lisatakse veerg `allikas`, kasutatakse seda): `valitud` → `tulemused` (viide
+`koosseisud.valimistulemuste_allikas`), `valitav` → `kandidaadid` (`kandidaatide_allikas`),
+1917 `valitav` kirillitsas perenimega → `kandidaadid_vene` (79 rida; viide puudub, LAHTINE). `koosseis_id` lisatud. 1939. aastal on
 ringkonnad (1–4) ja häältearvud (`hääled_kokku` jt), nimekirjanimed puuduvad.
 Aadressiväljad (`elukoht_tänav` jne) on täidetud 713 real (peamiselt 1926,
 1929, 1934 valimistelt). `nimekiri_nimi` on allika toorkuju; **`nimekiri_id`** viitab
@@ -109,8 +120,8 @@ osavott.csv sisaldab ainult protokollis otsesõnu nimetatud isikuid.
 
 ## protokolli_lehed.csv — 7121 rida (SISEND, 2. etapp)
 Protokoll × arhiivileht × pilt. `protokoll` = korpuse failinimi (`korpus/json/*.json`),
-`jrk` 1…n protokolli sees, `arhiiviviide` (nt `ERA.2966.2.57`), `lehekulg` (arhiivi lk,
-võib olla `134a`), `xml_file` (korpuse `textline_info.xml_file`; tühi, kui leht on
+`jrk` 1…n protokolli sees, `arhiiviviide` (nt `ERA.2966.2.57`), `lehekulg` = **Rahvusarhiivi
+digikaadri number** (PA-10; veerunimi jääb ühilduvuse pärast; võib olla `134a`, lingis `134`), `xml_file` (korpuse `textline_info.xml_file`; tühi, kui leht on
 tekstita), `pilt` (`<aasta>/<säilik>_<lk>.png` kaustades `public/pildid/1200` ja `/300`),
 `transkribus_lk` (Transkribuse lehe järjekorranumber — ≠ arhiivi lk!), `tekstita` (0/1).
 28 tekstita lehte 23 protokollis; jagatud lehed 134/134a/134b (1934-04-30) ja

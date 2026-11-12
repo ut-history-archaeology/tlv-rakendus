@@ -7,6 +7,7 @@ import { kuupaevEesti } from "@/lib/format";
 import HelpTip from "@/components/HelpTip";
 import { ABI } from "@/lib/abitekstid";
 import { kuupaevadEesti } from "@/lib/protokollid/viide";
+import { kuupaevEestiAlates } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Koosseisud" };
 
@@ -48,6 +49,14 @@ export default function KoosseisudLeht() {
               ) : (
                 <p className="mt-1 text-xs text-stone-500">
                   Valimised: {k.valimised_algus ? kuupaevadEesti([k.valimised_algus, k.valimised_lopp]) : "—"}
+                </p>
+              )}
+              {k.volikogu_suurus_algne !== null && (
+                <p className="text-xs text-stone-500">
+                  Volikogu suurus: {k.volikogu_suurus_algne}
+                  {k.volikogu_suurus_hiljem !== null && k.volikogu_suurus_muutus && (
+                    <>; alates {kuupaevEestiAlates(k.volikogu_suurus_muutus)}: {k.volikogu_suurus_hiljem}</>
+                  )}
                 </p>
               )}
               <dl className="mt-3 grid grid-cols-3 gap-2 text-center text-sm">

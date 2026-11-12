@@ -1,3 +1,4 @@
+import { kaadriUrl, kaadridTekst } from "../viited";
 /**
  * PT-09: txt / markdown / JSON-meta koostamine (TE-10). Puhtad funktsioonid, ilma brauserita.
  */
@@ -32,7 +33,8 @@ function paiseRead(p: ProtokollAndmed, k: EkspordiKontekst): string[] {
   return [
     `Tartu Linnavolikogu protokoll, ${kuupaevadEesti(k.kuupaevad)}`,
     `Kuupäev: ${k.kuupaevad.join(" / ")}`,
-    `Arhiiviviide: ${p.arhiiviviide}, lk ${p.lehed[0]?.lk ?? "?"}–${p.lehed[p.lehed.length - 1]?.lk ?? "?"}`,
+    `Arhiiviviide: ${p.arhiiviviide}, ${kaadridTekst(p.lehed[0]?.lk ?? "?", p.lehed[p.lehed.length - 1]?.lk ?? "?")}`,
+    `Rahvusarhiiv: ${kaadriUrl(p.arhiiviviide, p.lehed[0]?.lk ?? "") ?? ""}`,
     `Transkribus: ${p.transkribus_url}`,
     `Allikas: ${ALLIKAS}`,
     `URL: ${k.url}`,

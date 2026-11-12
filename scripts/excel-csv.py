@@ -163,7 +163,9 @@ ISIKUD_VEERUD = ["isik_id", "perenimi", "alt_perenimi", "eesnimi", "alt_eesnimi"
                  "synd_kuupaev", "synd_tuletatud", "surm_kuupaev", "wikidata", "arhiiviviited", "AKL_ID"]
 KOOSSEISUD_VEERUD = ["koosseis_id", "aasta_valimised", "valimised_algus", "valimised_lopp",
                      "esimene_koosolek", "viimane_koosolek", "valimised_allikas",
-                     "valimistulemuste_allikas", "kandidaatide_allikas"]
+                     "valimistulemuste_allikas", "kandidaatide_allikas",
+                     "volikogu_suurus", "volikogu_suurus_algne", "volikogu_suurus_hiljem", "volikogu_suurus_muutus",
+                     "haaled_allikas", "valimistulemuste_allikas_url", "kandidaatide_allikas_url"]
 KOOSOLEKUD_VEERUD = ["koosolek_id", "kuupaev", "kuupaev_lopp", "nadalapaev", "vorm", "koosseis_id",
                      "juhataja", "koosseis_arv", "kohal_arv", "kohal_arv_2paev", "kuupaev_txt",
                      "protokolli_algus_txt"]
@@ -172,7 +174,7 @@ MUUTUSED_VEERUD = ["muutus_id", "isik_id", "perenimi", "eesnimi", "nimekiri", "k
                    "liik", "liitus_prot", "lahkus_prot", "ryhmavahetus_prot", "peatatud_prot",
                    "allikaviide", "täpsustus", "asendaja_ID", "asendatav_ID", "asendaja_puudub",
                    "asendatav_puudub"]
-VALIMISED_VEERUD = ["aasta", "koosseis_id", "roll", "isik_id", "nimekiri_nr", "nimekiri_nimi", "nimekiri_id",
+VALIMISED_VEERUD = ["aasta", "koosseis_id", "roll", "allikas", "isik_id", "nimekiri_nr", "nimekiri_nimi", "nimekiri_id",
                     "nimekiri_kontrollida",
                     "ringkond_nr", "perenimi", "alt_perenimi", "eesnimi", "alt_eesnimi", "isanimi",
                     "vanus", "sünniaeg", "sünniaeg_tuletatud", "elukoht_tänav", "elukoht_majanr",
@@ -206,12 +208,42 @@ def tee_isikud(read, aliased, loendur) -> list[dict]:
     return out
 
 
-def tee_koosseisud(read) -> list[dict]:
+def volikogu_suurus(toor: str) -> tuple[str, str]:
+    """AN-04: "60" → ("60", ""); "65/33" → ("65", "33") (valiti 65, hiljem 33, OTSUS K-06);
+    "-" / tühi → ("", ""). Muu kuju → hoiatus, väljad tühjad."""
+    t = toor.strip()
+    if t in ("", "-", "–"):
+        return "", ""
+    m = re.fullmatch(r"(\d+)(?:\s*/\s*(\d+))?", t)
+    if not m:
+        hoiata(f"koosseisud: volikogu_suurus {toor!r} — tundmatu kuju")
+        return "", ""
+    return m.group(1), m.group(2) or ""
+
+
+def maara_suuruse_muutus(koosseisud: list[dict], koosolekud: list[dict]) -> None:
+    """AN-04: muutuse kuupäev = koosseisu esimene koosolek, mille koosseis_arv = hilisem suurus."""
+    for k in koosseisud:
+        k["volikogu_suurus_muutus"] = ""
+        if not k["volikogu_suurus_hiljem"]:
+            continue
+        omad = sorted((x for x in koosolekud if x["koosseis_id"] == k["koosseis_id"]), key=lambda x: x["kuupaev"])
+        leitud = next((x for x in omad if x["koosseis_arv"] == k["volikogu_suurus_hiljem"]), None)
+        if leitud:
+            k["volikogu_suurus_muutus"] = leitud["kuupaev"]
+        else:
+            hoiata(f"koosseisud: {k['koosseis_id']} — ühtegi koosolekut koosseisu suurusega "
+                   f"{k['volikogu_suurus_hiljem']} ei leitud (volikogu_suurus_muutus tühi)")
+
+
+def tee_koosseisud(read, lingid: dict | None = None) -> list[dict]:
+    lingid = lingid or {}
     out = []
-    for r in read:
+    for nr, r in enumerate(read):
         algus, lopp = vahemik(r["valimised_aasta"], r["valimised_kuu"], r["valimised_päev"])
         esim = vahemik(r["esimene_koosolek_aasta"], r["esimene_koosolek_kuu"], r["esimene_koosolek_päev"])[0]
         viim = vahemik(r["viimane_koosolek_aasta"], r["viimane_koosolek_kuu"], r["viimane_koosolek_päev"])[1]
+        algne, hiljem = volikogu_suurus(tekst(r.get("volikogu_suurus")))
         out.append({
             "koosseis_id": kriips(tekst(r["aastad_koosolekud"]).strip()),
             "aasta_valimised": tekst(r["aasta_valimised"]),
@@ -222,6 +254,13 @@ def tee_koosseisud(read) -> list[dict]:
             "valimised_allikas": tekst(r["valimised_allikas"]),
             "valimistulemuste_allikas": tekst(r["valimistulemuste_nimekiri_allikas"]),
             "kandidaatide_allikas": tekst(r["volinike_kandidaatide_nimekiri_allikas"]),
+            "volikogu_suurus": tekst(r.get("volikogu_suurus")).strip(),
+            "volikogu_suurus_algne": algne,
+            "volikogu_suurus_hiljem": hiljem,
+            "volikogu_suurus_muutus": "",
+            "haaled_allikas": tekst(r.get("hääled_allikas")).strip(),
+            "valimistulemuste_allikas_url": lingid.get((nr, "valimistulemuste_nimekiri_allikas"), ""),
+            "kandidaatide_allikas_url": lingid.get((nr, "volinike_kandidaatide_nimekiri_allikas"), ""),
         })
     return out
 
@@ -308,6 +347,26 @@ def tee_muutused(read, maara, aliased, loendur) -> list[dict]:
     return out
 
 
+KIRILLITSA = re.compile(r"[\u0400-\u04FF]")
+VALIMISE_ALLIKAD = {"tulemused", "kandidaadid", "kandidaadid_vene"}
+
+
+def valimise_allikas(r: dict) -> str:
+    """VK-02: rea allikas. Exceli veerg `allikas`, kui see on olemas ja täidetud; muidu
+    valitud → tulemused; valitav → kandidaadid, v.a 1917 kirillitsas perenimega → kandidaadid_vene."""
+    oma = tekst(r.get("allikas")).strip()
+    if oma:
+        if oma not in VALIMISE_ALLIKAD:
+            hoiata(f"valimised: tundmatu allikas {oma!r}")
+        return oma
+    roll = tekst(r["roll_allikas"]).strip()
+    if roll == "valitud":
+        return "tulemused"
+    if tekst(r["aasta"]) == "1917" and KIRILLITSA.search(tekst(r["perenimi"])):
+        return "kandidaadid_vene"
+    return "kandidaadid"
+
+
 def tee_valimised(read, koosseisud, aliased, loendur) -> list[dict]:
     aastast = {k["aasta_valimised"]: k["koosseis_id"] for k in koosseisud}
     out = []
@@ -319,11 +378,12 @@ def tee_valimised(read, koosseisud, aliased, loendur) -> list[dict]:
             "aasta": aasta,
             "koosseis_id": aastast.get(aasta, ""),
             "roll": tekst(r["roll_allikas"]),
+            "allikas": valimise_allikas(r),
             "isik_id": rakenda_alias(tekst(r["ID_isik"]), aliased, "valimised.isik_id", loendur),
             "nimekiri_nr": tekst(r["nimekiri_nr"]),
             "nimekiri_nimi": tekst(r["nimekiri_nimi"]),
             "ringkond_nr": tekst(r["ringkond_nr"]),
-            **{v: tekst(r[v]) for v in VALIMISED_VEERUD[9:]},
+            **{v: tekst(r[v]) for v in VALIMISED_VEERUD[10:]},
         })
     return out
 
@@ -732,7 +792,7 @@ def teisenda(kaust: str) -> tuple[dict[str, list[dict]], list[str], Counter]:
     aliased = loe_aliased()
     alias_loendur: Counter = Counter()
     _, isikud_x, _ = loe_leht(kaust, "TLV_isikud.xlsx")
-    _, koosseisud_x, _ = loe_leht(kaust, "TLV_koosseisud.xlsx", lingid=True)
+    _, koosseisud_x, koosseisu_lingid = loe_leht(kaust, "TLV_koosseisud.xlsx", lingid=True)
     _, koosolekud_x, _ = loe_leht(kaust, "TLV_koosolekud.xlsx")
     _, muutused_x, _ = loe_leht(kaust, "TLV_muutused_protokollides.xlsx")
     _, valimised_x, _ = loe_leht(kaust, "TLV_valimised.xlsx")
@@ -740,7 +800,7 @@ def teisenda(kaust: str) -> tuple[dict[str, list[dict]], list[str], Counter]:
     _, valimisnimekirjad_x, _ = loe_leht(kaust, "TLV_nimekirjad.xlsx", "Sheet1")
 
     isikud = tee_isikud(isikud_x, aliased, alias_loendur)
-    koosseisud = tee_koosseisud(koosseisud_x)
+    koosseisud = tee_koosseisud(koosseisud_x, koosseisu_lingid)
     maara = KoosseisuMaaraja(koosseisud)
     koosolekud = tee_koosolekud(koosolekud_x, maara)
     muutused = tee_muutused(muutused_x, maara, aliased, alias_loendur)
@@ -752,6 +812,7 @@ def teisenda(kaust: str) -> tuple[dict[str, list[dict]], list[str], Counter]:
     for k in koosolekud:
         k["nadalapaev"] = nadalapaev(k["kuupaev"])
         k["koosseis_id"] = maara(k["kuupaev"])
+    maara_suuruse_muutus(koosseisud, koosolekud)
     tabelid["koosolek_juhatajad"] = tee_juhatajad(koosolekud, isikud)
     tabelid["osavott"] = tee_osavott(koosolekud, isikud, valimised, muutused)
     seo_nimekirjad(valimised, loe_nimekirjade_vasted())

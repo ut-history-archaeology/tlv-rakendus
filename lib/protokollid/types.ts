@@ -54,7 +54,7 @@ export interface Lisa {
 /** Üks protokolli leht (ET-09). Järjekord = protokolli_lehed.csv jrk. */
 export interface Leht {
   jrk: number;
-  /** Arhiivi leheküljenumber, nt "112", "134a". */
+  /** Rahvusarhiivi digikaadri number (veerg `lehekulg`), nt "112", "134a". */
   lk: string;
   arhiiviviide: string;
   /** Tekstivahemik `tekst`-is (textline_info.xml_file kaudu); null, kui tekstita. */

@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import ArhiiviLink from "./ArhiiviLink";
+import { kaadriUrl } from "@/lib/viited";
 import { aktiivneLeht, leiaLeht, naaberLeht, samaPildiLehed, transkribusLeheUrl, type MarkeriKoht } from "@/lib/protokollid/lehed";
 import { BASE_PATH } from "@/lib/protokollid/laadi";
 import { pildiUrl } from "@/lib/protokollid/lehed";
@@ -113,7 +115,7 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
       valiLeht(lk, true);
       if (!lai) setSakk("originaal");
     } else {
-      setTeade(`Lehte ${lk} selles protokollis ei ole.`);
+      setTeade(`Kaadrit ${lk} selles protokollis ei ole.`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mounted]);
@@ -242,13 +244,17 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
   const paneeliSisu = leht && (
     <div className="space-y-2">
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
-        <button type="button" onClick={() => eelmine && valiLeht(eelmine.lk, true)} disabled={!eelmine} className={nupp} aria-label="Eelmine leht">
+        <button type="button" onClick={() => eelmine && valiLeht(eelmine.lk, true)} disabled={!eelmine} className={nupp} aria-label="Eelmine kaader">
           ← eelmine
         </button>
         <span className="font-medium">
-          lk {leht.lk} <span className="text-stone-500">/ {esimene}–{viimane} · {arhiiviviide}</span>
+          kaader {leht.lk}{" "}
+          <span className="text-stone-500">
+            / {esimene}–{viimane} ·{" "}
+            <ArhiiviLink url={kaadriUrl(arhiiviviide, leht.lk)}>{arhiiviviide}:{leht.lk}</ArhiiviLink>
+          </span>
         </span>
-        <button type="button" onClick={() => jargmine && valiLeht(jargmine.lk, true)} disabled={!jargmine} className={nupp} aria-label="Järgmine leht">
+        <button type="button" onClick={() => jargmine && valiLeht(jargmine.lk, true)} disabled={!jargmine} className={nupp} aria-label="Järgmine kaader">
           järgmine →
         </button>
       </div>
@@ -259,9 +265,9 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
         <button
           type="button"
           className="text-blue-700 hover:underline"
-          onClick={() => void kopeeri(`${leheUrl()}?lk=${encodeURIComponent(leht.lk)}`, "Lehe link kopeeritud")}
+          onClick={() => void kopeeri(`${leheUrl()}?lk=${encodeURIComponent(leht.lk)}`, "Kaadri link kopeeritud")}
         >
-          Kopeeri lehe link
+          Kopeeri kaadri link
         </button>
         <button
           type="button"
@@ -280,7 +286,7 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
       </div>
       <LehePilt
         leht={leht}
-        alt={`Protokolli ${kuupaevTekst} originaal, lk ${leht.lk}`}
+        alt={`Protokolli ${kuupaevTekst} originaal, kaader ${leht.lk}`}
         kirjeldus={leht.tekstita ? "tekstita leht" : samad.length ? `sama leht kui ${samad.join(", ")}` : undefined}
       />
       <LehtedeRiba lehed={lehed} aktiivne={leht.lk} vali={(lk) => valiLeht(lk, true)} kuupaev={kuupaevTekst} />
@@ -315,7 +321,7 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
               onClick={() => vahetaSakk(s)}
               className={`rounded-md px-3 py-1 ${sakk === s ? "bg-stone-800 text-white" : "border border-stone-300 bg-white text-stone-700"}`}
             >
-              {s === "tekst" ? "Tekst" : `Originaal (lk ${aktiivne})`}
+              {s === "tekst" ? "Tekst" : `Originaal (kaader ${aktiivne})`}
             </button>
           ))}
         </div>

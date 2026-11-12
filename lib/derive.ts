@@ -1,5 +1,5 @@
 import type {
-  Andmestik, IsikuRida, Koosolek, KoosolekuRida, Muutus, Valimine,
+  Andmestik, IsikuRida, Koosolek, KoosolekuRida, Koosseis, Muutus, Valimine,
 } from "./types";
 
 /**
@@ -281,17 +281,25 @@ export function koosseisuNimekirjad(andmed: Andmestik, koosseisId: string): Koos
 }
 
 /** Valimiste rea allikas (UX-03): valitav → kandidaatide_allikas, valitud → valimistulemuste_allikas. */
+/** VK-02: väärtuse allikas — rea kaupa (valimised.csv `allikas`). viide/url null = viide puudub. */
 export interface Allikas {
-  roll: "valitav" | "valitud";
-  viide: string;
+  allikas: Valimine["allikas"];
+  viide: string | null;
+  url: string | null;
 }
+
+export const ALLIKA_NIMI: Record<Valimine["allikas"], string> = {
+  tulemused: "valimistulemused",
+  kandidaadid: "kandidaatide nimekiri",
+  kandidaadid_vene: "venekeelne kandidaatide nimekiri",
+};
 
 export interface Vaartus {
   vaartus: string;
   allikad: Allikas[];
 }
 
-/** UX-03: ühe isiku ühe valimisaasta read koondatuna. */
+/** VK-01: ühe isiku ühe valimisaasta kõik read ühel kaardil. */
 export interface ValimineKoos {
   aasta: number;
   koosseis_id: string;
@@ -304,23 +312,38 @@ export interface ValimineKoos {
     nr: string; nimi: string; toor: string[]; nimekiri_id: number | null; kontrollida: boolean;
     allikad: Allikas[];
   }[];
-  koht: { jrk_nimekiri?: string; jrk_uld?: string; jrk_ringkond?: string };
-  ringkond?: string;
-  haaled?: { jsk1?: string; jsk2?: string; kokku?: number };
+  /** VK-04: nimekuju allikas (originaalkujul, ka kirillitsas) */
+  nimekuju: Vaartus[];
+  /** "6 (üldjärjestuses 46)" */
+  koht: Vaartus[];
+  /** "2, koht ringkonnas 5" */
+  ringkond: Vaartus[];
+  /** "812 (1. jsk 400, 2. jsk 412)" */
+  haaled: Vaartus[];
   amet: Vaartus[];
   /** kandidaadirealt; mitu väärtust = allikad erinevad */
   vanus: Vaartus[];
   synniaeg: Vaartus[];
-  aadress: { tekst: string; allikad: Allikas[] }[];
+  aadress: Vaartus[];
   markused: Vaartus[];
-  /** kõik read, millest kirje koosneb (valitav enne valitud) */
+  /** kõik read, millest kirje koosneb (kandidaadid enne tulemusi) */
   allikad: Allikas[];
 }
 
-function valimiseAllikas(andmed: Andmestik, v: Valimine): Allikas {
+const ALLIKA_JARK: Record<Valimine["allikas"], number> = { kandidaadid: 0, kandidaadid_vene: 1, tulemused: 2 };
+
+/** VK-02: rea allikas + viide koosseisu tabelist (kandidaadid_vene: viide puudub, LAHTINE). */
+export function valimiseAllikas(andmed: Andmestik, v: Valimine): Allikas {
   const k = andmed.koosseisud.find((x) => x.koosseis_id === v.koosseis_id);
-  const viide = !k ? "" : v.roll === "valitav" ? k.kandidaatide_allikas : k.valimistulemuste_allikas;
-  return { roll: v.roll, viide };
+  if (!k || v.allikas === "kandidaadid_vene") return { allikas: v.allikas, viide: null, url: null };
+  const [viide, url] = v.allikas === "tulemused"
+    ? [k.valimistulemuste_allikas, k.valimistulemuste_allikas_url]
+    : [k.kandidaatide_allikas, k.kandidaatide_allikas_url];
+  return { allikas: v.allikas, viide: viide || null, url: url || null };
+}
+
+function samaAllikas(a: Allikas, b: Allikas): boolean {
+  return a.allikas === b.allikas && a.viide === b.viide;
 }
 
 /** Rea aadressid: tänav+maja(+korter) ja `elukoht_muu` eraldi (UX-04). */
@@ -347,8 +370,9 @@ function kogu(read: { tekst: string; allikas: Allikas }[], voti: (s: string) => 
     if (!tekst.trim()) continue;
     const k = voti(tekst);
     const olemas = tulem.find((t) => t.k === k);
-    if (olemas) olemas.allikad.push(allikas);
-    else tulem.push({ k, vaartus: tekst.trim(), allikad: [allikas] });
+    if (olemas) {
+      if (!olemas.allikad.some((a) => samaAllikas(a, allikas))) olemas.allikad.push(allikas);
+    } else tulem.push({ k, vaartus: tekst.trim(), allikad: [allikas] });
   }
   return tulem.map(({ vaartus, allikad }) => ({ vaartus, allikad }));
 }
@@ -374,7 +398,7 @@ export function isikuValimisedKoos(andmed: Andmestik, isikId: number): ValimineK
   return [...aastati.entries()]
     .sort((a, b) => a[0] - b[0])
     .map(([aasta, read]) => {
-      read = [...read].sort((a, b) => (a.roll === b.roll ? 0 : a.roll === "valitav" ? -1 : 1));
+      read = [...read].sort((a, b) => ALLIKA_JARK[a.allikas] - ALLIKA_JARK[b.allikas]);
       const allikad = read.map((r) => valimiseAllikas(andmed, r));
       const paar = read.map((r, i) => ({ r, allikas: allikad[i] }));
 
@@ -394,7 +418,7 @@ export function isikuValimisedKoos(andmed: Andmestik, isikId: number): ValimineK
           olemas.nr ||= nr;
           if (toor && !olemas.toor.includes(toor)) olemas.toor.push(toor);
           olemas.kontrollida ||= r.nimekiri_kontrollida;
-          olemas.allikad.push(allikas);
+          if (!olemas.allikad.some((a) => samaAllikas(a, allikas))) olemas.allikad.push(allikas);
         } else {
           nimekiri.push({
             nr, nimi, toor: toor ? [toor] : [], nimekiri_id: id, kontrollida: r.nimekiri_kontrollida,
@@ -403,41 +427,42 @@ export function isikuValimisedKoos(andmed: Andmestik, isikId: number): ValimineK
         }
       }
 
-      const koht: ValimineKoos["koht"] = {};
-      const jrkN = yks(read.map((r) => r.jrk_nimekiri));
-      const jrkU = yks(read.map((r) => r.jrk_uld));
-      const jrkR = yks(read.map((r) => r.jrk_ringkond));
-      if (jrkN) koht.jrk_nimekiri = jrkN;
-      if (jrkU) koht.jrk_uld = jrkU;
-      if (jrkR) koht.jrk_ringkond = jrkR;
+      const koht = kogu(paar.map(({ r, allikas }) => ({
+        tekst: r.jrk_nimekiri || r.jrk_uld
+          ? `${r.jrk_nimekiri || "—"}${r.jrk_uld ? ` (üldjärjestuses ${r.jrk_uld})` : ""}`
+          : "",
+        allikas,
+      })));
+      const ringkond = kogu(paar.map(({ r, allikas }) => ({
+        tekst: r.ringkond_nr ? `${r.ringkond_nr}${r.jrk_ringkond ? `, koht ringkonnas ${r.jrk_ringkond}` : ""}` : "",
+        allikas,
+      })));
+      const haaled = kogu(paar.map(({ r, allikas }) => ({
+        tekst: r.haaled_kokku !== null || r.haaled_1_jsk || r.haaled_2_jsk
+          ? `${r.haaled_kokku ?? "—"}${r.haaled_1_jsk || r.haaled_2_jsk
+            ? ` (1. jsk ${r.haaled_1_jsk || "—"}, 2. jsk ${r.haaled_2_jsk || "—"})` : ""}`
+          : "",
+        allikas,
+      })));
 
-      const jsk1 = yks(read.map((r) => r.haaled_1_jsk));
-      const jsk2 = yks(read.map((r) => r.haaled_2_jsk));
-      const kokku = read.find((r) => r.haaled_kokku !== null)?.haaled_kokku ?? undefined;
-      const haaled = jsk1 || jsk2 || kokku !== undefined
-        ? { ...(jsk1 && { jsk1 }), ...(jsk2 && { jsk2 }), ...(kokku !== undefined && { kokku }) }
-        : undefined;
-
-      const aadress = kogu(
-        paar.flatMap(({ r, allikas }) => reaAadressid(r).map((tekst) => ({ tekst, allikas }))),
-        aadressiVoti
-      ).map(({ vaartus, allikad }) => ({ tekst: vaartus, allikad }));
-
-      // Vanus ja sünniaeg on kandidaadireal; valitu rida neid tavaliselt ei sisalda.
       return {
         aasta,
         koosseis_id: read[0].koosseis_id,
         tulemus: read.some((r) => r.roll === "valitud") ? "valitud" : "kandidaat",
         nimekiri,
+        nimekuju: kogu(paar.map(({ r, allikas }) => ({ tekst: [r.eesnimi, r.perenimi].filter(Boolean).join(" "), allikas }))),
         koht,
-        ...(yks(read.map((r) => r.ringkond_nr)) && { ringkond: yks(read.map((r) => r.ringkond_nr)) }),
-        ...(haaled && { haaled }),
+        ringkond,
+        haaled,
         amet: kogu(paar.map(({ r, allikas }) => ({ tekst: r.amet, allikas }))),
         vanus: kogu(paar.map(({ r, allikas }) => ({ tekst: r.vanus, allikas }))),
         synniaeg: kogu(paar.map(({ r, allikas }) => ({ tekst: r.synniaeg, allikas }))),
-        aadress,
+        aadress: kogu(
+          paar.flatMap(({ r, allikas }) => reaAadressid(r).map((tekst) => ({ tekst, allikas }))),
+          aadressiVoti
+        ),
         markused: kogu(paar.map(({ r, allikas }) => ({ tekst: r.markused, allikas }))),
-        allikad,
+        allikad: allikad.filter((a, i) => allikad.findIndex((b) => samaAllikas(a, b)) === i),
       };
     });
 }
@@ -457,7 +482,7 @@ export function isikuAadressidKoos(
       const k = aadressiVoti(tekst);
       const kirje = tulem.get(k) ?? { tekst, aastad: [], allikad: [] };
       if (!kirje.aastad.includes(v.aasta)) kirje.aastad.push(v.aasta);
-      if (!kirje.allikad.some((a) => a.roll === allikas.roll && a.viide === allikas.viide)) {
+      if (!kirje.allikad.some((a) => samaAllikas(a, allikas))) {
         kirje.allikad.push(allikas);
       }
       tulem.set(k, kirje);
@@ -903,4 +928,15 @@ export function naaberKoosolekud(
   const i = jada.findIndex((k) => k.koosolek_id === id);
   if (i < 0) return { eelmine: null, jargmine: null };
   return { eelmine: jada[i - 1] ?? null, jargmine: jada[i + 1] ?? null };
+}
+
+/** AN-04: volikogu suurus astmetena (algne valimistest, hilisem muutuse kuupäevast). */
+export function volikoguSuurus(k: Koosseis): { kuupaev: string; arv: number }[] {
+  if (k.volikogu_suurus_algne === null) return [];
+  const algus = k.valimised_algus || k.esimene_koosolek;
+  const astmed = [{ kuupaev: algus, arv: k.volikogu_suurus_algne }];
+  if (k.volikogu_suurus_hiljem !== null && k.volikogu_suurus_muutus) {
+    astmed.push({ kuupaev: k.volikogu_suurus_muutus, arv: k.volikogu_suurus_hiljem });
+  }
+  return astmed;
 }

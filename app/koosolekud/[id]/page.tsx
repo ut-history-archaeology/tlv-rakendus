@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import ArhiiviLink from "@/components/ArhiiviLink";
+import { kaadriUrl, kaadridTekst } from "@/lib/viited";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
@@ -125,8 +127,10 @@ export default async function KoosolekuLeht({
         arhiiviviide={
           protokoll && (
             <>
-              Rahvusarhiiv, {protokoll.arhiiviviide}, lk {protokoll.esimene_lk}
-              {protokoll.viimane_lk && protokoll.viimane_lk !== protokoll.esimene_lk && <>–{protokoll.viimane_lk}</>}
+              Rahvusarhiiv,{" "}
+              <ArhiiviLink url={kaadriUrl(protokoll.arhiiviviide, protokoll.esimene_lk)}>
+                {protokoll.arhiiviviide}, {kaadridTekst(protokoll.esimene_lk, protokoll.viimane_lk)}
+              </ArhiiviLink>
             </>
           )
         }

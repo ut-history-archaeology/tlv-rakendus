@@ -5,7 +5,7 @@ import type { Andmestik, Koosseis, Valimine } from "./types";
 
 function rida(roll: Valimine["roll"], lisa: Partial<Valimine> = {}): Valimine {
   return {
-    aasta: 1926, koosseis_id: "K", roll, isik_id: 1,
+    aasta: 1926, koosseis_id: "K", roll, allikas: roll === "valitud" ? "tulemused" : "kandidaadid", isik_id: 1,
     nimekiri_nr: "", nimekiri_nimi: "", nimekiri_id: null, nimekiri_kontrollida: false, ringkond_nr: "",
     perenimi: "", alt_perenimi: "", eesnimi: "", alt_eesnimi: "", isanimi: "",
     vanus: "", synniaeg: "", synniaeg_tuletatud: "",
@@ -20,6 +20,7 @@ const KOOSSEIS: Koosseis = {
   koosseis_id: "K", aasta_valimised: "1926", valimised_algus: "", valimised_lopp: "",
   esimene_koosolek: "", viimane_koosolek: "", valimised_allikas: "",
   valimistulemuste_allikas: "TULEMUSED", kandidaatide_allikas: "KANDIDAADID",
+  volikogu_suurus: "", volikogu_suurus_algne: null, volikogu_suurus_hiljem: null, volikogu_suurus_muutus: "", haaled_allikas: "", valimistulemuste_allikas_url: "", kandidaatide_allikas_url: "",
 };
 
 function andmestik(valimised: Valimine[], koosseisud: Koosseis[] = [KOOSSEIS]): Andmestik {
@@ -33,8 +34,8 @@ function andmestik(valimised: Valimine[], koosseisud: Koosseis[] = [KOOSSEIS]): 
   };
 }
 
-const KAND = { roll: "valitav", viide: "KANDIDAADID" } as const;
-const TUL = { roll: "valitud", viide: "TULEMUSED" } as const;
+const KAND = { allikas: "kandidaadid", viide: "KANDIDAADID", url: null } as const;
+const TUL = { allikas: "tulemused", viide: "TULEMUSED", url: null } as const;
 
 describe("isikuValimisedKoos (TE3-02)", () => {
   it("ainult kandidaat → tulemus kandidaat, üks allikas", () => {
@@ -57,7 +58,7 @@ describe("isikuValimisedKoos (TE3-02)", () => {
       { nr: "3", nimi: "A", toor: ["A"], nimekiri_id: null, kontrollida: false, allikad: [KAND, TUL] },
     ]);
     expect(k[0].amet).toEqual([{ vaartus: "kaupmees", allikad: [KAND, TUL] }]);
-    expect(k[0].koht).toEqual({ jrk_nimekiri: "6", jrk_uld: "46" });
+    expect(k[0].koht).toEqual([{ vaartus: "6 (üldjärjestuses 46)", allikad: [TUL] }]);
     expect(k[0].allikad).toEqual([KAND, TUL]);
   });
 
@@ -95,9 +96,11 @@ describe("isikuValimisedKoos (TE3-02)", () => {
       rida("valitav", { aasta: 1939, ringkond_nr: "1" }),
       rida("valitud", { aasta: 1939, ringkond_nr: "1", jrk_ringkond: "8", haaled_1_jsk: "443", haaled_2_jsk: "494", haaled_kokku: 937 }),
     ]), 1);
-    expect(k.ringkond).toBe("1");
-    expect(k.koht.jrk_ringkond).toBe("8");
-    expect(k.haaled).toEqual({ jsk1: "443", jsk2: "494", kokku: 937 });
+    expect(k.ringkond).toEqual([
+      { vaartus: "1", allikad: [KAND] },
+      { vaartus: "1, koht ringkonnas 8", allikad: [TUL] },
+    ]);
+    expect(k.haaled).toEqual([{ vaartus: "937 (1. jsk 443, 2. jsk 494)", allikad: [TUL] }]);
   });
 
   it("allikad õige koosseisu järgi", () => {
@@ -108,15 +111,74 @@ describe("isikuValimisedKoos (TE3-02)", () => {
       rida("valitud", { aasta: 1929, koosseis_id: "L" }),
     ], [KOOSSEIS, teine]), 1);
     expect(k.map((x) => x.aasta)).toEqual([1926, 1929]);
-    expect(k[1].allikad).toEqual([{ roll: "valitav", viide: "K2" }, { roll: "valitud", viide: "T2" }]);
+    expect(k[1].allikad).toEqual([
+      { allikas: "kandidaadid", viide: "K2", url: null }, { allikas: "tulemused", viide: "T2", url: null },
+    ]);
   });
 
   it("päris andmed: Aavik 1926 — üks kirje, vanus 55, koht 6 (46), kaks allikat", () => {
     const k = isikuValimisedKoos(loeAndmestik(), 1).find((x) => x.aasta === 1926)!;
     expect(k.nimekiri).toHaveLength(1);
     expect(k.vanus.map((v) => v.vaartus)).toEqual(["55"]);
-    expect(k.koht).toMatchObject({ jrk_nimekiri: "6", jrk_uld: "46" });
+    expect(k.koht.map((v) => v.vaartus)).toEqual(["6 (üldjärjestuses 46)"]);
     expect(k.allikad).toHaveLength(2);
+  });
+});
+
+describe("valimiste kaart allikaviidetega (TE4-04, VK-01…VK-03)", () => {
+  it("kolm allikat ühel aastal → üks kaart, allikad rea kaupa", () => {
+    const k = isikuValimisedKoos(andmestik([
+      rida("valitav", { aasta: 1917, amet: "kontoriametnik" }),
+      rida("valitav", { aasta: 1917, allikas: "kandidaadid_vene", amet: "конторщикъ" }),
+      rida("valitud", { aasta: 1917 }),
+    ]), 1);
+    expect(k).toHaveLength(1);
+    expect(k[0].allikad.map((a) => a.allikas)).toEqual(["kandidaadid", "kandidaadid_vene", "tulemused"]);
+    expect(k[0].amet).toEqual([
+      { vaartus: "kontoriametnik", allikad: [KAND] },
+      { vaartus: "конторщикъ", allikad: [{ allikas: "kandidaadid_vene", viide: null, url: null }] },
+    ]);
+  });
+
+  it("võrdne väärtus kahest allikast → üks väärtus kahe viitega", () => {
+    const [k] = isikuValimisedKoos(andmestik([
+      rida("valitav", { amet: "kaupmees" }), rida("valitud", { amet: "kaupmees" }),
+    ]), 1);
+    expect(k.amet).toEqual([{ vaartus: "kaupmees", allikad: [KAND, TUL] }]);
+  });
+
+  it("viide puudu → viide: null; URL koosseisu tabelist", () => {
+    const ilma: Koosseis = { ...KOOSSEIS, kandidaatide_allikas: "", valimistulemuste_allikas_url: "https://dea.digar.ee/x" };
+    const [k] = isikuValimisedKoos(andmestik([
+      rida("valitav", { amet: "kaupmees" }), rida("valitud", { amet: "kaupmees" }),
+    ], [ilma]), 1);
+    expect(k.amet[0].allikad).toEqual([
+      { allikas: "kandidaadid", viide: null, url: null },
+      { allikas: "tulemused", viide: "TULEMUSED", url: "https://dea.digar.ee/x" },
+    ]);
+  });
+
+  it("päris andmed: Oskar Allik (6) 1917 — üks kaart, eesti viitega, vene VIIDE PUUDU", () => {
+    const k = isikuValimisedKoos(loeAndmestik(), 6).filter((x) => x.aasta === 1917);
+    expect(k).toHaveLength(1);
+    const vene = (v: { allikad: { allikas: string; viide: string | null }[] }) =>
+      v.allikad.some((a) => a.allikas === "kandidaadid_vene" && a.viide === null);
+    expect(k[0].vanus.find((v) => v.vaartus === "32")).toSatisfy(vene);
+    expect(k[0].aadress.find((v) => v.vaartus.startsWith("Толстого 10"))).toSatisfy(vene);
+    expect(k[0].amet.find((v) => v.vaartus === "конторщикъ")).toSatisfy(vene);
+    const eesti = k[0].allikad.find((a) => a.allikas === "kandidaadid")!;
+    expect(eesti.viide).toMatch(/^Eestimaa Kubermangu Teataja, nr\. 35/);
+    expect(eesti.url).toMatch(/^https:\/\/dea\.digar\.ee\//);
+    expect(k[0].nimekiri[0].allikad.map((a) => a.allikas)).toEqual(["kandidaadid", "kandidaadid_vene", "tulemused"]);
+  });
+
+  it("päris andmed: Aavik (1) 1926 — kandidaadi viide puudub (L-04), valitu viide Riigi Teatajale", () => {
+    const k = isikuValimisedKoos(loeAndmestik(), 1).find((x) => x.aasta === 1926)!;
+    const kand = k.allikad.find((a) => a.allikas === "kandidaadid")!;
+    const tul = k.allikad.find((a) => a.allikas === "tulemused")!;
+    expect(kand.viide).toBeNull();
+    expect(tul.viide).toBe("Riigi Teataja, nr. 6, 24 jaanuar 1927");
+    expect(tul.url).toBe("https://dea.digar.ee/article/AKriigiteataja/1927/01/24/12");
   });
 });
 

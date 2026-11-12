@@ -1,24 +1,65 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
-import type { Allikas, ValimineKoos } from "@/lib/derive";
+import { Fragment, type ReactNode } from "react";
+import { ALLIKA_NIMI, type Allikas, type Vaartus, type ValimineKoos } from "@/lib/derive";
 import { ABI } from "@/lib/abitekstid";
 import HelpTip from "./HelpTip";
 import KontrollimiselMark from "./KontrollimiselMark";
-
-const ULAINDEKS = ["¹", "²", "³", "⁴", "⁵", "⁶"];
-
-function allikaSilt(a: Allikas): string {
-  return a.roll === "valitav" ? "kandidaatide nimekiri" : "valimistulemused";
-}
 
 /** Koosseisu ID → "1927–1929" pealkirja jaoks. */
 function koosseisuNimi(id: string): string {
   return id.replace("-", "–");
 }
 
+/** Viite lühikuju (täiskuju tooltipis). */
+function lyhike(viide: string): string {
+  return viide.length > 32 ? viide.slice(0, 30).trimEnd() + "…" : viide;
+}
+
+/** VK-03: ühe allika viide väärtuse järel — link, kui URL olemas; puudumisel VIIDE PUUDU. */
+function Viide({ a }: { a: Allikas }) {
+  const nimi = ALLIKA_NIMI[a.allikas];
+  if (!a.viide) {
+    return (
+      <strong className="text-red-800" title={`${nimi}: viide puudub`}>
+        VIIDE PUUDU
+      </strong>
+    );
+  }
+  const title = `${nimi}: ${a.viide}`;
+  return a.url ? (
+    <a
+      href={a.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={`${title} (avaneb uues aknas)`}
+      className="text-blue-700 underline decoration-blue-300 hover:decoration-blue-700"
+    >
+      {lyhike(a.viide)}
+    </a>
+  ) : (
+    <span title={title}>{lyhike(a.viide)}</span>
+  );
+}
+
+function Viited({ allikad }: { allikad: Allikas[] }) {
+  return (
+    <span className="ml-1.5 text-xs text-stone-500">
+      [
+      {allikad.map((a, i) => (
+        <Fragment key={i}>
+          {i > 0 && "; "}
+          <Viide a={a} />
+        </Fragment>
+      ))}
+      ]
+    </span>
+  );
+}
+
 /**
- * UX-03: üks kaart valimisaasta kohta. Erinevate allikaväärtuste järel ülaindeks,
- * mis viitab jaluse allikareale (andmeid ei ühtlustata).
+ * VK-01…VK-04: üks kaart valimisaasta kohta; iga väärtuse järel selle allika(te) viide.
+ * Sama väärtus mitmest allikast → üks väärtus, kõik viited; erinevad väärtused jäävad kõik
+ * nähtavaks, igaüks oma viitega (ei ühtlustata).
  */
 export default function ValimisedKoos({ kirjed }: { kirjed: ValimineKoos[] }) {
   return (
@@ -31,71 +72,45 @@ export default function ValimisedKoos({ kirjed }: { kirjed: ValimineKoos[] }) {
 }
 
 function ValimiseKaart({ k }: { k: ValimineKoos }) {
-  const indeks = (a: Allikas) =>
-    k.allikad.findIndex((x) => x.roll === a.roll && x.viide === a.viide);
-  /** Ülaindeksid ainult siis, kui väljal on mitu erinevat väärtust. */
-  const viited = (allikad: Allikas[], mitu: boolean) =>
-    mitu ? (
-      <sup className="ml-0.5 text-stone-500" title={allikad.map(allikaSilt).join(", ")}>
-        {allikad.map((a) => ULAINDEKS[indeks(a)] ?? "").join("")}
-      </sup>
-    ) : null;
-
   const read: [string, ReactNode][] = [];
   if (k.nimekiri.length > 0) {
-    read.push(["Nimekiri", k.nimekiri.map((n, i) => (
-      <span key={i} className="block">
-        {n.nr && <>nr {n.nr} — </>}
-        <span
-          title={n.toor.length && n.toor.join() !== n.nimi ? `Allikas: ${n.toor.join("; ")}` : undefined}
-          className={n.toor.length && n.toor.join() !== n.nimi ? "cursor-help underline decoration-dotted decoration-stone-400" : ""}
-        >
-          {n.nimi}
+    read.push(["Nimekiri", k.nimekiri.map((n, i) => {
+      const toorEri = n.toor.length > 0 && n.toor.join() !== n.nimi;
+      return (
+        <span key={i} className="block">
+          {n.nr && <>nr {n.nr} — </>}
+          <span
+            title={toorEri ? `Allikas: ${n.toor.join("; ")}` : undefined}
+            className={toorEri ? "cursor-help underline decoration-dotted decoration-stone-400" : ""}
+          >
+            {n.nimi}
+          </span>
+          {n.kontrollida && <KontrollimiselMark />}
+          <Viited allikad={n.allikad} />
         </span>
-        {n.kontrollida && <KontrollimiselMark />}
-        {viited(n.allikad, k.nimekiri.length > 1)}
-      </span>
-    ))]);
+      );
+    })]);
   }
-  if (k.koht.jrk_nimekiri || k.koht.jrk_uld) {
-    read.push(["Koht nimekirjas", (
-      <>
-        {k.koht.jrk_nimekiri ?? "—"}
-        {k.koht.jrk_uld && ` (üldjärjestuses ${k.koht.jrk_uld})`}
-      </>
-    )]);
-  }
-  if (k.ringkond) {
-    read.push(["Ringkond", (
-      <>
-        {k.ringkond}
-        {k.koht.jrk_ringkond && `, koht ringkonnas ${k.koht.jrk_ringkond}`}
-      </>
-    )]);
-  }
-  if (k.haaled) {
-    const { jsk1, jsk2, kokku } = k.haaled;
-    read.push(["Hääled", (
-      <>
-        {kokku ?? "—"}
-        {(jsk1 || jsk2) && ` (1. jsk ${jsk1 ?? "—"}, 2. jsk ${jsk2 ?? "—"})`}
-      </>
-    )]);
-  }
-  const mitmene = (silt: string, v: { vaartus: string; allikad: Allikas[] }[]) => {
-    if (v.length === 0) return;
+  const valjad: [string, Vaartus[]][] = [
+    ["Nimekuju allikas", k.nimekuju],
+    ["Koht nimekirjas", k.koht],
+    ["Ringkond", k.ringkond],
+    ["Hääled", k.haaled],
+    ["Amet", k.amet],
+    ["Vanus valimiste ajal", k.vanus],
+    ["Sünniaeg", k.synniaeg],
+    ["Aadress", k.aadress],
+    ["Märkused", k.markused],
+  ];
+  for (const [silt, v] of valjad) {
+    if (v.length === 0) continue;
     read.push([silt, v.map((x, i) => (
       <span key={i} className="block">
         {x.vaartus}
-        {viited(x.allikad, v.length > 1)}
+        <Viited allikad={x.allikad} />
       </span>
     ))]);
-  };
-  mitmene("Amet", k.amet);
-  mitmene("Vanus valimiste ajal", k.vanus);
-  mitmene("Sünniaeg", k.synniaeg);
-  mitmene("Aadress", k.aadress.map((a) => ({ vaartus: a.tekst, allikad: a.allikad })));
-  mitmene("Märkused", k.markused);
+  }
 
   return (
     <article className="rounded-lg border border-stone-200 bg-white p-4">
@@ -105,6 +120,7 @@ function ValimiseKaart({ k }: { k: ValimineKoos }) {
           <Link href={`/koosseisud/${k.koosseis_id}/`} className="text-blue-700 underline decoration-blue-200 underline-offset-2 hover:decoration-blue-700">
             koosseis {koosseisuNimi(k.koosseis_id)}
           </Link>
+          <HelpTip tekst={ABI.valimisteAllikad} />
         </h3>
         <span
           className={`rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -127,17 +143,6 @@ function ValimiseKaart({ k }: { k: ValimineKoos }) {
           ))}
         </dl>
       )}
-      <p className="mt-3 border-t border-stone-100 pt-2 text-xs text-stone-500">
-        Allikad:{" "}
-        {k.allikad.map((a, i) => (
-          <span key={i}>
-            {i > 0 && "; "}
-            {k.allikad.length > 1 && ULAINDEKS[i]}
-            {allikaSilt(a)} — {a.viide || <em>allikas märkimata</em>}
-          </span>
-        ))}
-        <HelpTip tekst={ABI.valimisteAllikad} />
-      </p>
     </article>
   );
 }

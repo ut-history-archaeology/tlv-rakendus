@@ -5,7 +5,7 @@ import type { Andmestik, Koosseis, Muutus, Valimine } from "./types";
 
 function valitud(isik_id: number): Valimine {
   return {
-    aasta: 1926, koosseis_id: "K", roll: "valitud", isik_id,
+    aasta: 1926, koosseis_id: "K", roll: "valitud", allikas: "tulemused", isik_id,
     nimekiri_nr: "", nimekiri_nimi: "", nimekiri_id: null, nimekiri_kontrollida: false, ringkond_nr: "",
     perenimi: "", alt_perenimi: "", eesnimi: "", alt_eesnimi: "", isanimi: "",
     vanus: "", synniaeg: "", synniaeg_tuletatud: "",
@@ -33,6 +33,7 @@ const KOOSSEIS: Koosseis = {
   koosseis_id: "K", aasta_valimised: "1926", valimised_algus: "1926-12-01", valimised_lopp: "",
   esimene_koosolek: "1927-02-07", viimane_koosolek: "1929-12-30", valimised_allikas: "",
   valimistulemuste_allikas: "", kandidaatide_allikas: "",
+  volikogu_suurus: "", volikogu_suurus_algne: null, volikogu_suurus_hiljem: null, volikogu_suurus_muutus: "", haaled_allikas: "", valimistulemuste_allikas_url: "", kandidaatide_allikas_url: "",
 };
 
 function andmestik(muutused: Muutus[], valimised: Valimine[] = [], koosseis = KOOSSEIS): Andmestik {

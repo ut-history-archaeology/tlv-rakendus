@@ -36,7 +36,8 @@ describe("TE-10 eksport", () => {
     expect(md).toContain("## Lisa: Kiri linnavalitsusele");
     expect(md).toContain("**Olesk:** Kinnitame.");
     expect((md.match(/^## \d+\. /gm) ?? []).length).toBe(p.paevakord.length);
-    expect(md).toContain("- Arhiiviviide: ERA.2966.2.60, lk 27–28");
+    expect(md).toContain("- Arhiiviviide: ERA.2966.2.60, kaadrid 27–28");
+    expect(md).toContain("- Rahvusarhiiv: https://www.ra.ee/dgs/_purl.php?shc=ERA.2966.2.60:27");
   });
   it("moderniseeritud kuju muudab teksti ja pealkirja, kõne jääb õigele kohale", () => {
     const md = koostaMarkdown(p, { ...ctx, kirjakuju: "moderniseeritud" });
@@ -47,7 +48,7 @@ describe("TE-10 eksport", () => {
   });
   it("txt päises on arhiiviviide, Transkribus, allikas ja kirjakuju; tekst muutmata reavahetustega", () => {
     const txt = koostaTxt(p, ctx);
-    expect(txt).toContain("Arhiiviviide: ERA.2966.2.60, lk 27–28");
+    expect(txt).toContain("Arhiiviviide: ERA.2966.2.60, kaadrid 27–28");
     expect(txt).toContain("Transkribus: https://x/document/1/pages/5");
     expect(txt).toContain("Allikas: Tartu Linnavolikogu andmestik, 2026");
     expect(txt).toContain("Kirjakuju: ajalooline");

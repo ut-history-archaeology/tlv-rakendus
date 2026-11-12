@@ -20,6 +20,8 @@ interface Props {
   lopp: string;
   seeria: { kuupaev: string; arv: number }[];
   valitudArv: number;
+  /** AN-04: volikogu ametlik suurus astmelise viitejoonena (kuupäevast alates) */
+  suurus?: { kuupaev: string; arv: number }[];
   varv: string;
   paevad: AjateljePaev[];
   koosolekud: string[];
@@ -40,7 +42,7 @@ const SEGA = "#78716c";
 
 /** UX-07: liikmete arv ajas (astmeline joon) + sündmuste riba (üks marker kuupäeva kohta). */
 export default function LiikmeteAjatelg({
-  algus, lopp, seeria, valitudArv, varv, paevad, koosolekud, valitudKuupaev, vali,
+  algus, lopp, seeria, valitudArv, varv, paevad, koosolekud, valitudKuupaev, vali, suurus = [],
 }: Props) {
   const ymbris = useRef<HTMLDivElement>(null);
   const [laius, setLaius] = useState(960);
@@ -59,7 +61,7 @@ export default function LiikmeteAjatelg({
   if (!(l > a) || seeria.length === 0) return null;
 
   const x = (iso: string) => VASAK + ((utc(iso) - a) / (l - a)) * (laius - VASAK - PAREM);
-  const arvud = [...seeria.map((s) => s.arv), valitudArv];
+  const arvud = [...seeria.map((s) => s.arv), valitudArv, ...suurus.map((s) => s.arv)];
   const lo = Math.min(...arvud) - 1;
   const hi = Math.max(...arvud) + 1;
   const y = (n: number) => JOON_ALL - ((n - lo) / (hi - lo)) * (JOON_ALL - JOON_YLAL);
@@ -70,7 +72,15 @@ export default function LiikmeteAjatelg({
     tee += ` H${x(seeria[i].kuupaev)} V${y(seeria[i].arv)}`;
   }
 
-  const yTikid = [...new Set([Math.min(...seeria.map((s) => s.arv)), valitudArv, Math.max(...seeria.map((s) => s.arv))])];
+  const yTikid = [...new Set([
+    Math.min(...seeria.map((s) => s.arv)), valitudArv, Math.max(...seeria.map((s) => s.arv)), ...suurus.map((s) => s.arv),
+  ])];
+  let suuruseTee = "";
+  suurus.forEach((s, i) => {
+    const sx = Math.max(VASAK, x(s.kuupaev));
+    suuruseTee += i === 0 ? `M${VASAK},${y(s.arv)}` : ` H${sx} V${y(s.arv)}`;
+  });
+  if (suuruseTee) suuruseTee += ` H${laius - PAREM}`;
   const aastad: number[] = [];
   for (let aa = Number(algus.slice(0, 4)) + 1; aa <= Number(lopp.slice(0, 4)); aa++) aastad.push(aa);
 
@@ -110,6 +120,10 @@ export default function LiikmeteAjatelg({
               x1={VASAK} x2={laius - PAREM} y1={y(valitudArv)} y2={y(valitudArv)}
               stroke={varv} strokeDasharray="4 3" strokeOpacity={0.6}
             />
+            {/* AN-04: volikogu suurus */}
+            {suuruseTee && (
+              <path d={suuruseTee} fill="none" stroke="#57534e" strokeWidth={1.5} strokeDasharray="1 3" strokeLinecap="round" />
+            )}
             {/* liikmete arv */}
             <path d={tee} fill="none" stroke={varv} strokeWidth={2.5} />
             {/* sündmuste riba alus */}
@@ -203,6 +217,12 @@ export default function LiikmeteAjatelg({
           <span className="inline-block w-5 border-t-2 border-dashed" style={{ borderColor: varv }} aria-hidden />
           valitud liikmeid ({valitudArv})
         </span>
+        {suurus.length > 0 && (
+          <span className="inline-flex items-center gap-1.5">
+            <span className="inline-block w-5 border-t-2 border-dotted border-stone-600" aria-hidden />
+            volikogu suurus ({suurus.map((s) => s.arv).join(" → ")})
+          </span>
+        )}
         {liigidKokku.map((liik) => (
           <span key={liik} className="inline-flex items-center gap-1">
             <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: LIIGI_VARV[liik] }} aria-hidden />

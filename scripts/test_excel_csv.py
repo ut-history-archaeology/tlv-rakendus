@@ -139,6 +139,55 @@ class Osavott(unittest.TestCase):
         self.assertEqual(self.siduja([]).seo("Kleement", "K"), ("", "puudub"))
 
 
+class Koosseisud(unittest.TestCase):
+    """TE4-01/AN-04: volikogu suurus ja selle muutus."""
+
+    def setUp(self):
+        x.hoiatused.clear()
+
+    def test_65_33(self):
+        self.assertEqual(x.volikogu_suurus("65/33"), ("65", "33"))
+        self.assertEqual(x.volikogu_suurus("60"), ("60", ""))
+        self.assertEqual(x.volikogu_suurus("-"), ("", ""))
+        self.assertEqual(x.volikogu_suurus("umbes 60"), ("", ""))
+        self.assertTrue(x.hoiatused)
+
+    def test_muutuse_kuupaev(self):
+        k = [{"koosseis_id": "A", "volikogu_suurus_hiljem": "33"}]
+        kk = [{"koosseis_id": "A", "kuupaev": "1934-04-30", "koosseis_arv": "33"},
+              {"koosseis_id": "A", "kuupaev": "1934-03-02", "koosseis_arv": "65"},
+              {"koosseis_id": "A", "kuupaev": "1934-04-09", "koosseis_arv": "33"}]
+        x.maara_suuruse_muutus(k, kk)
+        self.assertEqual(k[0]["volikogu_suurus_muutus"], "1934-04-09")
+
+    def test_hyperlink_url_veergu(self):
+        r = {"aastad_koosolekud": "1927–1929", "aasta_valimised": 1926, "valimised_aasta": 1926, "valimised_kuu": 12,
+             "valimised_päev": "18,19", **{f"{a}_{b}": None for a in ("esimene_koosolek", "viimane_koosolek")
+                                           for b in ("aasta", "kuu", "päev")},
+             "valimised_allikas": None, "valimistulemuste_nimekiri_allikas": "Riigi Teataja, nr. 6, 24 jaanuar 1927",
+             "volinike_kandidaatide_nimekiri_allikas": None, "volikogu_suurus": 55, "hääled_allikas": "ERA.40.1.457"}
+        url = "https://dea.digar.ee/article/AKriigiteataja/1927/01/24/12"
+        [k] = x.tee_koosseisud([r], {(0, "valimistulemuste_nimekiri_allikas"): url})
+        self.assertEqual(k["valimistulemuste_allikas_url"], url)
+        self.assertEqual(k["kandidaatide_allikas_url"], "")
+        self.assertEqual(k["koosseis_id"], "1927-1929")
+
+
+class ValimiseAllikas(unittest.TestCase):
+    """VK-02: rea allikas."""
+
+    def test_reeglid(self):
+        self.assertEqual(x.valimise_allikas({"roll_allikas": "valitud", "aasta": 1917, "perenimi": "Allik"}), "tulemused")
+        self.assertEqual(x.valimise_allikas({"roll_allikas": "valitav", "aasta": 1917, "perenimi": "Алликъ"}),
+                         "kandidaadid_vene")
+        self.assertEqual(x.valimise_allikas({"roll_allikas": "valitav", "aasta": 1917, "perenimi": "Allik"}), "kandidaadid")
+        self.assertEqual(x.valimise_allikas({"roll_allikas": "valitav", "aasta": 1926, "perenimi": "Aavik"}), "kandidaadid")
+
+    def test_exceli_veerg_eelistatakse(self):
+        self.assertEqual(x.valimise_allikas({"allikas": "kandidaadid_vene", "roll_allikas": "valitav", "aasta": 1917,
+                                             "perenimi": "Allik"}), "kandidaadid_vene")
+
+
 class Nimekirjad(unittest.TestCase):
     """TE4-03: nimekirjade sidumine vastete tabeli järgi."""
     VASTED = {("1926", "", "Eesti rahvaerakonna nimekiri"): {"id": "7", "kontrollida": False},

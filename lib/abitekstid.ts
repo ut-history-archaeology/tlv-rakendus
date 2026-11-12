@@ -26,10 +26,10 @@ export const ABI = {
   protokolliLisa:
     "Lisa on protokolli juurde kuuluv eraldi dokument (nt eelarve, nimekiri), mille piirid on tuvastatud automaatselt.",
   lehemarker:
-    "Lehemarker näitab, kust algab arhiivisäiliku järgmine lehekülg. Klõps markeril avab sama lehe originaalpildi.",
+    "Kaadrimarker näitab, kust algab Rahvusarhiivi järgmine digikaader (arhiivisäiliku leht). Klõps markeril avab selle kaadri originaalpildi.",
   // 3. etapp
   valimisteAllikad:
-    "Valimiste andmed pärinevad kahest allikast: kandidaatide nimekirjast ja valimistulemustest. Kui allikad erinevad, näidatakse mõlemad kujud ja ülaindeks viitab allikale.",
+    "Kaardil on kõik selle aasta valimiste read: kandidaatide nimekiri (1917 ka venekeelne) ja valimistulemused. Iga väärtuse järel nurksulgudes on allika viide; sama väärtus mitmest allikast on näidatud üks kord kõigi viidetega, erinevad väärtused kõik eraldi. VIIDE PUUDU = allika viide on andmetes märkimata.",
   kinnitamine:
     "Koosseisu esimesel koosolekul kinnitati valimistel valitud liikmed. Andmestikus on see iga liikme kohta eraldi liitumisrida; siin on need koondatud üheks sündmuseks.",
   vahetus:

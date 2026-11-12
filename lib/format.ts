@@ -15,6 +15,18 @@ export function kuupaevEesti(iso: string | null | undefined): string {
   return `${Number(p)}. ${KUUD[Number(k) - 1]} ${a}`;
 }
 
+const KUUD_ELATIIV = [
+  "jaanuarist", "veebruarist", "märtsist", "aprillist", "maist", "juunist",
+  "juulist", "augustist", "septembrist", "oktoobrist", "novembrist", "detsembrist",
+];
+
+/** "1934-04-09" → "9. aprillist 1934" ("alates …" jaoks). */
+export function kuupaevEestiAlates(iso: string): string {
+  const [a, k, p] = iso.split("-");
+  if (!k) return a;
+  return `${p ? `${Number(p)}. ` : ""}${KUUD_ELATIIV[Number(k) - 1]} ${a}`;
+}
+
 /** Lühivorm PP.KK.AAAA (tabelites); osaline kuupäev jääb nagu on. */
 export function kuupaevLyhike(iso: string | null | undefined): string {
   if (!iso) return "";

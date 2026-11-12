@@ -7,6 +7,7 @@ import { kuupaevEesti, kuupaevLyhike } from "@/lib/format";
 import { ABI } from "@/lib/abitekstid";
 import HelpTip from "./HelpTip";
 import ProtokolliSakid from "./ProtokolliSakid";
+import ArhiiviViited from "./ArhiiviViited";
 
 interface Naaber {
   koosolek_id: string;
@@ -25,7 +26,7 @@ interface Props {
   lisaRead?: ReactNode;
   /** paremal: eksport/viide */
   tegevused?: ReactNode;
-  /** täpsem arhiiviviide (protokollilehel lehekülgede vahemikuga) */
+  /** täpsem arhiiviviide (protokollilehel kaadrite vahemikuga) */
   arhiiviviide?: ReactNode;
 }
 
@@ -120,7 +121,7 @@ export default function KoosolekuPais({
               <div className="sm:col-span-2">
                 <dt className="inline font-medium">Arhiiviviide: </dt>
                 <dd className="inline">
-                  {arhiiviviide ?? <>Rahvusarhiiv, {protokoll.arhiiviviide}</>}
+                  {arhiiviviide ?? <>Rahvusarhiiv, <ArhiiviViited tekst={protokoll.arhiiviviide} /></>}
                   {protokoll.transkribus_url && (
                     <>
                       {" · "}

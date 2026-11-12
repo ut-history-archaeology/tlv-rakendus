@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import ArhiiviLink from "@/components/ArhiiviLink";
+import { kaadriUrl, kaadridTekst } from "@/lib/viited";
 import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
 import { naaberKoosolekud } from "@/lib/derive";
@@ -71,8 +73,10 @@ export default async function ProtokolliLeht({ params }: { params: Promise<{ id:
         jargmine={naabrid.jargmine}
         arhiiviviide={
           <>
-            Rahvusarhiiv, {p.arhiiviviide}, lk {esimeneLk}
-            {viimaneLk !== esimeneLk && <>–{viimaneLk}</>}
+            Rahvusarhiiv,{" "}
+            <ArhiiviLink url={kaadriUrl(p.arhiiviviide, esimeneLk)}>
+              {p.arhiiviviide}, {kaadridTekst(esimeneLk, viimaneLk)}
+            </ArhiiviLink>
             {" · "}
             <a href={korpuseFailiUrl(p.fail)} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
               Algne EstNLTK JSON (GitHub) ↗
@@ -84,7 +88,7 @@ export default async function ProtokolliLeht({ params }: { params: Promise<{ id:
             <dt className="inline font-medium">Statistika: </dt>
             <dd className="inline text-stone-700">
               {s.paevakorrapunkte} päevakorrapunkti
-              <HelpTip tekst={ABI.paevakorrapunkt} /> · {s.sonu.toLocaleString("et")} sõna · {s.konesid} kõnet · {s.lehekylgi} lehekülge
+              <HelpTip tekst={ABI.paevakorrapunkt} /> · {s.sonu.toLocaleString("et")} sõna · {s.konesid} kõnet · {s.lehekylgi} kaadrit
               {s.lehekylgi_tekstita > 0 && <> (neist {s.lehekylgi_tekstita} tekstita)</>}
               {s.lisasid > 0 && <> · {s.lisasid} lisa</>}
               {" · "}

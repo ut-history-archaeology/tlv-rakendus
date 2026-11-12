@@ -4,10 +4,10 @@ import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
 import {
   isikuRead, koosseisuLiikmedKokku, koosseisuNimekirjaJaotus, koosseisuNimekirjad, koosseisuSyndmused,
-  liikmeteArvuSeeria, syndmuseIsikud,
+  liikmeteArvuSeeria, syndmuseIsikud, volikoguSuurus,
 } from "@/lib/derive";
 import { koosseisuVarv } from "@/lib/colors";
-import { kuupaevEesti, kuupaevLyhike, taisnimi } from "@/lib/format";
+import { kuupaevEesti, kuupaevEestiAlates, kuupaevLyhike, taisnimi } from "@/lib/format";
 import { ABI } from "@/lib/abitekstid";
 import { kuupaevadEesti } from "@/lib/protokollid/viide";
 import HelpTip from "@/components/HelpTip";
@@ -17,6 +17,8 @@ import RingkonnaDiagramm from "@/components/RingkonnaDiagramm";
 import ExportButton from "@/components/ExportButton";
 import KoosseisuMuutused from "@/components/KoosseisuMuutused";
 import type { JaotuseSegment } from "@/components/JaotusRiba";
+import ArhiiviViited from "@/components/ArhiiviViited";
+import type { Koosseis } from "@/lib/types";
 
 const MUUTUSTE_VEERUD = [
   { key: "muutus_id", pealkiri: "muutus_id" },
@@ -34,6 +36,14 @@ const MUUTUSTE_VEERUD = [
   { key: "allikaviide", pealkiri: "Allikaviide" },
   { key: "tapsustus", pealkiri: "Täpsustus" },
 ];
+
+/** PA-05: valimistulemuste ja kandidaatide trükiallikas; sama allikas ja link → üks rida. */
+function trykiallikad(k: Koosseis): { silt: string; tekst: string; url: string }[] {
+  const t = { silt: "valimistulemused", tekst: k.valimistulemuste_allikas, url: k.valimistulemuste_allikas_url };
+  const c = { silt: "kandidaadid", tekst: k.kandidaatide_allikas, url: k.kandidaatide_allikas_url };
+  if (t.tekst && t.tekst === c.tekst && t.url === c.url) return [{ ...t, silt: "valimistulemused ja kandidaadid" }];
+  return [t, c].filter((x) => x.tekst);
+}
 
 export function generateStaticParams() {
   return loeAndmestik().koosseisud.map((k) => ({ id: k.koosseis_id }));
@@ -101,6 +111,7 @@ export default async function KoosseisuLeht({
     ]);
   }
 
+  const suurus = volikoguSuurus(koosseis);
   const algus = koosseis.valimised_algus || koosseis.esimene_koosolek;
   const lopp = koosseis.viimane_koosolek || koosseis.valimised_lopp;
 
@@ -210,6 +221,15 @@ export default async function KoosseisuLeht({
               </dd>
             </div>
           )}
+          {suurus.length > 0 && (
+            <div>
+              <dt className="inline font-medium">Volikogu suurus: </dt>
+              <dd className="inline">
+                {suurus[0].arv}
+                {suurus[1] && <>; alates {kuupaevEestiAlates(suurus[1].kuupaev)}: {suurus[1].arv}</>}
+              </dd>
+            </div>
+          )}
           <div>
             <dt className="inline font-medium">Liikmeid kokku: </dt>
             <dd className="inline">
@@ -236,13 +256,36 @@ export default async function KoosseisuLeht({
             <dt className="inline font-medium">Liikmesmuutusi: </dt>
             <dd className="inline">{syndmused.length} sündmust ({muutused.length} rida)</dd>
           </div>
-          {(koosseis.valimised_allikas || koosseis.valimistulemuste_allikas) && (
+          {/* PA-05: trükiallikad Exceli hüperlinkidena, arhiiviviited PA-10 järgi */}
+          {(koosseis.valimistulemuste_allikas || koosseis.kandidaatide_allikas) && (
+            <div className="sm:col-span-2">
+              <dt className="inline font-medium">Trükiallikad: </dt>
+              <dd className="inline text-stone-600">
+                {trykiallikad(koosseis).map((t, i) => (
+                  <span key={i}>
+                    {i > 0 && "; "}
+                    {t.silt}:{" "}
+                    {t.url ? (
+                      <a href={t.url} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline decoration-blue-300 hover:decoration-blue-700">
+                        {t.tekst}
+                      </a>
+                    ) : t.tekst}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          )}
+          {(koosseis.valimised_allikas || koosseis.haaled_allikas) && (
             <div className="sm:col-span-2">
               <dt className="inline font-medium">Arhiiviviited: </dt>
               <dd className="inline text-stone-600">
-                {[koosseis.valimised_allikas, koosseis.valimistulemuste_allikas, koosseis.kandidaatide_allikas]
-                  .filter(Boolean)
-                  .join("; ")}
+                {koosseis.valimised_allikas && (
+                  <>valimised: <ArhiiviViited tekst={koosseis.valimised_allikas} /></>
+                )}
+                {koosseis.valimised_allikas && koosseis.haaled_allikas && "; "}
+                {koosseis.haaled_allikas && (
+                  <>hääled: <ArhiiviViited tekst={koosseis.haaled_allikas} /></>
+                )}
               </dd>
             </div>
           )}
@@ -286,6 +329,7 @@ export default async function KoosseisuLeht({
           lopp={lopp}
           seeria={liikmeteArvuSeeria(andmed, id, algus, lopp)}
           valitudArv={valitudRead.length}
+          suurus={suurus}
           varv={koosseisuVarv(id)}
           koosolekud={koosolekud.map((k) => k.kuupaev)}
           failinimi={`tlv-syndmused-koosseis-${id}`}

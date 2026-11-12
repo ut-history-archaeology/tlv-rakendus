@@ -124,14 +124,14 @@ function Yksused({ yksused, nimed }: { yksused: (KuvaYksus | SegmentYksus | Mark
 
 function Marker({ y }: { y: MarkerYksus }) {
   const { leht } = y;
-  const silt = leht.tekstita ? `lk ${leht.lk} (tekstita leht)` : `lk ${leht.lk}`;
+  const silt = leht.tekstita ? `kaader ${leht.lk} (tekstita)` : `kaader ${leht.lk}`;
   return (
     <a
       id={`lk-${leht.lk}`}
       href={`?lk=${encodeURIComponent(leht.lk)}`}
       className="lehemarker"
       data-lk={leht.lk}
-      title={`Arhiivi lehekülg ${leht.lk} — ava originaalpilt`}
+      title={`Rahvusarhiivi digikaader ${leht.lk} — ava originaalpilt`}
     >
       {silt}
     </a>

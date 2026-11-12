@@ -17,6 +17,7 @@ import ValimisedKoos from "@/components/ValimisedKoos";
 import SyndmusteTabel from "@/components/SyndmusteTabel";
 import type { Muutus } from "@/lib/types";
 import type { ReactNode } from "react";
+import ArhiiviViited from "@/components/ArhiiviViited";
 
 export function generateStaticParams() {
   return loeAndmestik().isikud.map((i) => ({ id: String(i.isik_id) }));
@@ -169,7 +170,7 @@ export default async function IsikuProfiil({
       </a>
     )]);
   }
-  if (isik.arhiiviviited) paiseValjad.push(["Arhiiviviited", isik.arhiiviviited]);
+  if (isik.arhiiviviited) paiseValjad.push(["Arhiiviviited", <ArhiiviViited key="a" tekst={isik.arhiiviviited} />]);
   const on1940 = koosseisud.includes("1940-1941");
 
   return (
