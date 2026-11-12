@@ -25,6 +25,25 @@ npm run andmed     # andmed_excel/*.xlsx → data/*.csv (Python 3 + openpyxl; vt
 npm run andmed:kontrolli   # ainult võrdlusraport, CSV-sid ei kirjutata
 ```
 
+### Käivitamine oma arvutis (Windows / macOS)
+
+1. Paigalda **Node.js 20 LTS** (või uuem): <https://nodejs.org/> (Windowsis MSI-paigaldaja,
+   macOS-is pkg või `brew install node@20`). Kontroll: `node -v` → `v20…`.
+2. Klooni repo ja ava selle kaust terminalis (Windowsis PowerShell).
+3. `npm install`
+4. `npm run dev` → ava brauseris <http://localhost:3000/tlv-rakendus/> (rakendusel on
+   `basePath` `/tlv-rakendus`, ilma selleta tuleb 404).
+5. Staatiline ehitus: `npm run build` (väljund `out/`), vaatamiseks `npm start`.
+
+Märkused:
+- Kõik npm-skriptid on platvormist sõltumatud (andmete ZIP: `scripts/zip-andmed.mjs`).
+- Protokollilehed vajavad eeltöötluse väljundit `public/protokollid/`, mis tehakse
+  `predev`/`prebuild` ajal korpusest `korpus/json/` (gitis, ~375 MB). Kui korpust ega
+  väljundit pole, katkeb käivitus teatega „protokollide eeltöötlus puudub“.
+- **Pythonit on vaja ainult** `npm run andmed` jaoks (Excelist CSV-d): Python 3 +
+  `pip install openpyxl`. Windowsis, kus käsku `python3` pole, käivita otse
+  `py -3 scripts/excel-csv.py andmed_excel data`.
+
 ### Andmete kontrollleht `/kontroll` (4. etapp, ptk 5a)
 
 Andmestiku omaniku tööriist tabelite omavahelise vastavuse kontrolliks: avaneb otse

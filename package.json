@@ -2,6 +2,9 @@
   "name": "tlv-1917-1941",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "predev": "npm run zip-data && npm run eeltootle:kui-vaja",
     "dev": "next dev",
@@ -10,7 +13,7 @@
     "start": "npx serve out",
     "lint": "next lint",
     "test": "vitest run",
-    "zip-data": "mkdir -p public && rm -f public/tlv-andmestik.zip && cd data && zip -q -X -o ../public/tlv-andmestik.zip *.csv README.md",
+    "zip-data": "node scripts/zip-andmed.mjs",
     "andmed": "python3 scripts/excel-csv.py andmed_excel data",
     "andmed:kontrolli": "python3 scripts/excel-csv.py andmed_excel data --kontrolli",
     "kontroll": "tsx scripts/kontroll.ts",
@@ -19,6 +22,7 @@
   },
   "dependencies": {
     "exceljs": "^4.4.0",
+    "jszip": "^3.10.1",
     "next": "^15.4.0",
     "papaparse": "^5.4.1",
     "react": "^19.0.0",
