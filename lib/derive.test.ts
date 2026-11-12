@@ -96,11 +96,11 @@ describe("päris andmed: valideerimiskontrollid", () => {
   const andmed = loeAndmestik();
 
   it("andmestik on oodatud suurusega", () => {
-    expect(andmed.isikud).toHaveLength(404);
+    expect(andmed.isikud).toHaveLength(406); // andmeuuendus 12.11.2026: −301, +411…413
     expect(andmed.koosseisud).toHaveLength(9);
     expect(andmed.koosolekud).toHaveLength(338); // 337 + K338 (AP-02)
     expect(andmed.muutused).toHaveLength(633);
-    expect(andmed.valimised).toHaveLength(1092);
+    expect(andmed.valimised).toHaveLength(1174); // +79 venekeelset, +3 kandidaati
     expect(andmed.osavott).toHaveLength(5087);
   });
 

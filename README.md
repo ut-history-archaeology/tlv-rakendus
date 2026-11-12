@@ -240,6 +240,41 @@ ligipääsetavus 97, parimad tavad 96; konsoolis ainult `favicon.ico` 404. JS-vi
 Käsitsi (päris seadmes) veel kontrollimata: suurendus ja lohistamine puutel, kerimissünk K266-l
 pika lugemise jooksul, eksport-failide avanemine Excelis, trükieelvaade.
 
+## Andmeuuendus 12.11.2026 (4. etapp, `CLAUDE_CODE_ULESANNE_4.md`)
+
+Algandmed on kaustas `andmed_excel/` (Excelid gitis, väljundisse ei lähe). `npm run andmed`
+(`scripts/excel-csv.py`, Python 3 + `openpyxl`: `pip install openpyxl`) kirjutab `data/*.csv`;
+`npm run andmed:kontrolli` kirjutab ainult võrdlusraporti (vana `data/*.csv` ↔ uus). Buildis
+skripti ei käivitata. Parandused `scripts/andmeparandused.json` (AP-01…AP-03; kui allikas on
+juba parandatud, skript hoiatab), ID-aliased `scripts/isik-aliased.json` (`301 → 257`, OTSUS K-01).
+Testid: `python3 -m unittest scripts/test_excel_csv.py`.
+
+Võrdlus 12.11.2026 vs `ANDMEUUENDUS_2026-11_RAPORT.md` (omanik kinnitas, et nii jääb):
+- isikud 404 → 406, 140 rida muutunud; nimede moderniseerimine 7 isikul (164, 237, 307, 308,
+  336, 372, 376; raport ütles 4); isik 32 eesnimi "Alwil,Alvil" (L-09);
+- valimised 1092 → 1174 = +79 venekeelset, +3 uut kandidaati (Tents, Sild, Lemm) ja
+  1921 Engelhardti rida 301 → 257 (raporti "+4" loeb selle uueks);
+- muutused #95 `isik_id` ja #96 `asendatav_ID` 301 → 257 (#96 aliase kaudu, L-10);
+- vormingu muutused: pandase float-jäänused `38.0` → `38`, `1901-05-25 00:00:00` → `1901-05-25`.
+
+**Osavõtt parsitakse uuesti** `kohal_TLV`/`puudub_TLV` väljadest (augusti skripti polnud alles;
+reeglid kirjutati `ANDMEKORRASTUSE_RAPORT.md` kirjelduse järgi): nimekuju normaliseeritakse
+(w→v, õ/ö→o, sch/tsh/sh, ainult tähed), initsiaalid ja lühendid ("J.O.", "Ed.", "Alf.") peavad
+olema eesnime või alternatiivkuju algus, "Dr." eemaldatakse, initsiaalidega nime sees olevad
+tühikud ühendatakse ("H. Pe terson"), muu müra jääb sidumata. 1) koosseisu liikmete hulk
+(valitud + muutustes esinevad isikud; siin ka OCR-topelttähed "Kleement" → Klement) → **kõrge**;
+2) kogu isikute tabel → **keskmine**; mitu kandidaati või rooma number ("Raudsepp II") →
+**mitmene**; vasteta → **puudub**. Tulemus: kõrge 4 676, keskmine 153, mitmene 35, puudub 223.
+Vanade isikute/valimiste/muutuste peal annab uus siduja 98,9 % identse tulemuse (56 rida 5 087-st;
+siht oli ≥ 99 %, omanik aktsepteeris): 27 rida on uued OCR-topelttähe vasted (Kruuse → Kruse 61,
+Joonas → Jonas 41, Tomingas → Toomingas 175, Lukksepp, Siild, Rekkand), 8 "W. Koppel" keskmine →
+kõrge, 5 "Alf./Art. Walter" mitmene → kõrge, 9 Kangro rida (augustis kõik isik 45; "E.Kangro" nüüd
+260 Eduard, R./P. mitmene), "E.Stein", "B.Öunapuu", "J.Jaska" keskmine → mitmene, "R.Jaaska" 37 → 39,
+"Zur Mühlen" → 168, "Raudsepp II" puudub → mitmene, ".Karin" kõrge → puudub. Uute andmetega
+muutus võrreldes vana `osavott.csv`-ga 163 rida: 27 K002 kuupäev, 3 alias 301 → 257,
+1 "E.zur-Mühlen" (Exceli parandus), 78 uute isikuandmete tõttu (alt-nimed, isikud 411–413:
+nt Beganitskaja 22, O. Lemm 10, Sapotzky 8, Tents 6), 55 sidumisreeglite erinevus augustist.
+
 ## Lahtised andmeküsimused
 
 Vastuolud, mis on arenduse käigus ilmnenud ja mida koodis heuristikaga **ei
@@ -252,6 +287,9 @@ kui otsus on tehtud, liigub kirje `data/README.md` jaotisse "Andmeparandused".
 | L-03 | 27.10.2026 | `1918-01-22.json` (K002) päevakorrapunktide numeratsioon algab failis kolm korda otsast (1–4, 1–2, 1–2; tekstis "Harutusele tuleb:" uus loend). Numbrid `nr` jäetakse nagu allikas, punktidele on lisatud positsioon `jrk` (1…8); püsiaadress `#p<nr>` ei ole selles protokollis üheselt määratud. Kas kasutada K002 puhul `#p<jrk>` või nummerdada punktid ümber? | lahtine |
 | L-01 | 27.10.2026 | K338 (protokoll nr 28, 13.11.1940) on lisatud ainult `koosolekud.csv`-sse; `osavott.csv`-s selle koosoleku kohalolijaid ("Koos on: K. Jalak, A. Taev, V. Irs, H. Johani, F. Lange") ei ole, sest teiste 1940–41 ridade osavõtt on parsitud algsest `TLV_koosolekud.xlsx`-ist, mitte korpusest. Kas lisada käsitsi (kõik sidumata, nagu teistel 1940–41 ridadel)? | lahtine |
 | L-04 | 28.10.2026 | `koosseisud.csv` `kandidaatide_allikas` on tühi koosseisudes 1921–1923, 1927–1929 ja 1930–1934, kuigi neil on vastavalt 91, 74 ja 76 `roll=valitav` rida `valimised.csv`-s. 3. etapi lähteülesande näide (UX-03: "kandidaatide nimekiri — Riigi Teataja, nr. 6 …; valimistulemused — ERA.2966.2.200") ei vasta andmetele: 1927–1929 "Riigi Teataja, nr. 6, 24 jaanuar 1927" on `valimistulemuste_allikas` ja ERA.2966.2.200,…201 on `valimised_allikas`. Rakendus kuvab valimiste kaardil valitava rea allikana "allikas märkimata". Kas kandidaatide allikaks on neis koosseisudes `valimised_allikas` (arhiivitoimik) ja kas see tuleks `kandidaatide_allikas` veergu lisada? | lahtine |
-| L-05 | 28.10.2026 | 11 `lahkumine`-rida `muutused.csv`-s käib isiku kohta, kes erireegli 1 järgi (valitud + varasemad liitumised) ei olnud lahkumise eelõhtul koosseisu liige: #3 (1917–1919, isik 389), #95 (1921–1923, isik 301), #233, #242–#248, #272 (1924–1926; isikud 228, 325, 331, 337, 333, 347, 328, 366, 362). Nende asendajate liitumine suurendab liikmete arvu, lahkumine seda ei vähenda — UX-07 ajateljel tõuseb 1924–1926 koosseisu liikmete arv 26.03.1925 60-lt 68-le. Kas neil isikutel puudub `liitumine`-rida (või `valimised.csv` `roll=valitud` rida) või on lahkumise isik vale? Rakendus arvutab liikmelisust edasi erireegli 1 järgi. | lahtine |
+| L-05 | 28.10.2026 | 11 `lahkumine`-rida `muutused.csv`-s käib isiku kohta, kes erireegli 1 järgi (valitud + varasemad liitumised) ei olnud lahkumise eelõhtul koosseisu liige: #3 (1917–1919, isik 389), #95 (1921–1923, isik 301 → pärast andmeuuendust 12.11.2026 isik 257), #233, #242–#248, #272 (1924–1926; isikud 228, 325, 331, 337, 333, 347, 328, 366, 362). Nende asendajate liitumine suurendab liikmete arvu, lahkumine seda ei vähenda — UX-07 ajateljel tõuseb 1924–1926 koosseisu liikmete arv 26.03.1925 60-lt 68-le. Kas neil isikutel puudub `liitumine`-rida (või `valimised.csv` `roll=valitud` rida) või on lahkumise isik vale? Rakendus arvutab liikmelisust edasi erireegli 1 järgi. | lahtine |
+| L-06 | 12.11.2026 | 19 isikul puudub liikmeks saamise kirje (`valimised.csv` `roll=valitud` või `liitumine`), kuigi muutused või protokollid näitavad, et nad olid volinikud (kontrollleht KT-05a; rakenduses "Koosseise 0"). 1917–1919: Bukk (395), Koloshenkow (396), Landmann (397), Lemmats (398), Meos (399), Piho (400), Sammel (401), Sõkutaja (402) — protokollides puudujatena 6–10 korda; Jenson (389, lahkumine #3). 1924–1926: Einmann (325), Grünberg (328), Jakobson (331), Jõgi (333), Karro (337), Märtmann (347), Tork (366) — lahkumine 26.03.1925; Tamm (362) — lahkumine 17.02.1926 (vt L-05). **Uued 12.11.2026:** Lemm (411, 1924–1926 protokollides puudujana 10 korda) ja Tents (413, 1919–1921 6 korda) — mõlemad lisati uues `TLV_isikud.xlsx`-is ainult kandidaatidena. Engelhardt (257) pole enam loetelus, sest tal on liikmelisus teises koosseisus (lahkumine #95 jääb L-05 alla). Lähteülesanne ootas pärast uuendust 17 isikut. Andmete täiendus Excelis. | lahtine |
+| L-09 | 12.11.2026 | `TLV_isikud.xlsx` isik 32: `eesnimi` = "Alwil,Alvil" — alternatiivkuju on põhiveerus (peaks olema `alt_eesnimi`). Rakendus kuvab nagu allikas. | lahtine |
+| L-10 | 12.11.2026 | `TLV_muutused_protokollides.xlsx`: rida #96 `asendatav_ID` on endiselt 301 (ID liideti 257-ga; `scripts/isik-aliased.json` suunab ümber). Read #125 (`asendaja_ID`) ja #128 (`asendatav_ID`) sisaldavad Exceli viga `#REF!` (valemi viide katki); `TLV_valimised.xlsx` rida 975 (Saar, vanus "20+") `sünniaeg_tuletatud` = `#VALUE!`. Skript kirjutab need tühjaks ja hoiatab (vanas CSV-s olid samuti tühjad). Kas #125/#128 asendussuhted on allikas olemas? | lahtine |
 | L-07 | 12.11.2026 | Kontrollleht KT-05c: `koosolek_juhatajad.csv` seob 18 koosoleku (K283–K301, 30.05.1938–27.11.1939, koosseis 1934–1939) juhataja "Aleksander Tõnisson" isikuga 209, kes on valitud alles 1939 (koosseis 1940, liitumine #632 19.01.1940); koosseisus 1934–1939 tal liikmelisuse kirjet pole. Samuti juhatab K223 (1934-03-02, koosseisu 1934–1939 esimene koosolek) Villem Tubin (180), kes 1934 valitute hulgas pole. Kas juhataja on õige isik / kas liikmelisuse kirje puudub, või juhatas ta mitte-liikmena (nt vanema liikme või linnapeana)? | lahtine |
 | L-08 | 12.11.2026 | Kontrollleht KT-03b: #634 (Ants Piip, 128) ja #635 (Viktor Hion, 193) on `liitumine` 29.01.1940, kuigi mõlemad on 1939 valimistel `valitud` (koosseis 1940) ja seega juba liikmed. Esimese koosoleku (19.01.1940) kinnitusread need ei ole (kuupäev erineb). Kas tegu on hilisema kinnitamisega (nt puudusid esimesel koosolekul) või peaks valitud-rida puuduma? | lahtine |

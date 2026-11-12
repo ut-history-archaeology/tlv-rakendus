@@ -93,8 +93,8 @@ muutus_id,isik_id,perenimi,eesnimi,nimekiri,kuupaev,koosseis_id,liik,liitus_prot
 92,21,Erdmann,Johannes,nr 1,1922-10-30,1921-1923,liitumine,30.10.1922,,,,ERA.2966.2.62:135,,,162,ei,ei
 93,114,Ojar,Ed.,iseseiswa sotsial.tööliste partei rühmast,1922-10-30,1921-1923,lahkumine,,30.10.1922,,,ERA.2966.2.62:135,,307,,ei,ei
 94,307,Katago,Gustaw,nr 1,1922-10-30,1921-1923,liitumine,30.10.1922,,,,ERA.2966.2.62:135,,,114,ei,ei
-95,301,Engelhardt,W.,sakslaste rühm,1922-11-27,1921-1923,lahkumine,,27.11.1922,,,ERA.2966.2.62:155,,322,,ei,ei
-96,322,Ströhmberg,Konrad,sakslaste rühm,1922-11-27,1921-1923,liitumine,27.11.1922,,,,ERA.2966.2.62:155,,,301,ei,ei
+95,257,Engelhardt,W.,sakslaste rühm,1922-11-27,1921-1923,lahkumine,,27.11.1922,,,ERA.2966.2.62:155,,322,,ei,ei
+96,322,Ströhmberg,Konrad,sakslaste rühm,1922-11-27,1921-1923,liitumine,27.11.1922,,,,ERA.2966.2.62:155,,,257,ei,ei
 97,323,Sutt,Juhan,iseseisw.sots.tööl.partei rühm,1922-12-18,1921-1923,lahkumine,,18.12.1922,,,ERA.2966.2.62:168,,302,,ei,ei
 98,302,Freiberg,Karl,iseseisw.sots.tööl.partei rühm,1922-12-18,1921-1923,liitumine,18.12.1922,,,,ERA.2966.2.62:168,,,323,ei,ei
 99,8,Anderson,Hildegard,iseseisev sotsial. tööliste partei rühm,1923-01-04,1921-1923,lahkumine,,04.01.1923,,,ERA.2966.2.63:3,,316,,ei,ei

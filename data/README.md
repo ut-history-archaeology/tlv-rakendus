@@ -1,5 +1,8 @@
 # Tartu Linnavolikogu 1917–1941 — korrastatud andmestik
 
+Genereeritud: `andmed_excel/*.xlsx` → `npm run andmed` (`scripts/excel-csv.py`); viimati
+12.11.2026. CSV-sid ei muudeta käsitsi — parandused `scripts/andmeparandused.json`.
+
 Kõik failid on UTF-8 kodeeringus CSV-d (komaeraldajaga). Kuupäevad ISO-vormis
 (`YYYY-MM-DD`; osalised kuupäevad `YYYY` või `YYYY-MM`, kui täpsem info puudub).
 
@@ -23,10 +26,10 @@ Protokollide täistekst ja märgendused on eeltöödeldud kujul `public/protokol
 puhul kuvas säilitatakse reavahetused). Otsingukillud `public/protokollid/otsing/<aasta>.json`
 sisaldavad ainult normaliseeritud teksti (väiketähed, diakriitikata, w→v).
 
-## isikud.csv — 404 rida
+## isikud.csv — 406 rida
 | Veerg | Kirjeldus |
 |---|---|
-| isik_id | Unikaalne ID (1–410, kuus numbrit vahelt puudu — normaalne) |
+| isik_id | Unikaalne ID (1–413; numbreid on vahelt puudu — normaalne; 301 liideti 12.11.2026 ID-ga 257, vt `scripts/isik-aliased.json`) |
 | perenimi, alt_perenimi | Perekonnanimi + alternatiivkujud (komaga eraldatud) |
 | eesnimi, alt_eesnimi | Eesnimi + alternatiivkujud |
 | sugu | m/n |
@@ -72,23 +75,25 @@ Koosoleku × juhataja sidumine: `koosolek_id`, `juhataja_nimi`, `isik_id`.
 | asendaja_puudub, asendatav_puudub | jah/ei — kas asendussuhe on allikas puudu |
 | nimekiri, allikaviide, täpsustus | Toorandmed |
 
-## valimised.csv — 1092 rida
+## valimised.csv — 1174 rida
 Iga rida = (isik, valimisaasta, roll). `roll`: `valitud` (455 — sai volikokku)
-või `valitav` (637 — oli kandidaat). `koosseis_id` lisatud. 1939. aastal on
+või `valitav` (719 — oli kandidaat; 1917 on igal kandidaadil kaks rida: eestikeelne ja
+venekeelne kandidaatide nimekiri, viimane kirillitsas). `koosseis_id` lisatud. 1939. aastal on
 ringkonnad (1–4) ja häältearvud (`hääled_kokku` jt), nimekirjanimed puuduvad.
 Aadressiväljad (`elukoht_tänav` jne) on täidetud 713 real (peamiselt 1926,
 1929, 1934 valimistelt). **NB: `nimekiri_nimi` on KANONISEERIMATA toorkuju**
 (134 varianti) — vt nimekirjad_variandid_TAITMISEKS.csv.
 
 ## osavott.csv — 5087 rida (TULETATUD tabel)
-Parsitud koosolekute kohal/puudub-stringidest.
+Parsitud koosolekute kohal/puudub-stringidest (`scripts/excel-csv.py`; reeglid `README.md`
+"Andmeuuendus 12.11.2026").
 | Veerg | Kirjeldus |
 |---|---|
 | koosolek_id, kuupaev, koosseis_id | Viited |
 | staatus | kohal / puudub (nagu protokoll ütleb) |
 | nimi_toor | Algne nimekuju protokollist (OCR-müraga) |
-| isik_id | Seotud isik (93,1% ridadest) |
-| sidumise_kindlus | kõrge (4577 — perenimi+initsiaal klapib koosseisu liikmega) / keskmine (159 — klapib üldnimestikuga, mitte koosseisuga) / mitmene (26 — mitu kandidaati, nt "Raudsepp II") / puudub (325 — OCR-müra või isik pole tabelis, peamiselt 1940–41 linnavalitsuse liikmed) |
+| isik_id | Seotud isik (94,9% ridadest) |
+| sidumise_kindlus | kõrge (4676 — perenimi+initsiaal klapib koosseisu liikmega) / keskmine (153 — klapib üldnimestikuga, mitte koosseisuga) / mitmene (35 — mitu kandidaati, nt "Raudsepp II") / puudub (223 — OCR-müra või isik pole tabelis, peamiselt 1940–41 linnavalitsuse liikmed) |
 
 **Kohaloleku tuletamise reegel** (Toivo märkus lähtedokumendis): enamikul
 koosolekutel (302/338) loetleb protokoll ainult PUUDUJAID. Kohalolijate

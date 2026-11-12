@@ -1,0 +1,48 @@
+{
+  "_kommentaar": "AN-02: parandused, mis rakenduvad pärast Exceli lugemist (scripts/excel-csv.py). 'votmed' leiab read, 'vana' on oodatav allika väärtus, 'uus' parandatud väärtus. Kui allikas on juba parandatud, kirje jääb mõjuta ja skript hoiatab 'parandus on allikas juba sees — eemalda'. Kirje 'markus' dokumenteerib otsust, andmeid ei muuda. Põhjendused: data/README.md 'Andmeparandused'.",
+  "parandused": [
+    {
+      "nr": "AP-01",
+      "tabel": "koosolekud",
+      "votmed": {
+        "koosolek_id": "K026"
+      },
+      "vana": {
+        "kuupaev": "1920-02-29",
+        "kuupaev_lopp": "1920-02-30"
+      },
+      "uus": {
+        "kuupaev": "1920-03-29",
+        "kuupaev_lopp": "1920-03-30"
+      },
+      "pohjus": "30.02.1920 ei ole olemas; protokoll: '29 ja 30 märtsil 1920'; K025 (23.–24.02.1920) ja K027 (26.04.1920) vahel. Nädalapäev ja osavõtu kuupäev arvutatakse parandatud kuupäevast."
+    },
+    {
+      "nr": "AP-02",
+      "tabel": "koosolekud",
+      "votmed": [
+        "koosolek_id"
+      ],
+      "lisa": {
+        "koosolek_id": "K338",
+        "kuupaev": "1940-11-13",
+        "kuupaev_lopp": "",
+        "nadalapaev": "kolmapäev",
+        "vorm": "linnavalitsus linnavolikogu ülesandeis",
+        "koosseis_id": "1940-1941",
+        "juhataja": "",
+        "koosseis_arv": "",
+        "kohal_arv": "",
+        "kohal_arv_2paev": "",
+        "kuupaev_txt": "13. novembril 1940",
+        "protokolli_algus_txt": "Protokoll nr. 28. Tartu Linnavalitsuse koosolek Linnavolikogu ülesandeis 13. novembril 1940 raekojas. Koosolek algab kell 12, lõpeb kell 12.10. Koos on: linnapea K. Jalak, A. Taev, linnanõunike as.: V. Irs, H. Johani, F. Lange. Koosolekust võtab osa Kaubandusosakonna juhataja V. Kulak. Protokollib linnasekretär A. Mägi."
+      },
+      "pohjus": "Korpuses on 13.11.1940 kohta kaks protokolli (nr 28 ja nr 29), TLV_koosolekud.xlsx-is ainult üks rida (K329 = nr 29). K338 = protokoll nr 28, lisatud korpuse põhjal (protokolli_algus_txt = korpuse faili 1940-11-13.json sissejuhatus)."
+    },
+    {
+      "nr": "AP-03",
+      "markus": "K336 jääb omaette reana (K335 protokolli nr 2 ärakiri; protokollifaili pole, märge protokollid.csv-s eeltöötlusest)",
+      "pohjus": "Otsus O-02 (20.10.2026)."
+    }
+  ]
+}

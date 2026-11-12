@@ -6,3 +6,4 @@ public/tlv-andmestik.zip
 *.tsbuildinfo
 next-env.d.ts
 public/protokollid/
+scripts/__pycache__/

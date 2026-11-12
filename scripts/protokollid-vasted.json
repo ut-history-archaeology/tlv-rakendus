@@ -1,6 +1,10 @@
 {
   "_kommentaar": "SD-01 p 4: käsitsi vasted protokollifail → koosolek_id. Rakenduvad ENNE automaatreegleid. koosolek_id = null tähendaks teadlikult sidumata faili (praegu ühtegi). Kontrollitud 27.10.2026 korpuse teksti ja koosolekud.csv protokolli_algus_txt protokollinumbri järgi.",
   "vasted": {
+    "1918-01-22.json": {
+      "koosolek_id": "K002",
+      "miks": "AN-02 / OTSUS K-03 (12.11.2026): K002 kuupäev parandati Excelis 22.02.1918 (protokoll: '22 (8) weebruaril 1918'); korpuse fail jääb nimega 1918-01-22.json, seepärast käsitsi vaste."
+    },
     "1920-02-29_1920-03-30.json": {
       "koosolek_id": "K026",
       "miks": "AP-01: CSV kuupäev parandati 1920-03-29/30 (failinimi järgib vana vigast 29.02/30.02); faili ümber ei nimetata, seepärast käsitsi vaste."

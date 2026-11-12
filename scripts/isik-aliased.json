@@ -1,0 +1,4 @@
+{
+  "_kommentaar": "AN-02 / OTSUS K-01 (12.11.2026): vana isik_id → kehtiv isik_id. ID 301 (Wilhelm Engelhardt) liideti uues TLV_isikud.xlsx-is ID-ga 257 (Paul Wilhelm Engelhardt). Kasutavad scripts/excel-csv.py (kui vana ID esineb tabelites) ja scripts/eeltootle-protokollid.ts (korpuse council_member_id; korpust ei muudeta).",
+  "301": 257
+}
