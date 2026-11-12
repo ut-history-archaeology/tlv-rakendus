@@ -433,8 +433,11 @@ export function karjaariSegmendid(
       } else if ((m.liik === "lahkumine" || m.liik === "peatamine") && avatud) {
         segmendid.push({ koosseis_id: kid, algus: avatud, lopp: m.kuupaev });
         avatud = null;
-      } else if (m.liik === "liitumine&lahkumine" && !avatud) {
-        segmendid.push({ koosseis_id: kid, algus: m.kuupaev, lopp: m.kuupaev });
+      } else if (m.liik === "liitumine&lahkumine") {
+        // PA-09: avatud lõik suletakse sel päeval (nagu `liikmedKuupaeval`: liige ainult kuni selle päevani);
+        // avamata korral 1-päevane lõik
+        segmendid.push({ koosseis_id: kid, algus: avatud ?? m.kuupaev, lopp: m.kuupaev });
+        avatud = null;
       }
     }
     if (avatud) {

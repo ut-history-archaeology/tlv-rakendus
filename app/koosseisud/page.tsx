@@ -3,9 +3,10 @@ import Link from "next/link";
 import { loeAndmestik } from "@/lib/data";
 import { koosseisuLiikmedKokku } from "@/lib/derive";
 import { koosseisuVarv } from "@/lib/colors";
-import { kuupaevEesti, kuupaevLyhike } from "@/lib/format";
+import { kuupaevEesti } from "@/lib/format";
 import HelpTip from "@/components/HelpTip";
 import { ABI } from "@/lib/abitekstid";
+import { kuupaevadEesti } from "@/lib/protokollid/viide";
 
 export const metadata: Metadata = { title: "Koosseisud" };
 
@@ -46,10 +47,7 @@ export default function KoosseisudLeht() {
                 </p>
               ) : (
                 <p className="mt-1 text-xs text-stone-500">
-                  Valimised: {k.valimised_algus ? kuupaevEesti(k.valimised_algus) : "—"}
-                  {k.valimised_lopp && k.valimised_lopp !== k.valimised_algus && (
-                    <>–{kuupaevLyhike(k.valimised_lopp)}</>
-                  )}
+                  Valimised: {k.valimised_algus ? kuupaevadEesti([k.valimised_algus, k.valimised_lopp]) : "—"}
                 </p>
               )}
               <dl className="mt-3 grid grid-cols-3 gap-2 text-center text-sm">

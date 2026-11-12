@@ -62,7 +62,6 @@ export default function KoosseisuSisu({
           read={read}
           koosseisud={[]}
           eelKoosseis={koosseisId}
-          naitaAadressi
           staatus={staatus}
           valisFilter={
             valitudSegment

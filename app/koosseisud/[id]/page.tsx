@@ -8,6 +8,7 @@ import {
 import { koosseisuVarv } from "@/lib/colors";
 import { kuupaevEesti, kuupaevLyhike, taisnimi } from "@/lib/format";
 import { ABI } from "@/lib/abitekstid";
+import { kuupaevadEesti } from "@/lib/protokollid/viide";
 import HelpTip from "@/components/HelpTip";
 import KoosseisuSisu from "@/components/KoosseisuSisu";
 import RingkonnaDiagramm from "@/components/RingkonnaDiagramm";
@@ -210,11 +211,7 @@ export default async function KoosseisuLeht({
             <div>
               <dt className="inline font-medium">Valimised: </dt>
               <dd className="inline">
-                {kuupaevEesti(koosseis.valimised_algus)}
-                {koosseis.valimised_lopp &&
-                  koosseis.valimised_lopp !== koosseis.valimised_algus && (
-                    <>–{kuupaevLyhike(koosseis.valimised_lopp)}</>
-                  )}
+                {kuupaevadEesti([koosseis.valimised_algus, koosseis.valimised_lopp])}
               </dd>
             </div>
           )}

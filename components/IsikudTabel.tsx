@@ -20,8 +20,6 @@ interface Props {
   koosseisud: string[];
   /** Kui antud, on tabel eelfiltreeritud sellele koosseisule (koosseisu leht). */
   eelKoosseis?: string;
-  /** Kuva aadressiveerg (koosseisu lehel, KS-04). */
-  naitaAadressi?: boolean;
   /** Väline filter (nt KS-03 segmendiklõps): lubatud isikud + kiibi silt. */
   valisFilter?: { silt: string; isikud: number[] } | null;
   eemaldaValisFilter?: () => void;
@@ -75,7 +73,7 @@ function ekspordiRida(r: IsikuRida) {
 }
 
 export default function IsikudTabel({
-  read, koosseisud, eelKoosseis, naitaAadressi,
+  read, koosseisud, eelKoosseis,
   valisFilter, eemaldaValisFilter, storageKey, staatus,
 }: Props) {
   const seis = useTabeliSeis(
@@ -141,7 +139,6 @@ export default function IsikudTabel({
           case "esimene_koosseis": return r.esimene_koosseis || null;
           case "viimane_koosseis": return r.viimane_koosseis || null;
           case "peamine_nimekiri": return r.peamine_nimekiri || null;
-          case "aadress": return r.aadressid[0] ?? null;
           case "staatus": return staatus?.[r.isik_id]?.voti ?? null;
           default: return null;
         }
@@ -259,9 +256,6 @@ export default function IsikudTabel({
             {staatus && (
               <SortPais veerg="staatus" pealkiri="Staatus koosseisus" sort={seis.sort} sordi={seis.sordi} />
             )}
-            {naitaAadressi && (
-              <SortPais veerg="aadress" pealkiri="Aadress" sort={seis.sort} sordi={seis.sordi} />
-            )}
           </tr>
         </thead>
         <tbody>
@@ -301,16 +295,11 @@ export default function IsikudTabel({
               {staatus && (
                 <td className="whitespace-nowrap px-3 py-1.5">{staatus[r.isik_id]?.tekst ?? "—"}</td>
               )}
-              {naitaAadressi && (
-                <td className="max-w-xs truncate px-3 py-1.5" title={r.aadressid.join("; ")}>
-                  {r.aadressid.join("; ") || "—"}
-                </td>
-              )}
             </tr>
           ))}
           {nahtavad.length === 0 && (
             <tr>
-              <td colSpan={6 + (naitaAadressi ? 1 : 0) + (staatus ? 1 : 0)} className="px-3 py-6 text-center text-stone-500">
+              <td colSpan={6 + (staatus ? 1 : 0)} className="px-3 py-6 text-center text-stone-500">
                 Filtritele vastavaid isikuid ei leitud.
               </td>
             </tr>

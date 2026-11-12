@@ -1,3 +1,5 @@
+import { avalikUrl } from "@/lib/protokollid/laadi";
+
 export default function Footer() {
   return (
     <footer className="no-print mt-16 border-t border-stone-200 bg-white">
@@ -6,7 +8,7 @@ export default function Footer() {
           Andmeallikad: Tartu Linnavolikogu andmestik, 2026; Rahvusarhiiv.
         </p>
         <a
-          href="/tlv-andmestik.zip"
+          href={avalikUrl("tlv-andmestik.zip")}
           download
           className="font-medium text-stone-800 underline decoration-stone-400 hover:decoration-stone-800"
         >

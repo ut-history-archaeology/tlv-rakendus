@@ -10,6 +10,16 @@ export default function GlobalSearch({ indeks }: { indeks: OtsinguIndeks }) {
   const [otsing, setOtsing] = useState("");
   const [avatud, setAvatud] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  // PA-01: kitsal ekraanil (< 768 px) lühike vihje, muidu terve tekst (kast on piisavalt lai)
+  const [kitsas, setKitsas] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const muuda = () => setKitsas(mq.matches);
+    muuda();
+    mq.addEventListener("change", muuda);
+    return () => mq.removeEventListener("change", muuda);
+  }, []);
 
   useEffect(() => {
     function klikk(e: MouseEvent) {
@@ -44,7 +54,7 @@ export default function GlobalSearch({ indeks }: { indeks: OtsinguIndeks }) {
   const onTulemusi = tulemused.isikud.length > 0 || tulemused.koosolekud.length > 0;
 
   return (
-    <div ref={ref} className="relative w-full max-w-xs">
+    <div ref={ref} className="relative w-full max-w-xs md:min-w-[15rem]">
       <input
         type="search"
         value={otsing}
@@ -53,7 +63,7 @@ export default function GlobalSearch({ indeks }: { indeks: OtsinguIndeks }) {
           setAvatud(true);
         }}
         onFocus={() => setAvatud(true)}
-        placeholder="Otsi isikut või koosolekut…"
+        placeholder={kitsas ? "Otsi…" : "Otsi isikut või koosolekut"}
         aria-label="Globaalne otsing: isiku nimi või koosoleku kuupäev"
         className="w-full rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm focus:border-stone-500 focus:outline-none"
       />

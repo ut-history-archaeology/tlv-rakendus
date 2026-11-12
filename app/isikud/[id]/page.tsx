@@ -37,7 +37,8 @@ function protokolliViide(m: Muutus): string {
     case "liitumine": return m.liitus_prot;
     case "lahkumine": return m.lahkus_prot;
     case "liitumine&lahkumine":
-      return [m.liitus_prot, m.lahkus_prot].filter(Boolean).join(" / ");
+      // PA-08: võrdsed kuupäevad üks kord
+      return [...new Set([m.liitus_prot, m.lahkus_prot].filter(Boolean))].join(" / ");
     case "rühmavahetus": return m.ryhmavahetus_prot;
     case "peatamine": return m.peatatud_prot;
     default: return "";
