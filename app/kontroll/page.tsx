@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import Link from "next/link";
 import { loeAndmestik } from "@/lib/data";
-import { liikmeteArvuSeeria } from "@/lib/derive";
+import { liikmeteArvuSeeria, volikoguSuurus } from "@/lib/derive";
 import { koosseisuVarv } from "@/lib/colors";
 import { kuupaevEesti } from "@/lib/format";
 import {
@@ -132,6 +132,9 @@ export default function KontrollLeht() {
           const algus = ks.esimene_koosolek || read[0].kuupaev;
           const lopp = ks.viimane_koosolek || read[read.length - 1].kuupaev;
           const erinevusi = read.filter((r) => r.erinevus).length;
+          // AN-04: volikogu ametlik suurus (1934–1939: 65 → 33 alates 9.04.1934)
+          const suurus = volikoguSuurus(ks);
+          const suurusKuupaeval = (kp: string) => [...suurus].reverse().find((s) => s.kuupaev <= kp)?.arv ?? suurus[0]?.arv ?? null;
           return (
             <div key={ks.koosseis_id} id={`kt01-${ks.koosseis_id}`} className="scroll-mt-20">
               <h3 className="mb-1 font-semibold">
@@ -147,17 +150,19 @@ export default function KontrollLeht() {
                 punktid={read.filter((r) => r.koosseis_arv !== null).map((r) => ({
                   koosolek_id: r.koosolek_id, kuupaev: r.kuupaev, protokoll: r.koosseis_arv!, tuletatud: r.tuletatud,
                 }))}
+                suurus={suurus.map((x) => ({ alates: x.kuupaev, arv: x.arv }))}
                 varv={koosseisuVarv(ks.koosseis_id)}
               />
               <KontrollTabel
                 failinimi={`tlv-kontroll-kt01-${ks.koosseis_id}`}
                 erinevus="erinevus"
-                read={read.map((r) => ({ ...r }))}
+                read={read.map((r) => ({ ...r, volikogu_suurus: suurusKuupaeval(r.kuupaev) }))}
                 veerud={[
                   { key: "kuupaev", pealkiri: "Kuupäev" },
                   { key: "koosolek_id", pealkiri: "Koosolek", link: "koosolek" },
                   { key: "tuletatud", pealkiri: "Tuletatud liikmeid", arv: true },
                   { key: "koosseis_arv", pealkiri: "Protokollis (koosseis_arv)", arv: true },
+                  { key: "volikogu_suurus", pealkiri: "Volikogu suurus", arv: true },
                   { key: "erinevus", pealkiri: "Erinevus", arv: true },
                 ]}
               />
