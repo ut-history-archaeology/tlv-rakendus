@@ -5,7 +5,7 @@
 import { kiht, onSona, relKiht, transkribusLehenumber, vahemik, type KorpuseFail } from "./korpus";
 import { loendLehed, seoLehed, sailikXmlist, xmlVahemikud, type LeheRida } from "./lehed";
 import { sissejuhatusJaLopuosa } from "./plokid";
-import { parsiCouncilMemberId, seoKoneleja } from "./sidumine";
+import { parsiCouncilMemberId, seoKoneleja, type IsikuAliased } from "./sidumine";
 import { erinevadNormid } from "./kirjakuju";
 import type {
   Kone, Lisa, Olem, OlemiTyyp, Paevakorrapunkt, ProtokollAndmed, Vahemik,
@@ -19,6 +19,8 @@ export interface TootluseKontekst {
   fail: string;
   /** isikud.csv ID-d (ET-06) */
   tuntudIsikud: Set<number>;
+  /** ID-aliased (`scripts/isik-aliased.json`) */
+  aliased?: IsikuAliased;
   /** protokolli_lehed.csv read selle faili kohta */
   leheRead: LeheRida[];
 }
@@ -124,7 +126,7 @@ export function tootleProtokoll(fail: KorpuseFail, ctx: TootluseKontekst): Tootl
     kontrolliVahemik(v, pikkus, "olem", id);
     const a = s.annotations[0];
     if (!OLEMI_TYYBID.includes(a.tag as OlemiTyyp)) throw new Error(`${id}: tundmatu olemitüüp ${a.tag}`);
-    const sid = parsiCouncilMemberId(a.council_member_id, a.tag, a.council_member_match_status, ctx.tuntudIsikud);
+    const sid = parsiCouncilMemberId(a.council_member_id, a.tag, a.council_member_match_status, ctx.tuntudIsikud, ctx.aliased);
     if (a.tag === "PER" && sid.kindlus === "puudub" && (a.council_member_id ?? "").split(";").filter((x) => /^\d+$/.test(x)).length >= 4) {
       palju_kandidaate++;
     }

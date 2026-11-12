@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parsiCouncilMemberId, parsiIdd, seoKoneleja } from "./sidumine";
+import { aliasedJsonist, parsiCouncilMemberId, parsiIdd, seoKoneleja } from "./sidumine";
 import type { Olem } from "./types";
 
 const tuntud = new Set([38, 39, 82, 128, 258, 290, ...Array.from({ length: 30 }, (_, i) => i + 1)]);
@@ -35,6 +35,24 @@ describe("TE-02 SD-02: council_member_id → sidumine", () => {
   it("tundmatu ID → viga; tundmatu kuju → viga", () => {
     expect(() => parsiCouncilMemberId("999", "PER", "exact", tuntud)).toThrow(/999 puudub/);
     expect(() => parsiIdd("abc")).toThrow(/tundmatu/);
+  });
+});
+
+describe("TE4-02 ID-aliased (301 → 257)", () => {
+  const aliased = aliasedJsonist({ _kommentaar: "x", "301": 257 });
+  const isikud = new Set([257, 269, 395]);
+  it('"257;301" → üks ID 257, kõrge', () => {
+    expect(parsiCouncilMemberId("257;301", "PER", "exact", isikud, aliased)).toEqual({ isik_id: 257, kandidaadid: [257], kindlus: "kõrge" });
+  });
+  it('"257;301;None" → 257, mitmene (registriväline)', () => {
+    expect(parsiCouncilMemberId("257;301;None", "PER", "ambiguous_exact", isikud, aliased)).toEqual({ isik_id: 257, kandidaadid: [257], kindlus: "mitmene" });
+  });
+  it('"257;269;301;395;None" → 3 kandidaati, mitmene', () => {
+    expect(parsiCouncilMemberId("257;269;301;395;None", "PER", "ambiguous_exact", isikud, aliased)).toEqual({ isik_id: null, kandidaadid: [257, 269, 395], kindlus: "mitmene" });
+  });
+  it("ID-kontroll pärast aliaseid: 301 ilma aliaseta → viga, tundmatu → viga", () => {
+    expect(() => parsiCouncilMemberId("301", "PER", "exact", isikud)).toThrow(/301 puudub/);
+    expect(() => parsiCouncilMemberId("301;999", "PER", "exact", isikud, aliased)).toThrow(/999 puudub/);
   });
 });
 

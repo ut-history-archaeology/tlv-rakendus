@@ -3,7 +3,7 @@
  *   npm run eeltootle -- [--korpus korpus/json] [--valjund public/protokollid] [--kontrolli] [--ilma-piltideta]
  *
  * Sisend: korpus/json/*.json, data/koosolekud.csv, data/isikud.csv, data/protokolli_lehed.csv,
- *         scripts/protokollid-vasted.json
+ *         scripts/protokollid-vasted.json, scripts/isik-aliased.json (council_member_id 301 → 257)
  * Väljund: public/protokollid/<K-id>.json, public/protokollid/otsing/<aasta>.json, public/protokollid/_meta.json,
  *          data/protokollid.csv, data/paevakorrapunktid.csv, data/protokolli_mainimised.csv
  * Katkestab (exit 1) ET-06 vigade korral; hoiatused logitakse kokkuvõttesse.
@@ -16,6 +16,7 @@ import { kiht, puhastaPealkiri } from "../lib/protokollid/korpus";
 import { seoFailidKoosolekutega, type Ylekirjutused } from "../lib/protokollid/vasted";
 import { tootleProtokoll, sonuVahemikus } from "../lib/protokollid/eeltootlus";
 import { ehitaOtsinguKirje } from "../lib/protokollid/otsing";
+import { aliasedJsonist } from "../lib/protokollid/sidumine";
 import { mainimisteRead } from "../lib/protokollid/mainimised";
 import type { LeheRida } from "../lib/protokollid/lehed";
 import type {
@@ -93,6 +94,7 @@ const failid = fs.readdirSync(KORPUS).filter((f) => f.endsWith(".json")).sort();
 const koosolekud = loeCSV("koosolekud.csv");
 const isikud = loeCSV("isikud.csv");
 const tuntudIsikud = new Set(isikud.map((r) => Number(r.isik_id)));
+const aliased = aliasedJsonist(JSON.parse(fs.readFileSync(path.join(JUUR, "scripts", "isik-aliased.json"), "utf-8")));
 const leheReadKoik: LeheRida[] = loeCSV("protokolli_lehed.csv").map((r) => ({
   protokoll: r.protokoll,
   jrk: Number(r.jrk),
@@ -188,7 +190,7 @@ for (const f of failid) {
     continue;
   }
   try {
-    const t = tootleProtokoll(fail, { id, fail: f, tuntudIsikud, leheRead: lehedFailiti.get(f) ?? [] });
+    const t = tootleProtokoll(fail, { id, fail: f, tuntudIsikud, aliased, leheRead: lehedFailiti.get(f) ?? [] });
     const p = t.andmed;
     hoiatused.push(...t.hoiatused);
     paljuKandidaate += t.palju_kandidaate;
@@ -344,7 +346,7 @@ if (!KONTROLLI) {
 const kestus = ((Date.now() - algus) / 1000).toFixed(1);
 log(`\n=== Eeltöötluse kokkuvõte${KONTROLLI ? " (--kontrolli, midagi ei kirjutatud)" : ""} ===`);
 log(`Faile: ${failid.length}; seotud koosolekuid: ${seotudIdd.length}; koosolekuid ilma protokollita: ${ilmaProtokollita.length} (${ilmaProtokollita.join(", ") || "—"})`);
-log(`Käsitsi vasteid: ${Object.keys(ylekirjutused).length}; ID-de kontroll (ET-06): kõik council_member_id-d ⊂ isikud.csv ✓`);
+log(`Käsitsi vasteid: ${Object.keys(ylekirjutused).length}; ID-de kontroll (ET-06, pärast aliaseid ${[...aliased].map(([a, b]) => `${a}→${b}`).join(", ")}): kõik council_member_id-d ⊂ isikud.csv ✓`);
 log(`SD-01 p 3: teksti algus erineb CSV protokolli_algus_txt-st ${erinevaAlgusega.length} üherealisel päeval (OCR-müra lehe alguses; informatiivne${KONTROLLI ? ": " + erinevaAlgusega.join(", ") : ""})`);
 log(`Päevakorrapunkte: ${paevakorraRead.length}; mainimiste ridu: ${mainimised.length}`);
 log(`Lehti: ${lehti} (tekstita ${lehtiTekstita} / ${protokolleTekstitaLehtedega} protokollis); kasutusel pilte: ${kasutatudPildid.size}`);

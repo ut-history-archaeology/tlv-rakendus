@@ -3,15 +3,33 @@
  */
 import type { Olem, Sidumine, Vahemik } from "./types";
 
-/** council_member_id string → täisarvulised ID-d (ilma "None"-ta). Tundmatu kuju → viga. */
-export function parsiIdd(cm: string | null | undefined): { idd: number[]; none: boolean } {
+/** ID-aliased (AN-02): vana isik_id → kehtiv (`scripts/isik-aliased.json`, nt 301 → 257). */
+export type IsikuAliased = ReadonlyMap<number, number>;
+
+/** `scripts/isik-aliased.json` sisu → Map (võtmed "_…" on kommentaarid). */
+export function aliasedJsonist(sisu: Record<string, unknown>): Map<number, number> {
+  return new Map(
+    Object.entries(sisu)
+      .filter(([k]) => !k.startsWith("_"))
+      .map(([k, v]) => [Number(k), Number(v)])
+  );
+}
+
+/**
+ * council_member_id string → täisarvulised ID-d (ilma "None"-ta). Tundmatu kuju → viga.
+ * Aliased asendatakse ja duplikaadid ühendatakse ("257;301" → [257]); korpust ei muudeta.
+ */
+export function parsiIdd(cm: string | null | undefined, aliased?: IsikuAliased): { idd: number[]; none: boolean } {
   if (cm === null || cm === undefined || cm === "" || cm === "None") return { idd: [], none: true };
   const osad = String(cm).split(";").map((s) => s.trim()).filter((s) => s !== "");
   const idd: number[] = [];
   let none = false;
   for (const o of osad) {
     if (o === "None") none = true;
-    else if (/^\d+$/.test(o)) idd.push(Number(o));
+    else if (/^\d+$/.test(o)) {
+      const id = aliased?.get(Number(o)) ?? Number(o);
+      if (!idd.includes(id)) idd.push(id);
+    }
     else throw new Error(`tundmatu council_member_id kuju: "${cm}"`);
   }
   return { idd, none };
@@ -22,6 +40,7 @@ export const MITTE_ISIK: Sidumine = { isik_id: null, kandidaadid: [], kindlus: n
 
 /**
  * SD-02 tabel. `tuntud` (isikud.csv ID-d) antakse eeltöötluses; ID väljaspool seda → viga (ET-06).
+ * Kontroll tehakse PÄRAST aliaseid (AN-02).
  * - "None" + not_per → kindlus null (ORG/LOC/MONEY/POSITION)
  * - "None" + PER → puudub
  * - "N" → kõrge; kui match_status sisaldab levenshtein_fuzzy/ocrmistake → keskmine
@@ -33,10 +52,11 @@ export function parsiCouncilMemberId(
   cm: string | null | undefined,
   tag: string,
   matchStatus: string | null | undefined,
-  tuntud?: Set<number>
+  tuntud?: Set<number>,
+  aliased?: IsikuAliased
 ): Sidumine {
   if (tag !== "PER") return MITTE_ISIK;
-  const { idd, none } = parsiIdd(cm);
+  const { idd, none } = parsiIdd(cm, aliased);
   if (tuntud) {
     for (const id of idd) {
       if (!tuntud.has(id)) throw new Error(`council_member_id ${id} puudub isikud.csv-s (kuju "${cm}")`);

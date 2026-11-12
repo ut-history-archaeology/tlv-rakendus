@@ -6,6 +6,7 @@ import path from "path";
 import { describe, expect, it } from "vitest";
 import Papa from "papaparse";
 import { tootleProtokoll } from "./eeltootlus";
+import { aliasedJsonist } from "./sidumine";
 import type { KorpuseFail } from "./korpus";
 import type { LeheRida } from "./lehed";
 
@@ -21,6 +22,7 @@ function csv(fail: string) {
 
 describe.skipIf(!korpusOlemas)("TE-11 näidisfailid", () => {
   const tuntudIsikud = new Set(csv("isikud.csv").map((r) => Number(r.isik_id)));
+  const aliased = aliasedJsonist(JSON.parse(fs.readFileSync(path.join(JUUR, "scripts", "isik-aliased.json"), "utf-8")));
   const lehed = csv("protokolli_lehed.csv");
   const vasted = JSON.parse(fs.readFileSync(path.join(JUUR, "scripts", "protokollid-vasted.json"), "utf-8")).vasted as Record<string, { koosolek_id: string }>;
   function tootle(fail: string, id: string) {
@@ -29,7 +31,7 @@ describe.skipIf(!korpusOlemas)("TE-11 näidisfailid", () => {
       protokoll: r.protokoll, jrk: Number(r.jrk), arhiiviviide: r.arhiiviviide, lehekulg: r.lehekulg,
       xml_file: r.xml_file ?? "", pilt: r.pilt, transkribus_lk: Number(r.transkribus_lk), tekstita: r.tekstita === "1",
     }));
-    return tootleProtokoll(json, { id, fail, tuntudIsikud, leheRead });
+    return tootleProtokoll(json, { id, fail, tuntudIsikud, aliased, leheRead });
   }
 
   it("1937-09-06.json → 0 punkti, PER-olemeid, isik 128 kaks korda", () => {
