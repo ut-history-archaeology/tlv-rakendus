@@ -82,7 +82,8 @@ Koosoleku × juhataja sidumine: `koosolek_id`, `juhataja_nimi`, `isik_id`.
 | liitus_prot, lahkus_prot, ryhmavahetus_prot, peatatud_prot | Protokolliviited kuupäevana |
 | asendaja_ID, asendatav_ID | Viide isikule, kes asendas / keda asendati |
 | asendaja_puudub, asendatav_puudub | jah/ei — kas asendussuhe on allikas puudu |
-| nimekiri, allikaviide, täpsustus | Toorandmed |
+| allikaviide | Protokolli säilik ja RA digikaader (`ERA.2966.2.57:112`); rakenduses link RA-sse (PA-10) ja koosolekule `protokolli_lehed.csv` kaudu (PA-07) |
+| nimekiri, täpsustus | Toorandmed (nimekiri toorkujul, kanoonilist ID-d pole) |
 
 ## valimised.csv — 1174 rida
 Iga rida = (isik, valimisaasta, roll). `roll`: `valitud` (455 — sai volikokku)

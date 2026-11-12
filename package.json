@@ -10,7 +10,7 @@
     "start": "npx serve out",
     "lint": "next lint",
     "test": "vitest run",
-    "zip-data": "mkdir -p public && cd data && zip -q -X -o ../public/tlv-andmestik.zip *.csv README.md",
+    "zip-data": "mkdir -p public && rm -f public/tlv-andmestik.zip && cd data && zip -q -X -o ../public/tlv-andmestik.zip *.csv README.md",
     "andmed": "python3 scripts/excel-csv.py andmed_excel data",
     "andmed:kontrolli": "python3 scripts/excel-csv.py andmed_excel data --kontrolli",
     "kontroll": "tsx scripts/kontroll.ts",
