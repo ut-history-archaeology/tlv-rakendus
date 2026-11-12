@@ -55,7 +55,7 @@ function o(koosolek_id: string, kuupaev: string, staatus: Osavott["staatus"], is
 function andmestik(osa: Partial<Andmestik>): Andmestik {
   return {
     isikud: [1, 2, 3, 4, 5, 6].map(isik), koosseisud: [KOOSSEIS], koosolekud: [], juhatajad: [], muutused: [],
-    valimised: [1, 2, 3].map(valitud), osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [], ...osa,
+    valimised: [1, 2, 3].map(valitud), osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [], protokolliLehed: [], ...osa,
   };
 }
 

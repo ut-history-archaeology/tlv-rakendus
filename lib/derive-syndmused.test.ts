@@ -39,7 +39,7 @@ const KOOSSEIS: Koosseis = {
 function andmestik(muutused: Muutus[], valimised: Valimine[] = [], koosseis = KOOSSEIS): Andmestik {
   return {
     isikud: [], koosseisud: [koosseis], koosolekud: [], juhatajad: [], muutused,
-    valimised, osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [],
+    valimised, osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [], protokolliLehed: [],
   };
 }
 

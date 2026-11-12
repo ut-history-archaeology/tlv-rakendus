@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
 import {
   isikuRead, koosseisuLiikmedKokku, koosseisuNimekirjaJaotus, koosseisuNimekirjad, koosseisuSyndmused,
-  liikmeteArvuSeeria, syndmuseIsikud, volikoguSuurus,
+  allikaviiteKoosolek, liikmeteArvuSeeria, syndmuseIsikud, volikoguSuurus,
 } from "@/lib/derive";
 import { koosseisuVarv } from "@/lib/colors";
 import { kuupaevEesti, kuupaevEestiAlates, kuupaevLyhike, taisnimi } from "@/lib/format";
@@ -34,6 +34,7 @@ const MUUTUSTE_VEERUD = [
   { key: "asendaja", pealkiri: "Asendaja" },
   { key: "asendatav", pealkiri: "Asendatav" },
   { key: "allikaviide", pealkiri: "Allikaviide" },
+  { key: "koosolek_id", pealkiri: "koosolek_id" },
   { key: "tapsustus", pealkiri: "Täpsustus" },
 ];
 
@@ -177,6 +178,7 @@ export default async function KoosseisuLeht({
     asendaja: m.asendaja_ID !== null ? nimiMap.get(m.asendaja_ID) ?? "" : "",
     asendatav: m.asendatav_ID !== null ? nimiMap.get(m.asendatav_ID) ?? "" : "",
     allikaviide: m.allikaviide,
+    koosolek_id: allikaviiteKoosolek(andmed, m.allikaviide, [m.kuupaev])?.koosolek_id ?? "",
     tapsustus: m.tapsustus,
   }));
 

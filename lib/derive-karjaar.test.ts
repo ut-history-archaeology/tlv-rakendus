@@ -34,7 +34,7 @@ function m(muutus_id: number, isik_id: number, kuupaev: string, liik: Muutus["li
 function andmestik(muutused: Muutus[], valimised: Valimine[]): Andmestik {
   return {
     isikud: [], koosseisud: [KOOSSEIS], koosolekud: [], juhatajad: [], muutused, valimised,
-    osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [],
+    osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [], protokolliLehed: [],
   };
 }
 

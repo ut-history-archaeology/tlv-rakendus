@@ -1,5 +1,5 @@
 import type { Andmestik, Muutus } from "./types";
-import { isikuKoosseisud, koosseisuLiikmedKokku, liikmedKuupaeval } from "./derive";
+import { koosseisuLiikmedKokku, liikmedKuupaeval, liikmekirjePuudub } from "./derive";
 
 /**
  * Kontrollleht `/kontroll` (4. etapp, ptk 5a): tabelite omavahelise vastavuse kontrollid.
@@ -284,23 +284,12 @@ export interface Kt05Leid {
  */
 export function kt05Isikud(andmed: Andmestik): Kt05Leid[] {
   const leiud: Kt05Leid[] = [];
-  const jark = new Map(andmed.koosseisud.map((k, i) => [k.koosseis_id, i]));
   for (const i of andmed.isikud) {
-    if (isikuKoosseisud(andmed, i.isik_id).length > 0) continue;
-    const muutused = andmed.muutused.filter((m) => m.isik_id === i.isik_id);
-    const osavott = andmed.osavott.filter(
-      (o) => o.isik_id === i.isik_id && (o.sidumise_kindlus === "kõrge" || o.sidumise_kindlus === "keskmine")
-    );
-    if (muutused.length === 0 && osavott.length === 0) continue;
-    const koosseisud = [...new Set([...muutused.map((m) => m.koosseis_id), ...osavott.map((o) => o.koosseis_id)])]
-      .sort((a, b) => (jark.get(a) ?? 99) - (jark.get(b) ?? 99));
-    const toendid = [
-      ...muutused.map((m) => `${m.liik} ${m.kuupaev} (#${m.muutus_id})`),
-      ...(osavott.length ? [`protokollides nimetatud ${osavott.length} korda`] : []),
-    ];
+    const t = liikmekirjePuudub(andmed, i.isik_id);
+    if (!t) continue;
     leiud.push({
-      tyyp: "kirjeta", isik_id: i.isik_id, koosseis_id: koosseisud[0] ?? "", koosolek_id: "", kuupaev: "",
-      kirjeldus: toendid.join("; "),
+      tyyp: "kirjeta", isik_id: i.isik_id, koosseis_id: t.koosseisud[0] ?? "", koosolek_id: "", kuupaev: "",
+      kirjeldus: t.tekst.join("; "),
     });
   }
 

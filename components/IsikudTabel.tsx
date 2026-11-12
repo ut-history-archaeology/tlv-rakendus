@@ -10,6 +10,7 @@ import {
 } from "./TabeliOsad";
 import ExportButton from "./ExportButton";
 import KontrollimiselMark from "./KontrollimiselMark";
+import { LIIKMEKIRJE_PUUDUB } from "@/lib/derive";
 import HelpTip from "./HelpTip";
 import { ABI } from "@/lib/abitekstid";
 import type { EkspordiVeerg } from "@/lib/export";
@@ -40,6 +41,7 @@ const EKSPORDI_VEERUD: EkspordiVeerg[] = [
   { key: "synd_tuletatud", pealkiri: "Sünniaeg tuletatud" },
   { key: "surm_kuupaev", pealkiri: "Surmaaeg" },
   { key: "koosseise", pealkiri: "Koosseisude arv" },
+  { key: "liikmekirje_puudub", pealkiri: "Liikmeks saamise kirje puudub (tõendid)" },
   { key: "koosseisud", pealkiri: "Koosseisud" },
   { key: "esimene_koosseis", pealkiri: "Esimene koosseis" },
   { key: "viimane_koosseis", pealkiri: "Viimane koosseis" },
@@ -65,6 +67,7 @@ function ekspordiRida(r: IsikuRida) {
     synd_tuletatud: r.synd_tuletatud,
     surm_kuupaev: r.surm_kuupaev,
     koosseise: r.koosseise,
+    liikmekirje_puudub: r.liikmekirje_puudub,
     koosseisud: r.koosseisud.join(", "),
     esimene_koosseis: r.esimene_koosseis,
     viimane_koosseis: r.viimane_koosseis,
@@ -146,7 +149,8 @@ export default function IsikudTabel({
         switch (key) {
           case "perenimi": return r.perenimi;
           case "eesnimi": return r.eesnimi;
-          case "koosseise": return r.koosseise;
+          // PA-06: "?" sorditakse 0 järele
+          case "koosseise": return r.liikmekirje_puudub ? 0.5 : r.koosseise;
           case "esimene_koosseis": return r.esimene_koosseis || null;
           case "viimane_koosseis": return r.viimane_koosseis || null;
           case "peamine_nimekiri": return r.peamine_nimekiri || null;
@@ -296,7 +300,17 @@ export default function IsikudTabel({
                   {r.eesnimi || "—"}
                 </Link>
               </td>
-              <td className="px-3 py-1.5 text-center">{r.koosseise}</td>
+              <td className="px-3 py-1.5 text-center">
+                {r.liikmekirje_puudub ? (
+                  <span
+                    className="cursor-help font-semibold text-amber-800"
+                    title={`${LIIKMEKIRJE_PUUDUB}. Tõendid: ${r.liikmekirje_puudub}`}
+                    aria-label={LIIKMEKIRJE_PUUDUB}
+                  >
+                    ?
+                  </span>
+                ) : r.koosseise}
+              </td>
               <td className="px-3 py-1.5">{r.esimene_koosseis || "—"}</td>
               <td className="px-3 py-1.5">{r.viimane_koosseis || "—"}</td>
               <td

@@ -41,7 +41,7 @@ describe("liikmeteArvuSeeria (TE3-05)", () => {
         m(3, 4, "1928-02-01", "liitumine"),
       ],
       valimised: [valitud(1), valitud(2), valitud(3)],
-      osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [],
+      osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [], protokolliLehed: [],
     };
     expect(liikmeteArvuSeeria(andmed, "K", "1926-12-01", "1929-12-30")).toEqual([
       { kuupaev: "1926-12-01", arv: 3 },
@@ -59,7 +59,7 @@ describe("liikmeteArvuSeeria: liitumine&lahkumine", () => {
       isikud: [], koosseisud: [KOOSSEIS], koosolekud: [], juhatajad: [],
       muutused: [m(1, 9, "1928-01-31", "liitumine&lahkumine")],
       valimised: [valitud(1), valitud(2)],
-      osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [],
+      osavott: [], protokollid: [], paevakord: [], mainimised: [], nimekirjad: [], valimisnimekirjad: [], protokolliLehed: [],
     };
     expect(liikmeteArvuSeeria(andmed, "K", "1926-12-01", "1929-12-30").map((x) => [x.kuupaev, x.arv])).toEqual([
       ["1926-12-01", 2], ["1928-01-31", 3], ["1928-02-01", 2], ["1929-12-30", 2],

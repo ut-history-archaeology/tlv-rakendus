@@ -10,7 +10,8 @@ import { ABI } from "@/lib/abitekstid";
 import ExportButton from "./ExportButton";
 import HelpTip from "./HelpTip";
 import { FiltriKiibid } from "./TabeliOsad";
-import ArhiiviViited from "./ArhiiviViited";
+import ArhiiviLink from "./ArhiiviLink";
+import { arhiiviUrl } from "@/lib/viited";
 
 interface Props {
   syndmused: Syndmus[];
@@ -113,6 +114,48 @@ function Kirjeldus({ s, nimed, isikId }: { s: Syndmus; nimed: Record<number, str
   }
 }
 
+/**
+ * PA-07: iga allikaviide → koosoleku link (protokolli kuupäev), ikoon protokolli kaadrile ja
+ * arhiiviviide RA püsilingina. Koosolekut leidmata viide jääb ainult arhiivilingiks.
+ */
+function ProtokolliViited({ s }: { s: Syndmus }) {
+  if (s.allikaviited.length === 0) {
+    return s.protokollid.length ? <span className="text-stone-500">prot. {s.protokollid.join(", ")}</span> : <>—</>;
+  }
+  const kv = s.koosolekuViited ?? [];
+  return (
+    <>
+      {s.allikaviited.map((v, i) => {
+        const k = kv[i];
+        return (
+          <span key={i} className="block">
+            {k && (
+              <>
+                <Link href={`/koosolekud/${k.koosolek_id}/`} className="text-blue-700 underline decoration-blue-300 hover:decoration-blue-700">
+                  prot. {kuupaevLyhike(k.kuupaev)}
+                </Link>{" "}
+                <Link
+                  href={`/protokollid/${k.koosolek_id}/?lk=${encodeURIComponent(k.kaader)}`}
+                  title={`ava protokolli kaader ${k.kaader}`}
+                  aria-label={`ava protokolli kaader ${k.kaader}`}
+                  className="text-stone-500 hover:text-blue-700"
+                >
+                  <span aria-hidden>▤</span>
+                </Link>{" · "}
+              </>
+            )}
+            <ArhiiviLink url={arhiiviUrl(v)}>{v}</ArhiiviLink>
+          </span>
+        );
+      })}
+      {/* koosolekut ei leitud üheselt → protokolliviide tekstina, nagu allikas */}
+      {!kv.every(Boolean) && s.protokollid.length > 0 && (
+        <span className="block text-stone-500">prot. {s.protokollid.join(", ")}</span>
+      )}
+    </>
+  );
+}
+
 function ekspordiRida(s: Syndmus, nimed: Record<number, string>) {
   const isikud = syndmuseIsikud(s);
   return {
@@ -124,6 +167,7 @@ function ekspordiRida(s: Syndmus, nimed: Record<number, string>) {
     nimekiri: "nimekiri" in s ? s.nimekiri : "",
     protokollid: s.protokollid.join("; "),
     allikaviited: s.allikaviited.join("; "),
+    koosolekud: (s.koosolekuViited ?? []).map((k) => k?.koosolek_id ?? "").filter(Boolean).join("; "),
     tapsustus: "tapsustus" in s ? s.tapsustus : "",
     markus: [
       s.eiValitud ? "ei olnud valimistulemustes" : "",
@@ -143,6 +187,7 @@ const EKSPORDI_VEERUD = [
   { key: "nimekiri", pealkiri: "Nimekiri" },
   { key: "protokollid", pealkiri: "Protokolliviited" },
   { key: "allikaviited", pealkiri: "Allikaviited" },
+  { key: "koosolekud", pealkiri: "koosolek_id-d" },
   { key: "tapsustus", pealkiri: "Täpsustus" },
   { key: "markus", pealkiri: "Märkus" },
   { key: "muutus_idd", pealkiri: "muutus_id-d" },
@@ -228,7 +273,7 @@ export default function SyndmusteTabel({
               <th scope="col" className="px-3 py-2 text-left font-semibold">Sündmus</th>
               <th scope="col" className="px-3 py-2 text-left font-semibold">Isik(ud)</th>
               <th scope="col" className="px-3 py-2 text-left font-semibold">Nimekiri</th>
-              <th scope="col" className="px-3 py-2 text-left font-semibold">Allikaviide</th>
+              <th scope="col" className="px-3 py-2 text-left font-semibold">Protokoll ja allikaviide</th>
             </tr>
           </thead>
           <tbody>
@@ -268,10 +313,7 @@ export default function SyndmusteTabel({
                   {("nimekiri" in s && s.nimekiri) || "—"}
                 </td>
                 <td className="whitespace-nowrap px-3 py-1.5 text-xs">
-                  {s.allikaviited.length ? <ArhiiviViited tekst={s.allikaviited.join("; ")} eraldaja="; " /> : "—"}
-                  {s.protokollid.length > 0 && (
-                    <span className="block text-stone-500">prot. {s.protokollid.join(", ")}</span>
-                  )}
+                  <ProtokolliViited s={s} />
                 </td>
               </tr>
             ))}

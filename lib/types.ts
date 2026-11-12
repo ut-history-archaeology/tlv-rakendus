@@ -136,6 +136,13 @@ export interface Osavott {
 }
 
 /** Kõik andmestiku tabelid koos. */
+/** data/protokolli_lehed.csv (PA-07 jaoks vajalikud veerud); lehekulg = RA digikaader. */
+export interface ProtokolliLeheViide {
+  protokoll: string;
+  arhiiviviide: string;
+  lehekulg: string;
+}
+
 /** NK-01: kanooniline nimekiri (data/nimekirjad.csv, 35). */
 export interface Nimekiri {
   nimekiri_id: number;
@@ -173,6 +180,8 @@ export interface Andmestik {
   /** NK-01 */
   nimekirjad: Nimekiri[];
   valimisnimekirjad: Valimisnimekiri[];
+  /** PA-07: protokolli kaadrid (säilik + kaader → protokoll) */
+  protokolliLehed: ProtokolliLeheViide[];
 }
 
 /** Isikute tabeli tuletatud rida (/isikud vaade). */
@@ -198,6 +207,8 @@ export interface IsikuRida {
   /** isiku toorkujud selle nimekirja kohta ("; "-ga) */
   peamine_nimekiri_toor: string;
   peamine_nimekiri_kontrollida: boolean;
+  /** PA-06: tõendid, kui liikmeks saamise kirje puudub (koosseise 0, kuid oli volinik); muidu "" */
+  liikmekirje_puudub: string;
   oli_juhataja: boolean;
   aadressid: string[]; // "aadress (aasta, aasta)" tekstina (UX-04)
 }

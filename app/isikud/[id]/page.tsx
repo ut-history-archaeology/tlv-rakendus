@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { loeAndmestik } from "@/lib/data";
 import {
   isikuAadressidKoos, isikuKoosseisud, isikuSyndmused, isikuValimisedKoos, syndmuseIsikud, juhatamiseStatistika, karjaariSegmendid,
-  mainimisedProfiilile, nimekirjaNimed, osavotuStatistika, peamineNimekiri,
+  LIIKMEKIRJE_PUUDUB, allikaviiteKoosolek, liikmekirjePuudub, mainimisedProfiilile, nimekirjaNimed, osavotuStatistika, peamineNimekiri,
 } from "@/lib/derive";
 import { kuupaevEesti, kuupaevLyhike, taisnimi, wikidataQid } from "@/lib/format";
 import { koosseisuVarv } from "@/lib/colors";
@@ -102,6 +102,7 @@ export default async function IsikuProfiil({
   }
   const servad = [...servaMap.values()];
 
+  const liikmekirje = liikmekirjePuudub(andmed, id);
   const profiilJSON = {
     isik_id: id,
     mainimised_protokollides: mainimised
@@ -120,10 +121,13 @@ export default async function IsikuProfiil({
     arhiiviviited: isik.arhiiviviited,
     koosseisud,
     peamine_nimekiri: peamineNimekiri(andmed, id),
+    liikmekirje_puudub: liikmekirje ? liikmekirje.tekst : null,
     karjaar: segmendid,
     muutused: muutused.map((m) => ({
       kuupaev: m.kuupaev, liik: m.liik, koosseis_id: m.koosseis_id,
       protokolliviide: protokolliViide(m), nimekiri: m.nimekiri,
+      allikaviide: m.allikaviide,
+      koosolek_id: allikaviiteKoosolek(andmed, m.allikaviide, [m.kuupaev])?.koosolek_id ?? null,
       asendaja_ID: m.asendaja_ID, asendatav_ID: m.asendatav_ID,
       tapsustus: m.tapsustus,
     })),
@@ -211,6 +215,27 @@ export default async function IsikuProfiil({
         </h2>
         {segmendid.length > 0 ? (
           <KarjaarRiba segmendid={segmendid} />
+        ) : liikmekirje ? (
+          <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+            <p className="font-medium">{LIIKMEKIRJE_PUUDUB}.</p>
+            <p className="mt-1">
+              Andmetes on siiski tõendeid, et isik oli volikogu liige
+              {liikmekirje.koosseisud.length > 0 && <> (koosseis {liikmekirje.koosseisud.join(", ")})</>}:
+            </p>
+            <ul className="mt-1 list-disc pl-5">
+              {liikmekirje.muutused.map((m) => (
+                <li key={m.muutus_id}>
+                  {m.liik} {kuupaevLyhike(m.kuupaev)} (muutus #{m.muutus_id})
+                </li>
+              ))}
+              {liikmekirje.osavotuKordi > 0 && (
+                <li>protokollides (osavõtus) nimetatud {liikmekirje.osavotuKordi} korda</li>
+              )}
+            </ul>
+            <p className="mt-1 text-xs text-amber-800">
+              Liikmelisust ei ole tuletatud; vt README „Lahtised andmeküsimused“ L-06.
+            </p>
+          </div>
         ) : (
           <p className="text-sm text-stone-500">
             Volikogu liikmeks olemise andmed puuduvad (oli kandidaat).

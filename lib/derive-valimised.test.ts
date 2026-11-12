@@ -31,6 +31,7 @@ function andmestik(valimised: Valimine[], koosseisud: Koosseis[] = [KOOSSEIS]): 
       { nimekiri_id: 7, nimi: "Rahvaerakond", mitu_osapoolt: false, wikidata: "" },
     ],
     valimisnimekirjad: [],
+    protokolliLehed: [],
   };
 }
 

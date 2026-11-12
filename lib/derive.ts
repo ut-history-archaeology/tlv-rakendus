@@ -491,6 +491,47 @@ export function isikuAadressidKoos(
   return [...tulem.values()];
 }
 
+/** PA-06: isik, kellel puudub liikmeks saamise kirje, kuid on tõendeid liikmelisusest. */
+export interface LiikmekirjeTõendid {
+  /** muutuste read (lahkumine jt) */
+  muutused: Muutus[];
+  /** mitu korda protokollide osavõtus nimetatud (kindlus kõrge/keskmine) */
+  osavotuKordi: number;
+  /** koosseisud, kus tõendid esinevad (kronoloogiliselt) */
+  koosseisud: string[];
+  /** inimloetav loetelu: "lahkumine 1925-03-26 (#242)", "protokollides nimetatud 10 korda" */
+  tekst: string[];
+}
+
+export const LIIKMEKIRJE_PUUDUB =
+  "Liikmeks saamise kirje puudub andmetes (valimistulemus või liitumine)";
+
+/**
+ * PA-06 / KT-05a: 0 koosseisu (valitud-ridadest ja liitumistest), kuid muutustes või osavõtus
+ * (kõrge/keskmine) on tõendeid. Liikmelisust juurde ei tuletata; tagastab ainult tõendid.
+ */
+export function liikmekirjePuudub(
+  andmed: Andmestik, isikId: number, koosseisud: string[] = isikuKoosseisud(andmed, isikId)
+): LiikmekirjeTõendid | null {
+  if (koosseisud.length > 0) return null;
+  const muutused = andmed.muutused.filter((m) => m.isik_id === isikId);
+  const osavott = andmed.osavott.filter(
+    (o) => o.isik_id === isikId && (o.sidumise_kindlus === "kõrge" || o.sidumise_kindlus === "keskmine")
+  );
+  if (muutused.length === 0 && osavott.length === 0) return null;
+  const jark = new Map(andmed.koosseisud.map((k, i) => [k.koosseis_id, i]));
+  return {
+    muutused,
+    osavotuKordi: osavott.length,
+    koosseisud: [...new Set([...muutused.map((m) => m.koosseis_id), ...osavott.map((o) => o.koosseis_id)])]
+      .sort((a, b) => (jark.get(a) ?? 99) - (jark.get(b) ?? 99)),
+    tekst: [
+      ...muutused.map((m) => `${m.liik} ${m.kuupaev} (#${m.muutus_id})`),
+      ...(osavott.length ? [`protokollides nimetatud ${osavott.length} korda`] : []),
+    ],
+  };
+}
+
 /** IsikuRida nimekirjaväljad (NK-03). */
 export function peamiseNimekirjaValjad(p: PeamineNimekiri | null): Pick<
   IsikuRida, "peamine_nimekiri" | "peamine_nimekiri_id" | "peamine_nimekiri_toor" | "peamine_nimekiri_kontrollida"
@@ -528,6 +569,7 @@ export function isikuRead(andmed: Andmestik): IsikuRida[] {
       esimene_koosseis: koosseisud[0] ?? "",
       viimane_koosseis: koosseisud[koosseisud.length - 1] ?? "",
       ...peamiseNimekirjaValjad(peamineNimekiri(andmed, i.isik_id, nimed)),
+      liikmekirje_puudub: liikmekirjePuudub(andmed, i.isik_id, koosseisud)?.tekst.join("; ") ?? "",
       oli_juhataja: juhatajaIdd.has(i.isik_id),
       aadressid: isikuAadressidKoos(andmed, i.isik_id).map((a) => `${a.tekst} (${a.aastad.join(", ")})`),
     };
@@ -707,6 +749,60 @@ export function mainimisedProfiilile(andmed: Andmestik, isikId: number): Mainimi
   };
 }
 
+/* ───────────── PA-07: allikaviide → koosolek ───────────── */
+
+export interface KoosolekuViide {
+  koosolek_id: string;
+  kuupaev: string;
+  /** RA digikaader */
+  kaader: string;
+}
+
+const kaadriIndeksid = new WeakMap<Andmestik, Map<string, Set<string>>>();
+
+/** "säilik:kaader" → koosolek_id-d (protokolli_lehed.csv → protokollid.csv `fail`). */
+function kaadriIndeks(andmed: Andmestik): Map<string, Set<string>> {
+  let idx = kaadriIndeksid.get(andmed);
+  if (idx) return idx;
+  const failist = new Map(andmed.protokollid.filter((p) => p.fail).map((p) => [p.fail, p.koosolek_id]));
+  idx = new Map();
+  for (const l of andmed.protokolliLehed) {
+    const kid = failist.get(l.protokoll);
+    if (!kid) continue;
+    const voti = `${l.arhiiviviide}:${l.lehekulg}`;
+    idx.set(voti, (idx.get(voti) ?? new Set()).add(kid));
+  }
+  kaadriIndeksid.set(andmed, idx);
+  return idx;
+}
+
+/**
+ * PA-07: muutuse allikaviide (säilik:kaader) → koosolek, mille protokolli see kaader kuulub.
+ * Kui kaader kuulub mitmele protokollile, valitakse see, mille kuupäev on `kuupaevad` hulgas
+ * (muutuse protokolliviide); muidu null — ei arvata.
+ */
+export function allikaviiteKoosolek(
+  andmed: Andmestik, viide: string, kuupaevad: string[] = []
+): KoosolekuViide | null {
+  const m = viide.trim().match(/^(.+?):(\d+[a-z]?)$/);
+  if (!m) return null;
+  const kandidaadid = [...(kaadriIndeks(andmed).get(`${m[1]}:${m[2]}`) ?? [])];
+  const koosolekud = kandidaadid
+    .map((id) => andmed.koosolekud.find((k) => k.koosolek_id === id))
+    .filter((k): k is Koosolek => !!k);
+  const valik = koosolekud.length === 1
+    ? koosolekud
+    : koosolekud.filter((k) => kuupaevad.includes(k.kuupaev));
+  if (valik.length !== 1) return null;
+  return { koosolek_id: valik[0].koosolek_id, kuupaev: valik[0].kuupaev, kaader: m[2] };
+}
+
+/** "04.12.1918" → "1918-12-04" (muutuste protokolliviited). */
+function protKuupaevIso(s: string): string {
+  const m = s.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  return m ? `${m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}` : s.trim();
+}
+
 /* ───────────── UX-06: liikmesmuutused sündmustena ───────────── */
 
 interface SyndmuseAlus {
@@ -717,6 +813,8 @@ interface SyndmuseAlus {
   /** kõik algsed muutus_id-d (eksport, test) */
   muutus_idd: number[];
   allikaviited: string[];
+  /** PA-07: allikaviidete koosolekud (sama järjekord; null = koosolekut ei leitud üheselt) */
+  koosolekuViited?: (KoosolekuViide | null)[];
   /** protokolliviited (kuupäevad) */
   protokollid: string[];
   /** liitumine esimesel koosolekul, kuid isik puudub valimistulemustes */
@@ -855,6 +953,12 @@ export function koosseisuSyndmused(andmed: Andmestik, koosseisId: string): Syndm
       protokollid: unikaalsed(muutuseProtokoll(m)),
       ...(eiValitud(m) && { eiValitud: true }),
     });
+  }
+
+  // PA-07: allikaviidete koosolekud
+  for (const s of syndmused) {
+    const kpv = [s.kuupaev, ...s.protokollid.map(protKuupaevIso)];
+    s.koosolekuViited = s.allikaviited.map((v) => allikaviiteKoosolek(andmed, v, kpv));
   }
 
   return syndmused.sort(

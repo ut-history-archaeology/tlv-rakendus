@@ -3,7 +3,7 @@ import path from "path";
 import Papa from "papaparse";
 import type {
   Andmestik, Isik, Koosolek, KoosolekJuhataja, Koosseis, Muutus, Nimekiri, Osavott, Valimine,
-  Valimisnimekiri,
+  ProtokolliLeheViide, Valimisnimekiri,
 } from "./types";
 import type { MainimiseRida, PaevakorraRida, ProtokolliRida } from "./protokollid/types";
 
@@ -218,9 +218,16 @@ export function loeAndmestik(): Andmestik {
     nimekiri_id: num(r.nimekiri_id),
   }));
 
+  const protokolliLehed: ProtokolliLeheViide[] = loeCSV("protokolli_lehed.csv").map((r) => ({
+    protokoll: r.protokoll ?? "",
+    arhiiviviide: r.arhiiviviide ?? "",
+    lehekulg: r.lehekulg ?? "",
+  }));
+
   cache = {
     isikud, koosseisud, koosolekud, juhatajad, muutused, valimised, osavott,
     protokollid, paevakord, mainimised, nimekirjad, valimisnimekirjad,
+    protokolliLehed,
   };
   return cache;
 }
