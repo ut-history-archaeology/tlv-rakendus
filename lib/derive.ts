@@ -572,9 +572,6 @@ export function isikuRead(andmed: Andmestik): IsikuRida[] {
       liikmekirje_puudub: liikmekirjePuudub(andmed, i.isik_id, koosseisud)?.tekst.join("; ") ?? "",
       oli_juhataja: juhatajaIdd.has(i.isik_id),
       aadressid: isikuAadressidKoos(andmed, i.isik_id).map((a) => `${a.tekst} (${a.aastad.join(", ")})`),
-      aastad: isikuAastad(karjaariSegmendid(andmed, i.isik_id)),
-      isanimi: i.isanimi,
-      AKL_ID: i.AKL_ID,
     };
   });
 }
@@ -666,19 +663,6 @@ export function karjaariSegmendid(
     }
   }
   return segmendid;
-}
-
-/**
- * IS5-03 / PR5-02: volikogus oldud aastad karjäärisegmentidest — esimese lõigu algusaasta kuni
- * viimase lõigu lõpuaasta ("1917–1934"); üks aasta → "1921"; segmente pole (PA-06) → null.
- */
-export function isikuAastad(segmendid: { algus: string; lopp: string }[]): string | null {
-  const algused = segmendid.map((s) => s.algus.slice(0, 4)).filter(Boolean).sort();
-  const lopud = segmendid.map((s) => s.lopp.slice(0, 4)).filter(Boolean).sort();
-  if (algused.length === 0) return null;
-  const a = algused[0];
-  const l = lopud[lopud.length - 1] ?? a;
-  return a === l ? a : `${a}–${l}`;
 }
 
 /** PR-08: isiku juhatamise statistika. */
@@ -1059,152 +1043,4 @@ export function volikoguSuurus(k: Koosseis): { kuupaev: string; arv: number }[] 
     astmed.push({ kuupaev: k.volikogu_suurus_muutus, arv: k.volikogu_suurus_hiljem });
   }
   return astmed;
-}
-
-/* ───────────── 5. etapp: isiku leht (PR5-02, PR5-03, PR5-04) ───────────── */
-
-const PAEV = 86_400_000;
-function paevNr(iso: string): number {
-  const [a, k = "01", p = "01"] = iso.split("-");
-  return Date.UTC(Number(a), Number(k) - 1, Number(p)) / PAEV;
-}
-
-export interface RibaLoik {
-  koosseis_id: string;
-  /** "1924–1926" */
-  nimi: string;
-  /** koosseisu periood ribal: esimene … viimane koosolek (omaniku otsus 20.11.2026) */
-  algus: string;
-  lopp: string;
-  /** liikmepäevade osa koosseisu perioodist 0…1 */
-  taidetud: number;
-  /** täidetud osad lõigu sees (0…1) */
-  osad: { vasak: number; laius: number; algus: string; lopp: string }[];
-  /** "1924–1926: liige 15.01.1924–28.01.1924" / "1934–1939: ei olnud liige" */
-  silt: string;
-}
-
-/**
- * PR5-02: koosseisuriba — 9 võrdset lõiku. Täidetud osa = isiku liikmepäevad (`karjaariSegmendid`,
- * PA-09) koosseisu perioodist. Periood ja isiku lõigud on esimesest viimase koosolekuni
- * (valitu lõik, mis karjaariSegmendid järgi algab valimistest, lõigatakse esimesele koosolekule).
- */
-export function koosseisuRibaLoigud(andmed: Andmestik, isikId: number): RibaLoik[] {
-  const segmendid = karjaariSegmendid(andmed, isikId);
-  return andmed.koosseisud.map((k) => {
-    const nimi = k.koosseis_id.replace("-", "–");
-    const algus = k.esimene_koosolek || k.valimised_algus;
-    const lopp = k.viimane_koosolek || k.valimised_lopp || algus;
-    const p0 = paevNr(algus);
-    const kokku = paevNr(lopp) - p0 + 1;
-    const osad = segmendid
-      .filter((s) => s.koosseis_id === k.koosseis_id)
-      .map((s) => {
-        const sAlgus = s.algus < algus ? algus : s.algus;
-        const sLopp = s.lopp > lopp ? lopp : s.lopp < sAlgus ? sAlgus : s.lopp;
-        const vasak = (paevNr(sAlgus) - p0) / kokku;
-        const laius = (paevNr(sLopp) - paevNr(sAlgus) + 1) / kokku;
-        return { vasak, laius, algus: sAlgus, lopp: sLopp };
-      });
-    const taidetud = Math.min(1, osad.reduce((s, o) => s + o.laius, 0));
-    const silt = osad.length
-      ? `${nimi}: liige ${osad
-          .map((o) => (o.algus === o.lopp ? kuupaevLyhikeD(o.algus) : `${kuupaevLyhikeD(o.algus)}–${kuupaevLyhikeD(o.lopp)}`))
-          .join(", ")}`
-      : `${nimi}: ei olnud liige`;
-    return { koosseis_id: k.koosseis_id, nimi, algus, lopp, taidetud, osad, silt };
-  });
-}
-
-function kuupaevLyhikeD(iso: string): string {
-  const o = iso.split("-");
-  return o.length < 3 ? iso : `${o[2]}.${o[1]}.${o[0]}`;
-}
-
-export type AjaluguKirje =
-  | {
-      liik: "valimised";
-      kuupaev: string;
-      /** valimiste päev(ad) koosseisu tabelist */
-      kuupaevad: string[];
-      valitud: boolean;
-      /** kanooniline nimekiri (NK-03), selle puudumisel toorkuju */
-      nimekiri: string;
-      /** "5. koht nimekirjas, üldjärjestuses 7." */
-      koht: string;
-      amet: string;
-      /** kokku volditud rea ainus viide: valitul tulemuste, kandidaadil kandidaatide allikas */
-      allikas: Allikas;
-      /** VK-03 täisvaade ("allikad") */
-      kirje: ValimineKoos;
-    }
-  | { liik: "syndmus"; kuupaev: string; syndmus: Syndmus };
-
-/** PR5-03 järjestus: kuupäev; samal kuupäeval valimised enne liikmesmuutusi; muidu stabiilne. */
-export function ajaluguJarjestus(a: AjaluguKirje, b: AjaluguKirje): number {
-  return (
-    (a.kuupaev || "9999").localeCompare(b.kuupaev || "9999") ||
-    (a.liik === "valimised" ? 0 : 1) - (b.liik === "valimised" ? 0 : 1)
-  );
-}
-
-/**
- * PR5-03: isiku ajalugu — valimised (VK-01) ja liikmesmuutused (UX-06 sündmused, sh kinnitamine)
- * ühes kronoloogilises loendis.
- */
-export function isikuAjalugu(andmed: Andmestik, isikId: number): AjaluguKirje[] {
-  const nimed = nimekirjaNimed(andmed);
-  const valimised: AjaluguKirje[] = isikuValimisedKoos(andmed, isikId).map((kirje) => {
-    const k = andmed.koosseisud.find((x) => x.koosseis_id === kirje.koosseis_id);
-    const kuupaevad = [k?.valimised_algus, k?.valimised_lopp].filter((x): x is string => !!x);
-    const read = andmed.valimised.filter((v) => v.isik_id === isikId && v.aasta === kirje.aasta);
-    const valitud = kirje.tulemus === "valitud";
-    const pea =
-      (valitud ? read.find((r) => r.roll === "valitud") : read.find((r) => r.allikas === "kandidaadid")) ??
-      read.find((r) => r.allikas === "kandidaadid") ??
-      read[0];
-    const nimekiri = pea.nimekiri_id !== null
-      ? nimed.get(pea.nimekiri_id) ?? pea.nimekiri_nimi.trim()
-      : pea.nimekiri_nimi.trim() || kirje.nimekiri[0]?.nimi || "";
-    const koht = [
-      pea.jrk_nimekiri.trim() ? `${pea.jrk_nimekiri.trim()}. koht nimekirjas` : "",
-      pea.jrk_uld.trim() ? `üldjärjestuses ${pea.jrk_uld.trim()}.` : "",
-    ].filter(Boolean).join(", ");
-    return {
-      liik: "valimised",
-      kuupaev: kuupaevad[0] ?? String(kirje.aasta),
-      kuupaevad: kuupaevad.length ? kuupaevad : [String(kirje.aasta)],
-      valitud,
-      nimekiri,
-      koht,
-      amet: pea.amet.trim(),
-      allikas: valimiseAllikas(andmed, pea),
-      kirje,
-    };
-  });
-  const syndmused: AjaluguKirje[] = isikuSyndmused(andmed, isikId).map((s) => ({
-    liik: "syndmus", kuupaev: s.kuupaev, syndmus: s,
-  }));
-  return [...valimised, ...syndmused].sort(ajaluguJarjestus);
-}
-
-/**
- * PR5-04 (tuletatud): koosolekud, mil isik oli liige (`liikmedKuupaeval`), ja neist need, kus ta
- * ei olnud protokollis (kõrge/keskmine kindlus) puudujana.
- */
-export function osalemine(andmed: Andmestik, isikId: number): { osales: number; liige: number } {
-  const puudus = new Set(
-    andmed.osavott
-      .filter((o) => o.isik_id === isikId && o.staatus !== "kohal" &&
-        (o.sidumise_kindlus === "kõrge" || o.sidumise_kindlus === "keskmine"))
-      .map((o) => o.koosolek_id)
-  );
-  let liige = 0;
-  let osales = 0;
-  for (const k of andmed.koosolekud) {
-    if (!liikmedKuupaevalMemo(andmed, k.koosseis_id, k.kuupaev).has(isikId)) continue;
-    liige++;
-    if (!puudus.has(k.koosolek_id)) osales++;
-  }
-  return { osales, liige };
 }

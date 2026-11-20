@@ -70,22 +70,3 @@ export function wikidataQid(v: string | null | undefined): string {
   const m = /^(?:https?:\/\/(?:www\.)?wikidata\.org\/(?:wiki|entity)\/)?(Q\d+)\/?$/i.exec(s);
   return m ? m[1].toUpperCase() : "";
 }
-
-/**
- * PR5-03: kuupäevade lühikuju ajaloo veerus. ["1926-12-18","1926-12-19"] → "18.–19.12.1926";
- * kuu vahetusel "30.11.–01.12.1926"; aasta vahetusel "31.12.1926–01.01.1927"; üks → "07.02.1927".
- * Osaline kuupäev jääb nagu on.
- */
-export function kuupaevadLyhike(kuupaevad: string[]): string {
-  const eri = [...new Set(kuupaevad.filter(Boolean))].sort();
-  if (eri.length === 0) return "";
-  const a = eri[0];
-  const b = eri[eri.length - 1];
-  if (a === b) return kuupaevLyhike(a);
-  if (a.length < 10 || b.length < 10) return `${kuupaevLyhike(a)}–${kuupaevLyhike(b)}`;
-  const [aa, ak, ap] = a.split("-");
-  const [ba, bk, bp] = b.split("-");
-  if (aa === ba && ak === bk) return `${ap}.–${bp}.${bk}.${ba}`;
-  if (aa === ba) return `${ap}.${ak}.–${bp}.${bk}.${ba}`;
-  return `${kuupaevLyhike(a)}–${kuupaevLyhike(b)}`;
-}

@@ -6,9 +6,8 @@ Next.js (App Router) rakendus Tartu Linnavolikogu ajalooandmestiku sirvimiseks:
 
 Lähteülesanded: `CLAUDE_CODE_ULESANNE.md` (1. etapp), `CLAUDE_CODE_ULESANNE_2.md`
 (2. etapp: protokollide leht, täistekstiotsing, paralleelvaade arhiivi originaaliga),
-`CLAUDE_CODE_ULESANNE_3.md` (3. etapp: UI parandused), `CLAUDE_CODE_ULESANNE_4.md`
-(4. etapp: andmeuuendus, kanoonilised nimekirjad, valimiste kaart allikaviidetega) ja
-`CLAUDE_CODE_ULESANNE_5.md` (5. etapp: minimalistlik avaleht, isikute nimekiri ja isiku leht).
+`CLAUDE_CODE_ULESANNE_3.md` (3. etapp: UI parandused) ja `CLAUDE_CODE_ULESANNE_4.md`
+(4. etapp: andmeuuendus, kanoonilised nimekirjad, valimiste kaart allikaviidetega).
 Andmesõnastik: `data/README.md`. Andmetöötluse ülevaade: `ANDMETOOTLUSE_ULEVAADE.md`.
 Viited: `VIITED.md`.
 
@@ -78,46 +77,6 @@ killud 15 MB); kestus ≈ 6 s.
 Rakendus on täielikult staatiliselt genereeritav (`output: "export"`):
 kõik 404 isiku-, 338 koosoleku- ja 9 koosseisulehte ehitatakse build-ajal
 CSV-failidest (`data/`), serverit ega andmebaasi pole vaja.
-
-## Avalehe teksti muutmine
-
-Avalehe pealkirja all olev kirjeldus on failis **`content/avaleht.md`** (repo juurkaustas,
-kaust `content`). Teksti muutmiseks ei pea koodi puutuma: muuda ainult seda faili.
-
-**Kuidas muuta (GitHubi veebis, ilma programmideta):**
-
-1. Ava repos fail `content/avaleht.md` ja vajuta pliiatsi ikooni („Edit this file“).
-2. Muuda teksti (vt allpool, mida saab kasutada).
-3. Vajuta **„Commit changes…“**, kirjuta lühike selgitus (nt „Avalehe tekst uuendatud“) ja
-   vali „Commit directly to the `main` branch“.
-4. GitHub Actions ehitab lehe automaatselt uuesti (vahekaart **Actions**, töövoog
-   „Deploy to GitHub Pages“). Umbes mõne minuti pärast on uus tekst avalehel.
-
-**Mida failis kasutada saab** (Markdown):
-
-```markdown
-Esimene lõik. Lõigud eraldatakse tühja reaga.
-
-Teine lõik, milles on **rasvane tekst** ja *kursiiv*.
-
-Link rakenduse lehele: [Oskar Allik](/isikud/6/) — algab kaldkriipsuga, aadressi algusosa
-(`/tlv-rakendus`) lisatakse ise.
-Link välisele lehele: [Rahvusarhiiv](https://www.ra.ee/) — avaneb uues aknas.
-
-- loendi punkt
-- teine punkt
-
-1. nummerdatud loend
-2. teine punkt
-```
-
-Mida **ei** saa kasutada: HTML-märgendid (nt `<b>`, `<script>`) eemaldatakse; pealkirjad
-(`# …`) kuvatakse tavalise rasvase lõiguna, sest lehe pealkiri on koodis; pildid kuvatakse
-ainult nende kirjeldusena. Kui fail puudub või on tühi, siis lehe ehitamine katkeb veateatega
-„content/avaleht.md puudub — avalehe kirjeldus on kohustuslik“ ja vana avaleht jääb alles.
-
-Tehniliselt: `lib/sisu.ts` loeb faili build-ajal ja teisendab selle `marked`-iga HTML-iks
-(testid `lib/sisu.test.ts`).
 
 ## Ülesehitus
 
@@ -276,40 +235,6 @@ pesastatakse; K002 korduvate punktinumbrite id on `p<nr>-<jrk>` (L-03).
   "?" tooltipiga, profiilil tõendite loetelu. **PA-07**: sündmuste tabelis protokolliviide →
   koosoleku leht + ikoon protokolli kaadrile (allikaviide säilik:kaader → `protokolli_lehed.csv`).
 - Kontrollleht `/kontroll` (KT-01…KT-06), vt "Käivitamine".
-
-## 5. etapp: minimalistlik avaleht, isikute nimekiri ja isiku leht (`CLAUDE_CODE_ULESANNE_5.md`)
-
-- **Leheraam** (DS-01, DS-02): kujundusmärgid `app/globals.css` `@theme`-is (Tailwind v4, eraldi
-  konfiguratsioonifaili pole), kirjad Source Serif 4 ja Inter (`next/font`, build-ajal). Route
-  group'id: `app/(lihtne)/` (avaleht, `/isikud/`, `/isikud/<id>/`, ilma menüü ja globaalse
-  otsinguta, `components/LihtneLeht.tsx`) ja `app/(tavaline)/` (ülejäänud lehed senise `Nav`-iga).
-  URL-id ei muutunud.
-- **Avaleht** (AV5-01, AV5-02): kirjeldus failist `content/avaleht.md` (vt "Avalehe teksti
-  muutmine"); eemaldatud ajatelg, statistika, "Kolm teed" ja faktid.
-- **Isikute nimekiri** (IS5-01…IS5-04): `components/IsikudLoend.tsx` (otsing, Koosseis/Nimekiri
-  üksikvalikud, loend, "Näita veel", allalaadimine); loogika `lib/isikuloend.ts`.
-  URL-parameetrid (omaniku otsus 20.11.2026): kirjutatakse senised `koosseisud` (`,`),
-  `nimekirjad` (`|`), `sort=võti:desc`; lisaks loetakse `koosseis`, `nimekiri` ja `sort=võti-desc`.
-  `juhataja` ja `sort` töötavad URL-ist, UI-s neid pole. `leht=N` näitab esimesed N×50 rida.
-  Koosseisu lehe liikmete tabel (`IsikudTabel`) on muutmata.
-- **Isiku leht** (PR5-01…PR5-05): päis, koosseisuriba (`KoosseisuRiba`, `koosseisuRibaLoigud()`),
-  ajalugu (`IsikuAjalugu`, `isikuAjalugu()`; valimiste "allikad" = VK-03 täisvaade aadressita),
-  "Protokollides", jalus (arhiiviviited, Kopeeri viide, PDF, JSON). Eemaldatud: isanimi,
-  aadressid, osavõtu graafik, juhatamise plokk, asendusvõrk, menüü.
-  Koosseisuriba periood on esimesest viimase koosolekuni ja valitu lõik lõigatakse
-  esimesele koosolekule (omaniku otsus 20.11.2026); `karjaariSegmendid()` ja isiku aastad
-  ("1917–1934") arvestavad endiselt valimistest.
-- **Eksport**: isikute eksport ja profiili JSON said juurde `isanimi` ja `AKL_ID` (omaniku otsus
-  20.11.2026); kõik senised veerud, ka aadressid, on alles. PDF = brauseri print lehest.
-- **Tühistatud nõuded** (OTSUS 20.11.2026): kaardivaade — algse lähteülesande KT-01…KT-08
-  (`TLV rakendus ja ideed.docx`, ptk 4.7; mitte kontrolllehe KT-01…KT-06), PR-05 (isiku
-  aadressi kaart) ja EX-06 (GeoJSON); aadresse ei geokodeerita. Kaardilehte (`/kaart/`) ega
-  kaarditeeke rakenduses kunagi polnud, seega ei olnud midagi eemaldada ega ümber suunata
-  (omaniku otsus: ümbersuunajat ei tehta).
-- Kontroll 20.11.2026 (headless Chrome `out/`-i peal): `/`, `/isikud/`, isikud 6, 12, 96, 257, 395
-  laiusel 375, 768 ja 1280 px — horisontaalset ülevoolu pole; Tab-järjekord nimekirjas: tagasilink →
-  Loe protokolle → otsing → Koosseis → Nimekiri → esimene rida; Lighthouse ligipääsetavus `/`,
-  `/isikud/`, isik 6 ja isik 395: 100.
 
 ## Teadlikud piirangud (vt lähteülesanded, 2. etapi ptk 13)
 

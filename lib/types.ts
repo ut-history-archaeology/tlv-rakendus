@@ -211,11 +211,6 @@ export interface IsikuRida {
   liikmekirje_puudub: string;
   oli_juhataja: boolean;
   aadressid: string[]; // "aadress (aasta, aasta)" tekstina (UX-04)
-  /** IS5-03: volikogus oldud aastad ("1917–1934", "1921"); null = teadmata (PA-06) või ei olnud liige */
-  aastad: string | null;
-  /** ainult ekspordis (5. etapp, omaniku otsus 20.11.2026), lehel ei kuvata */
-  isanimi: string;
-  AKL_ID: string;
 }
 
 /** Koosolekute tabeli tuletatud rida (/koosolekud vaade). */

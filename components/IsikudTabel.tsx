@@ -13,7 +13,7 @@ import KontrollimiselMark from "./KontrollimiselMark";
 import { LIIKMEKIRJE_PUUDUB } from "@/lib/derive";
 import HelpTip from "./HelpTip";
 import { ABI } from "@/lib/abitekstid";
-import { ISIKUTE_EKSPORDI_VEERUD, isikuEkspordiRida } from "@/lib/isikuloend";
+import type { EkspordiVeerg } from "@/lib/export";
 
 const LEHE_SUURUS = 50;
 
@@ -30,8 +30,57 @@ interface Props {
   staatus?: Record<number, { tekst: string; voti: string }>;
 }
 
-const EKSPORDI_VEERUD = ISIKUTE_EKSPORDI_VEERUD;
-const ekspordiRida = isikuEkspordiRida;
+const EKSPORDI_VEERUD: EkspordiVeerg[] = [
+  { key: "isik_id", pealkiri: "isik_id" },
+  { key: "perenimi", pealkiri: "Perenimi" },
+  { key: "eesnimi", pealkiri: "Eesnimi" },
+  { key: "alt_perenimi", pealkiri: "Alt. perenimi" },
+  { key: "alt_eesnimi", pealkiri: "Alt. eesnimi" },
+  { key: "sugu", pealkiri: "Sugu" },
+  { key: "synd_kuupaev", pealkiri: "Sünniaeg" },
+  { key: "synd_tuletatud", pealkiri: "Sünniaeg tuletatud" },
+  { key: "surm_kuupaev", pealkiri: "Surmaaeg" },
+  { key: "koosseise", pealkiri: "Koosseisude arv" },
+  { key: "liikmekirje_puudub", pealkiri: "Liikmeks saamise kirje puudub (tõendid)" },
+  { key: "koosseisud", pealkiri: "Koosseisud" },
+  { key: "esimene_koosseis", pealkiri: "Esimene koosseis" },
+  { key: "viimane_koosseis", pealkiri: "Viimane koosseis" },
+  { key: "peamine_nimekiri", pealkiri: "Peamine nimekiri" },
+  { key: "peamine_nimekiri_id", pealkiri: "nimekiri_id" },
+  { key: "peamine_nimekiri_toor", pealkiri: "Peamine nimekiri (toorkuju)" },
+  { key: "peamine_nimekiri_kontrollida", pealkiri: "Nimekirja vaste kontrollimisel" },
+  { key: "oli_juhataja", pealkiri: "Oli juhataja" },
+  { key: "aadressid", pealkiri: "Teadaolevad aadressid" },
+  { key: "wikidata", pealkiri: "Wikidata" },
+  { key: "arhiiviviited", pealkiri: "Arhiiviviited" },
+];
+
+function ekspordiRida(r: IsikuRida) {
+  return {
+    isik_id: r.isik_id,
+    perenimi: r.perenimi,
+    eesnimi: r.eesnimi,
+    alt_perenimi: r.alt_perenimi,
+    alt_eesnimi: r.alt_eesnimi,
+    sugu: r.sugu,
+    synd_kuupaev: r.synd_kuupaev,
+    synd_tuletatud: r.synd_tuletatud,
+    surm_kuupaev: r.surm_kuupaev,
+    koosseise: r.koosseise,
+    liikmekirje_puudub: r.liikmekirje_puudub,
+    koosseisud: r.koosseisud.join(", "),
+    esimene_koosseis: r.esimene_koosseis,
+    viimane_koosseis: r.viimane_koosseis,
+    peamine_nimekiri: r.peamine_nimekiri,
+    peamine_nimekiri_id: r.peamine_nimekiri_id,
+    peamine_nimekiri_toor: r.peamine_nimekiri_toor,
+    peamine_nimekiri_kontrollida: r.peamine_nimekiri_kontrollida ? "jah" : "",
+    oli_juhataja: r.oli_juhataja ? "jah" : "ei",
+    aadressid: r.aadressid.join(" | "),
+    wikidata: r.wikidata,
+    arhiiviviited: r.arhiiviviited,
+  };
+}
 
 export default function IsikudTabel({
   read, koosseisud, eelKoosseis,

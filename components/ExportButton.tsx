@@ -14,15 +14,10 @@ interface Props {
   print?: boolean;
   /** Nupu tekst, kui samas kohas on mitu eksporti (vaikimisi "Lae alla"). */
   silt?: string;
-  /** 5. etapp (IS5-04): nupu klassid (lihtsatel lehtedel väike hall link-nupp) ja menüü joondus. */
-  nupuKlass?: string;
-  menyyVasakul?: boolean;
 }
 
 /** Eksport-nupp tabeli parem-ülanurgas (EX-01). */
-export default function ExportButton({
-  read, veerud, meta, print, silt = "Lae alla", nupuKlass, menyyVasakul,
-}: Props) {
+export default function ExportButton({ read, veerud, meta, print, silt = "Lae alla" }: Props) {
   const [avatud, setAvatud] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -33,9 +28,6 @@ export default function ExportButton({
     document.addEventListener("mousedown", klikk);
     return () => document.removeEventListener("mousedown", klikk);
   }, []);
-
-  // DS-03: lihtsatel lehtedel menüüread ≥ 44 px
-  const rida = `block w-full px-3 text-left text-sm hover:bg-stone-100 ${nupuKlass ? "min-h-11" : "py-1.5"}`;
 
   function vali(fn: () => void | Promise<void>) {
     setAvatud(false);
@@ -48,29 +40,29 @@ export default function ExportButton({
         type="button"
         onClick={() => setAvatud((a) => !a)}
         aria-expanded={avatud}
-        className={nupuKlass ?? "rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-50"}
+        className="rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 hover:bg-stone-50"
       >
-        {nupuKlass ? silt : <>↓ {silt}</>}
+        ↓ {silt}
       </button>
       {avatud && (
-        <div className={`absolute ${menyyVasakul ? "left-0" : "right-0"} z-40 mt-1 w-44 rounded-md border border-stone-200 bg-white py-1 shadow-lg`}>
+        <div className="absolute right-0 z-40 mt-1 w-44 rounded-md border border-stone-200 bg-white py-1 shadow-lg">
           <button
             type="button"
-            className={rida}
+            className="block w-full px-3 py-1.5 text-left text-sm hover:bg-stone-100"
             onClick={() => vali(() => ekspordiCSV(read, veerud, meta))}
           >
             CSV (Excel, semikoolon)
           </button>
           <button
             type="button"
-            className={rida}
+            className="block w-full px-3 py-1.5 text-left text-sm hover:bg-stone-100"
             onClick={() => vali(() => ekspordiXLSX(read, veerud, meta))}
           >
             Excel (.xlsx)
           </button>
           <button
             type="button"
-            className={rida}
+            className="block w-full px-3 py-1.5 text-left text-sm hover:bg-stone-100"
             onClick={() => vali(() => ekspordiJSON(read, veerud, meta))}
           >
             JSON
@@ -78,7 +70,7 @@ export default function ExportButton({
           {print && (
             <button
               type="button"
-              className={rida}
+              className="block w-full px-3 py-1.5 text-left text-sm hover:bg-stone-100"
               onClick={() => vali(() => window.print())}
             >
               Prindi / PDF
