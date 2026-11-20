@@ -572,6 +572,9 @@ export function isikuRead(andmed: Andmestik): IsikuRida[] {
       liikmekirje_puudub: liikmekirjePuudub(andmed, i.isik_id, koosseisud)?.tekst.join("; ") ?? "",
       oli_juhataja: juhatajaIdd.has(i.isik_id),
       aadressid: isikuAadressidKoos(andmed, i.isik_id).map((a) => `${a.tekst} (${a.aastad.join(", ")})`),
+      aastad: isikuAastad(karjaariSegmendid(andmed, i.isik_id)),
+      isanimi: i.isanimi,
+      AKL_ID: i.AKL_ID,
     };
   });
 }
@@ -663,6 +666,19 @@ export function karjaariSegmendid(
     }
   }
   return segmendid;
+}
+
+/**
+ * IS5-03 / PR5-02: volikogus oldud aastad karjäärisegmentidest — esimese lõigu algusaasta kuni
+ * viimase lõigu lõpuaasta ("1917–1934"); üks aasta → "1921"; segmente pole (PA-06) → null.
+ */
+export function isikuAastad(segmendid: { algus: string; lopp: string }[]): string | null {
+  const algused = segmendid.map((s) => s.algus.slice(0, 4)).filter(Boolean).sort();
+  const lopud = segmendid.map((s) => s.lopp.slice(0, 4)).filter(Boolean).sort();
+  if (algused.length === 0) return null;
+  const a = algused[0];
+  const l = lopud[lopud.length - 1] ?? a;
+  return a === l ? a : `${a}–${l}`;
 }
 
 /** PR-08: isiku juhatamise statistika. */
