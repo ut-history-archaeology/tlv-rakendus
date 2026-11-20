@@ -306,6 +306,10 @@ pesastatakse; K002 korduvate punktinumbrite id on `p<nr>-<jrk>` (L-03).
   aadressi kaart) ja EX-06 (GeoJSON); aadresse ei geokodeerita. Kaardilehte (`/kaart/`) ega
   kaarditeeke rakenduses kunagi polnud, seega ei olnud midagi eemaldada ega ümber suunata
   (omaniku otsus: ümbersuunajat ei tehta).
+- Kontroll 20.11.2026 (headless Chrome `out/`-i peal): `/`, `/isikud/`, isikud 6, 12, 96, 257, 395
+  laiusel 375, 768 ja 1280 px — horisontaalset ülevoolu pole; Tab-järjekord nimekirjas: tagasilink →
+  Loe protokolle → otsing → Koosseis → Nimekiri → esimene rida; Lighthouse ligipääsetavus `/`,
+  `/isikud/`, isik 6 ja isik 395: 100.
 
 ## Teadlikud piirangud (vt lähteülesanded, 2. etapi ptk 13)
 

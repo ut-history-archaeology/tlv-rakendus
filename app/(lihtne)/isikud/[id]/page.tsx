@@ -216,7 +216,7 @@ export default async function IsikuProfiil({
             <h2 id="protokollides" className="text-[26px]">Protokollides</h2>
             {kindladMainimised.length > 0 && (
               <details className="text-base text-tekst-2">
-                <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <summary className="flex min-h-11 cursor-pointer list-none flex-wrap items-center gap-x-1 [&::-webkit-details-marker]:hidden">
                   Nimetatud {kindladMainimised.length} koosolekul.{" "}
                   <span className="text-link underline underline-offset-2">Vaata mainimisi</span>
                 </summary>
