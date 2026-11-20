@@ -78,6 +78,46 @@ Rakendus on täielikult staatiliselt genereeritav (`output: "export"`):
 kõik 404 isiku-, 338 koosoleku- ja 9 koosseisulehte ehitatakse build-ajal
 CSV-failidest (`data/`), serverit ega andmebaasi pole vaja.
 
+## Avalehe teksti muutmine
+
+Avalehe pealkirja all olev kirjeldus on failis **`content/avaleht.md`** (repo juurkaustas,
+kaust `content`). Teksti muutmiseks ei pea koodi puutuma: muuda ainult seda faili.
+
+**Kuidas muuta (GitHubi veebis, ilma programmideta):**
+
+1. Ava repos fail `content/avaleht.md` ja vajuta pliiatsi ikooni („Edit this file“).
+2. Muuda teksti (vt allpool, mida saab kasutada).
+3. Vajuta **„Commit changes…“**, kirjuta lühike selgitus (nt „Avalehe tekst uuendatud“) ja
+   vali „Commit directly to the `main` branch“.
+4. GitHub Actions ehitab lehe automaatselt uuesti (vahekaart **Actions**, töövoog
+   „Deploy to GitHub Pages“). Umbes mõne minuti pärast on uus tekst avalehel.
+
+**Mida failis kasutada saab** (Markdown):
+
+```markdown
+Esimene lõik. Lõigud eraldatakse tühja reaga.
+
+Teine lõik, milles on **rasvane tekst** ja *kursiiv*.
+
+Link rakenduse lehele: [Oskar Allik](/isikud/6/) — algab kaldkriipsuga, aadressi algusosa
+(`/tlv-rakendus`) lisatakse ise.
+Link välisele lehele: [Rahvusarhiiv](https://www.ra.ee/) — avaneb uues aknas.
+
+- loendi punkt
+- teine punkt
+
+1. nummerdatud loend
+2. teine punkt
+```
+
+Mida **ei** saa kasutada: HTML-märgendid (nt `<b>`, `<script>`) eemaldatakse; pealkirjad
+(`# …`) kuvatakse tavalise rasvase lõiguna, sest lehe pealkiri on koodis; pildid kuvatakse
+ainult nende kirjeldusena. Kui fail puudub või on tühi, siis lehe ehitamine katkeb veateatega
+„content/avaleht.md puudub — avalehe kirjeldus on kohustuslik“ ja vana avaleht jääb alles.
+
+Tehniliselt: `lib/sisu.ts` loeb faili build-ajal ja teisendab selle `marked`-iga HTML-iks
+(testid `lib/sisu.test.ts`).
+
 ## Ülesehitus
 
 - `lib/data.ts` — CSV-de laadimine build-ajal (papaparse)

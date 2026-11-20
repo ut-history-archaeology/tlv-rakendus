@@ -1,98 +1,57 @@
 import Link from "next/link";
-import { loeAndmestik } from "@/lib/data";
-import { arvutaFaktid } from "@/lib/faktid";
-import Ajatelg from "@/components/Ajatelg";
-import FaktiKarussell from "@/components/FaktiKarussell";
 import LihtneLeht from "@/components/LihtneLeht";
+import { avaleheKirjeldus } from "@/lib/sisu";
+import { avalikUrl } from "@/lib/protokollid/laadi";
 
+const SUUR_NUPP =
+  "flex min-h-[96px] items-center justify-between gap-4 rounded-[14px] px-8 py-7 text-[22px] font-medium leading-tight";
+
+/** AV5-01: pealkiri, kirjeldus failist (AV5-02), kaks nuppu, jalus. */
 export default function Avaleht() {
-  const andmed = loeAndmestik();
-  const faktid = arvutaFaktid(andmed);
-
-  const statistika = [
-    { arv: andmed.koosseisud.length, silt: "koosseisu", href: "/koosseisud/" },
-    { arv: andmed.isikud.length, silt: "isikut", href: "/isikud/" },
-    {
-      arv: andmed.koosolekud.length, silt: "koosolekut", href: "/koosolekud/",
-      alamsilt: `${andmed.protokollid.filter((p) => p.fail).length} protokolli täistekstiga`,
-    },
-    { arv: andmed.muutused.length, silt: "liikmesmuutust", href: "/koosseisud/" },
-  ];
-
+  const kirjeldus = avaleheKirjeldus();
   return (
-    <LihtneLeht>
-    <div className="space-y-10 py-6">
-      <section className="pt-4 text-center">
-        <h1 className="text-3xl font-bold md:text-4xl">
+    <LihtneLeht className="pb-12 pt-16 sm:pt-24">
+      <main className="flex flex-col gap-12">
+        <h1 className="text-[40px] leading-[1.05] tracking-[-0.01em] sm:text-[52px]">
           Tartu Linnavolikogu 1917–1941
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-stone-600">
-          Tartu linna esinduskogu ajalugu esimestest demokraatlikest valimistest
-          1917. aastal kuni nõukogude okupatsioonini: {andmed.isikud.length}{" "}
-          isikut, {andmed.koosseisud.length} koosseisu,{" "}
-          {andmed.koosolekud.length} koosolekut ja {andmed.muutused.length}{" "}
-          liikmesmuutust Rahvusarhiivi protokollide põhjal.
-        </p>
-      </section>
 
-      <section aria-labelledby="ajatelg-pealkiri">
-        <h2 id="ajatelg-pealkiri" className="mb-3 text-xl font-semibold">
-          Koosseisud ajateljel
-        </h2>
-        <Ajatelg koosseisud={andmed.koosseisud} />
-      </section>
+        <section
+          aria-label="Projekti kirjeldus"
+          className="lihtne-sisu text-[18px] leading-[1.65]"
+          dangerouslySetInnerHTML={{ __html: kirjeldus }}
+        />
 
-      <section aria-label="Võtmestatistika" className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {statistika.map((s) => (
-          <Link
-            key={s.silt}
-            href={s.href}
-            className="rounded-lg border border-stone-200 bg-white p-4 text-center transition-shadow hover:shadow-md"
-          >
-            <span className="block font-serif text-3xl font-bold">{s.arv}</span>
-            <span className="text-sm text-stone-600">{s.silt}</span>
-            {"alamsilt" in s && s.alamsilt && (
-              <span className="mt-0.5 block text-xs text-stone-500">{s.alamsilt}</span>
-            )}
+        <nav aria-label="Alusta" className="grid gap-4 sm:grid-cols-2">
+          <Link href="/isikud/" className={`${SUUR_NUPP} bg-tekst text-white hover:bg-black hover:text-white`}>
+            Otsi Tartu linnavolikogu liikmeid
+            <span aria-hidden>→</span>
           </Link>
-        ))}
-      </section>
+          <Link
+            href="/koosolekud/"
+            className={`${SUUR_NUPP} border border-raam bg-pind text-tekst hover:border-tekst hover:text-tekst`}
+          >
+            Loe protokolle
+            <span aria-hidden>→</span>
+          </Link>
+        </nav>
+      </main>
 
-      <section aria-label="Kolm teed andmetesse" className="grid gap-3 md:grid-cols-3">
-        <Link
-          href="/isikud/"
-          className="rounded-lg border border-stone-200 bg-white p-5 transition-shadow hover:shadow-md"
+      <footer className="mt-auto flex flex-wrap gap-x-5 pt-12 text-[13px] text-hall">
+        <a
+          href={avalikUrl("tlv-andmestik.zip")}
+          download
+          className="inline-flex min-h-11 items-center text-hall underline decoration-raam underline-offset-2 hover:text-tekst"
         >
-          <h3 className="text-lg font-semibold">Volinikud →</h3>
-          <p className="mt-1 text-sm text-stone-600">
-            Otsi ja sirvi kõiki {andmed.isikud.length} volikogus tegutsenud
-            isikut: elulood, karjäärid, valimised.
-          </p>
-        </Link>
-        <Link
-          href="/koosolekud/"
-          className="rounded-lg border border-stone-200 bg-white p-5 transition-shadow hover:shadow-md"
-        >
-          <h3 className="text-lg font-semibold">Koosolekud ja protokollid →</h3>
-          <p className="mt-1 text-sm text-stone-600">
-            {andmed.koosolekud.length} protokollitud koosolekut aastatest
-            1918–1941: juhatajad, osavõtjad, vormid ning protokollide täistekst ja otsing.
-          </p>
-        </Link>
+          Laadi alla kogu andmestik
+        </a>
         <Link
           href="/koosseisud/"
-          className="rounded-lg border border-stone-200 bg-white p-5 transition-shadow hover:shadow-md"
+          className="inline-flex min-h-11 items-center text-hall underline decoration-raam underline-offset-2 hover:text-tekst"
         >
-          <h3 className="text-lg font-semibold">Koosseisud →</h3>
-          <p className="mt-1 text-sm text-stone-600">
-            Üheksa valimisperioodi 1917–1941: poliitiline jaotus, liikmed ja
-            muutused.
-          </p>
+          Koosseisud
         </Link>
-      </section>
-
-      <FaktiKarussell faktid={faktid} />
-    </div>
+      </footer>
     </LihtneLeht>
   );
 }
