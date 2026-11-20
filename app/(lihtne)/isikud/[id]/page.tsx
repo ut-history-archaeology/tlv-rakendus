@@ -18,6 +18,7 @@ import SyndmusteTabel from "@/components/SyndmusteTabel";
 import type { Muutus } from "@/lib/types";
 import type { ReactNode } from "react";
 import ArhiiviViited from "@/components/ArhiiviViited";
+import LihtneLeht from "@/components/LihtneLeht";
 
 export function generateStaticParams() {
   return loeAndmestik().isikud.map((i) => ({ id: String(i.isik_id) }));
@@ -178,10 +179,8 @@ export default async function IsikuProfiil({
   const on1940 = koosseisud.includes("1940-1941");
 
   return (
-    <div className="space-y-6">
-      <nav aria-label="Asukoht" className="no-print text-sm text-stone-500">
-        <Link href="/isikud/" className="hover:underline">← Kõik isikud</Link>
-      </nav>
+    <LihtneLeht tagasi={{ href: "/isikud/", tekst: "Volinikud" }}>
+    <div className="space-y-6 py-6">
 
       {/* PR-01: päis */}
       <header className="flex flex-wrap items-start justify-between gap-4">
@@ -409,5 +408,6 @@ export default async function IsikuProfiil({
         </section>
       )}
     </div>
+    </LihtneLeht>
   );
 }

@@ -1,5 +1,48 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+ * DS-01 (5. etapp): kujundusmärgid lihtsatele lehtedele (avaleht, /isikud/, isiku leht).
+ * Tailwindi klassid: bg-taust, bg-pind, text-tekst, text-tekst-2, text-hall, text-link,
+ * text-link-hover, border-joon, border-raam, font-pealkiri, font-sisu.
+ * ------------------------------------------------------------------------- */
+@theme inline {
+  --color-taust: #f6f5f1;
+  --color-pind: #ffffff;
+  --color-tekst: #22211e;
+  --color-tekst-2: #45433e;
+  --color-hall: #5c5952; /* kontrast taustal 6,4:1 */
+  --color-link: #1f5e6b;
+  --color-link-hover: #123e47;
+  --color-joon: #e2dfd8;
+  --color-raam: #cfcbc2;
+  --font-pealkiri: var(--font-source-serif), Georgia, serif;
+  --font-sisu: var(--font-inter), -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Lihtne leheraam: Inter kõigele, Source Serif 4 pealkirjadele (vt globaalne h1–h3 reegel allpool). */
+.lihtne {
+  font-family: var(--font-sisu);
+}
+.lihtne h1,
+.lihtne h2,
+.lihtne h3 {
+  font-family: var(--font-pealkiri);
+  font-weight: 600;
+}
+/* baaskihis, et utility-klassid (nt nupu text-white, jaluse text-hall) saaksid üle kirjutada */
+@layer base {
+  .lihtne a {
+    color: var(--color-link);
+  }
+  .lihtne a:hover {
+    color: var(--color-link-hover);
+  }
+}
+.lihtne :is(a, button, input, select, summary):focus-visible {
+  outline: 2px solid var(--color-link);
+  outline-offset: 2px;
+}
+
 :root {
   --taust: #faf9f7;
   --tekst: #1c1917;

@@ -3,6 +3,7 @@ import { loeAndmestik } from "@/lib/data";
 import { arvutaFaktid } from "@/lib/faktid";
 import Ajatelg from "@/components/Ajatelg";
 import FaktiKarussell from "@/components/FaktiKarussell";
+import LihtneLeht from "@/components/LihtneLeht";
 
 export default function Avaleht() {
   const andmed = loeAndmestik();
@@ -19,7 +20,8 @@ export default function Avaleht() {
   ];
 
   return (
-    <div className="space-y-10">
+    <LihtneLeht>
+    <div className="space-y-10 py-6">
       <section className="pt-4 text-center">
         <h1 className="text-3xl font-bold md:text-4xl">
           Tartu Linnavolikogu 1917–1941
@@ -91,5 +93,6 @@ export default function Avaleht() {
 
       <FaktiKarussell faktid={faktid} />
     </div>
+    </LihtneLeht>
   );
 }

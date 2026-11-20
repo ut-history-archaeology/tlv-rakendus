@@ -4,6 +4,7 @@ import { isikuRead } from "@/lib/derive";
 import IsikudTabel from "@/components/IsikudTabel";
 import HelpTip from "@/components/HelpTip";
 import { ABI } from "@/lib/abitekstid";
+import LihtneLeht from "@/components/LihtneLeht";
 
 export const metadata: Metadata = { title: "Isikud" };
 
@@ -11,7 +12,8 @@ export default function IsikudLeht() {
   const andmed = loeAndmestik();
   const read = isikuRead(andmed);
   return (
-    <div>
+    <LihtneLeht tagasi={{ href: "/", tekst: "Tartu Linnavolikogu 1917–1941" }}>
+    <div className="py-6">
       <h1 className="mb-1 text-2xl font-bold">
         Isikud
         <HelpTip tekst={ABI.koosseis} />
@@ -25,5 +27,6 @@ export default function IsikudLeht() {
         koosseisud={andmed.koosseisud.map((k) => k.koosseis_id)}
       />
     </div>
+    </LihtneLeht>
   );
 }
