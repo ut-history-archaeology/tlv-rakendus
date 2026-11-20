@@ -1,11 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { loeSort, normaliseeriParameetrid, type SortVeerg } from "./isikuloend";
 
-export interface SortVeerg {
-  key: string;
-  desc: boolean;
-}
+export type { SortVeerg };
 
 /**
  * Tabelivaadete jagatud seis: filtrid + sorteerimine + leht.
@@ -17,7 +15,9 @@ export function useTabeliSeis(
   vaikeFiltrid: Record<string, string>,
   storageKey: string,
   /** varasemad "Minu vaade" võtmed, mis migreeritakse üks kord `storageKey` alla (UX-09) */
-  vanadVotmed: string[] = []
+  vanadVotmed: string[] = [],
+  /** URL-parameetrite aliased (5. etapp: `koosseis` → `koosseisud` jne), loetakse ainult laadimisel */
+  aliased: Record<string, { voti: string; eraldaja: string }> = {}
 ) {
   const [filtrid, setFiltridRaw] = useState<Record<string, string>>(vaikeFiltrid);
   const [sort, setSort] = useState<SortVeerg[]>([]);
@@ -28,7 +28,7 @@ export function useTabeliSeis(
 
   // Mount: loe seis URL-ist (staatilise ekspordi puhul alles kliendis)
   useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
+    const p = normaliseeriParameetrid(new URLSearchParams(window.location.search), aliased);
     const f: Record<string, string> = { ...vaikimisi.current };
     let muudetud = false;
     for (const k of Object.keys(vaikimisi.current)) {
@@ -39,15 +39,8 @@ export function useTabeliSeis(
       }
     }
     if (muudetud) setFiltridRaw(f);
-    const s = p.get("sort");
-    if (s) {
-      setSort(
-        s.split(",").flatMap((osa) => {
-          const [key, suund] = osa.split(":");
-          return key ? [{ key, desc: suund === "desc" }] : [];
-        }).slice(0, 3)
-      );
-    }
+    const s = loeSort(p.get("sort"));
+    if (s.length > 0) setSort(s);
     const l = Number(p.get("leht"));
     if (l > 1) setLeht(l);
     try {

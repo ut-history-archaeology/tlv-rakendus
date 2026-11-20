@@ -94,7 +94,10 @@ kui Excelisse lisatakse veerg `allikas`, kasutatakse seda): `valitud` → `tulem
 1917 `valitav` kirillitsas perenimega → `kandidaadid_vene` (79 rida; viide puudub, LAHTINE). `koosseis_id` lisatud. 1939. aastal on
 ringkonnad (1–4) ja häältearvud (`hääled_kokku` jt), nimekirjanimed puuduvad.
 Aadressiväljad (`elukoht_tänav` jne) on täidetud 713 real (peamiselt 1926,
-1929, 1934 valimistelt). `nimekiri_nimi` on allika toorkuju; **`nimekiri_id`** viitab
+1929, 1934 valimistelt). 5. etapist (20.11.2026) neid rakenduse lehtedel ei kuvata
+(isiku leht, valimiste "allikad"), kuid need jäävad andmestikku, isikute eksporti, profiili JSON-i
+ja ZIP-i muutmata. Kaardivaadet ega geokodeerimist ei tehta (kaardinõuded tühistatud, vt README
+"5. etapp"). `nimekiri_nimi` on allika toorkuju; **`nimekiri_id`** viitab
 kanoonilisele nimekirjale (`nimekirjad.csv`, NK-01), seotud `scripts/nimekirjad-vasted.csv`
 järgi (aasta + nr + toorkuju; alguse/lõpu tühikud ei loe). Tühi: 1919 valitud (nimekiri
 allikas puudub) ja 1939 (ringkonnad). **`nimekiri_kontrollida`** = `jah` 3 real, kus vaste
