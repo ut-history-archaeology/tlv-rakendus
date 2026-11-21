@@ -11,7 +11,6 @@ export interface ViiteAndmed {
   /** arhiivi lk-d (esimene ja viimane; ühe lehe viitel samad) */
   esimeneLk: string;
   viimaneLk?: string;
-  transkribusUrl: string;
   /** rakenduse lehe URL (ilma #-ta) */
   leheUrl: string;
   punktNr?: number | null;
@@ -37,7 +36,7 @@ export function koostaViide(v: ViiteAndmed): string {
   const vaadatud = kuupaevEesti(v.vaadatud ?? new Date().toISOString().slice(0, 10));
   return (
     `Tartu Linnavolikogu protokoll, ${kuupaevadEesti(v.kuupaevad)}${punkt}. ` +
-    `Rahvusarhiiv, ${v.arhiiviviide}, ${lk}. Transkribus: ${v.transkribusUrl}. ` +
+    `Rahvusarhiiv, ${v.arhiiviviide}, ${lk}. ` +
     `Tartu Linnavolikogu andmestik, 2026, ${v.leheUrl}${ankur} (vaadatud ${vaadatud}).`
   );
 }

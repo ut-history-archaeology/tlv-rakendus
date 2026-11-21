@@ -35,7 +35,6 @@ function paiseRead(p: ProtokollAndmed, k: EkspordiKontekst): string[] {
     `Kuupäev: ${k.kuupaevad.join(" / ")}`,
     `Arhiiviviide: ${p.arhiiviviide}, ${kaadridTekst(p.lehed[0]?.lk ?? "?", p.lehed[p.lehed.length - 1]?.lk ?? "?")}`,
     `Rahvusarhiiv: ${kaadriUrl(p.arhiiviviide, p.lehed[0]?.lk ?? "") ?? ""}`,
-    `Transkribus: ${p.transkribus_url}`,
     `Allikas: ${ALLIKAS}`,
     `URL: ${k.url}`,
     `Eksporditud: ${k.aeg ?? new Date().toISOString()}`,

@@ -29,7 +29,7 @@ export const ABI = {
     "Kaadrimarker näitab, kust algab Rahvusarhiivi järgmine digikaader (arhiivisäiliku leht). Klõps markeril avab selle kaadri originaalpildi.",
   // 3. etapp
   valimisteAllikad:
-    "Kaardil on kõik selle aasta valimiste read: kandidaatide nimekiri (1917 ka venekeelne) ja valimistulemused. Iga väärtuse järel nurksulgudes on allika viide; sama väärtus mitmest allikast on näidatud üks kord kõigi viidetega, erinevad väärtused kõik eraldi. VIIDE PUUDU = allika viide on andmetes märkimata.",
+    "Kaardil on kõik selle aasta valimiste read: kandidaatide nimekiri (1917 ka venekeelne) ja valimistulemused. Allika viide on kaardi allservas; sama väärtus mitmest allikast on näidatud üks kord, erinevad väärtused kõik eraldi. VIIDE PUUDU = allika viide on andmetes märkimata.",
   kinnitamine:
     "Koosseisu esimesel koosolekul kinnitati valimistel valitud liikmed. Andmestikus on see iga liikme kohta eraldi liitumisrida; siin on need koondatud üheks sündmuseks.",
   vahetus:

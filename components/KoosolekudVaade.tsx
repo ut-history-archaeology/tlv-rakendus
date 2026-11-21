@@ -44,7 +44,6 @@ interface Props {
 
 const PROTOKOLLI_VEERUD: { key: keyof ProtokolliRida; pealkiri: string }[] = [
   { key: "fail", pealkiri: "Korpuse fail" },
-  { key: "transkribus_url", pealkiri: "Transkribus" },
   { key: "arhiiviviide", pealkiri: "Arhiiviviide" },
   { key: "esimene_lk", pealkiri: "Esimene kaader" },
   { key: "viimane_lk", pealkiri: "Viimane lk" },

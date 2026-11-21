@@ -17,7 +17,7 @@ interface Naaber {
 interface Props {
   koosolek: Koosolek;
   juhatajad: KoosolekJuhataja[];
-  /** protokollid.csv rida (arhiiviviide, Transkribus); null, kui protokolli faili ei ole */
+  /** protokollid.csv rida (arhiiviviide); null, kui protokolli faili ei ole */
   protokoll: ProtokolliRida | null;
   aktiivne: "koosolek" | "protokoll";
   eelmine: Naaber | null;
@@ -122,19 +122,6 @@ export default function KoosolekuPais({
                 <dt className="inline font-medium">Arhiiviviide: </dt>
                 <dd className="inline">
                   {arhiiviviide ?? <>Rahvusarhiiv, <ArhiiviViited tekst={protokoll.arhiiviviide} /></>}
-                  {protokoll.transkribus_url && (
-                    <>
-                      {" · "}
-                      <a
-                        href={protokoll.transkribus_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-700 underline"
-                      >
-                        Ava Transkribuses ↗
-                      </a>
-                    </>
-                  )}
                 </dd>
               </div>
             )}

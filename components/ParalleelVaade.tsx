@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import ArhiiviLink from "./ArhiiviLink";
 import { kaadriUrl } from "@/lib/viited";
-import { aktiivneLeht, leiaLeht, naaberLeht, samaPildiLehed, transkribusLeheUrl, type MarkeriKoht } from "@/lib/protokollid/lehed";
+import { aktiivneLeht, leiaLeht, naaberLeht, samaPildiLehed, type MarkeriKoht } from "@/lib/protokollid/lehed";
 import { BASE_PATH } from "@/lib/protokollid/laadi";
 import { pildiUrl } from "@/lib/protokollid/lehed";
 import type { Leht } from "@/lib/protokollid/types";
@@ -20,7 +20,6 @@ interface Props {
   /** eesti kujul kuupäev(ad) alt-tekstidesse */
   kuupaevTekst: string;
   arhiiviviide: string;
-  transkribusUrl: string;
   viide: ViiteBaas;
   /** lk → ploki id, mis tuleb lehe valimisel avada */
   leheplokid: Record<string, string>;
@@ -34,7 +33,7 @@ interface Props {
  * Sünkroonimine: tekst → pilt (kerimine, nähtavad markerid, `aktiivneLeht`), pilt → tekst
  * (lehe valimine avab ploki ja kerib markerile; lukk ~600 ms tagasisünki vastu).
  */
-export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, transkribusUrl, viide, leheplokid, children }: Props) {
+export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, viide, leheplokid, children }: Props) {
   const [mounted, setMounted] = useState(false);
   const [lai, setLai] = useState(true);
   const [avatud, setAvatud] = useState(true);
@@ -237,7 +236,6 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
   const viimane = lehed[lehed.length - 1]?.lk ?? "";
   const eelmine = leht ? naaberLeht(lehed, leht.lk, -1) : null;
   const jargmine = leht ? naaberLeht(lehed, leht.lk, 1) : null;
-  const transkribusLehe = leht ? transkribusLeheUrl(transkribusUrl, leht.transkribus_lk) : transkribusUrl;
   const samad = leht ? samaPildiLehed(lehed, leht) : [];
   const nupp = "rounded border border-stone-300 bg-white px-2 py-0.5 text-xs text-stone-700 hover:bg-stone-50 disabled:opacity-40";
 
@@ -259,9 +257,6 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
         </button>
       </div>
       <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
-        <a href={transkribusLehe} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
-          Ava Transkribuses ↗
-        </a>
         <button
           type="button"
           className="text-blue-700 hover:underline"
@@ -276,7 +271,6 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
             void kopeeriViide(viide, null, {
               esimeneLk: leht.lk,
               viimaneLk: leht.lk,
-              transkribusUrl: transkribusLehe,
               leheUrl: `${leheUrl()}?lk=${encodeURIComponent(leht.lk)}`,
             })
           }
@@ -291,7 +285,7 @@ export default function ParalleelVaade({ lehed, kuupaevTekst, arhiiviviide, tran
       />
       <LehtedeRiba lehed={lehed} aktiivne={leht.lk} vali={(lk) => valiLeht(lk, true)} kuupaev={kuupaevTekst} />
       <p className="text-[11px] text-stone-500">
-        Originaalid: Rahvusarhiiv, {arhiiviviide.split(".").slice(0, 2).join(".")}; täislahutuses Transkribuses. Pilt on 1200 px laiune mustvalge koopia.
+        Originaalid: Rahvusarhiiv, {arhiiviviide.split(".").slice(0, 2).join(".")}. Pilt on 1200 px laiune mustvalge koopia.
       </p>
     </div>
   );

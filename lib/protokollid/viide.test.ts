@@ -4,13 +4,11 @@ import { koostaViide, kuupaevadEesti } from "./viide";
 describe("TE-09 viide", () => {
   const alus = {
     kuupaevad: ["1930-09-08"], arhiiviviide: "ERA.2966.2.74", esimeneLk: "125", viimaneLk: "131",
-    transkribusUrl: "https://rahvusarhiiv.transkribus.eu/document/3016346/pages/125",
     leheUrl: "https://ut-history-archaeology.github.io/tlv-rakendus/protokollid/K175/", vaadatud: "2026-10-27",
   };
   it("ilma punktita", () => {
     expect(koostaViide(alus)).toBe(
       "Tartu Linnavolikogu protokoll, 8. september 1930. Rahvusarhiiv, ERA.2966.2.74, kaadrid 125–131. " +
-        "Transkribus: https://rahvusarhiiv.transkribus.eu/document/3016346/pages/125. " +
         "Tartu Linnavolikogu andmestik, 2026, https://ut-history-archaeology.github.io/tlv-rakendus/protokollid/K175/ (vaadatud 27. oktoober 2026)."
     );
   });
@@ -24,6 +22,7 @@ describe("TE-09 viide", () => {
     expect(kuupaevadEesti(["1920-02-23", "1920-03-01"])).toBe("23. veebruar 1920 – 1. märts 1920");
     const v = koostaViide({ ...alus, kuupaevad: ["1920-03-29", "1920-03-30"], esimeneLk: "27", viimaneLk: "27" });
     expect(v).toContain("protokoll, 29.–30. märts 1920.");
-    expect(v).toContain(", kaader 27. Transkribus");
+    expect(v).toContain(", kaader 27. Tartu Linnavolikogu andmestik");
+    expect(v).not.toContain("Transkribus");
   });
 });

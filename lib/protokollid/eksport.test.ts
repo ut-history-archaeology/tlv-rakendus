@@ -46,10 +46,10 @@ describe("TE-10 eksport", () => {
     expect(md).toContain("**Olesk:** Kinnitame.");
     expect(md).toContain("- Kirjakuju: moderniseeritud");
   });
-  it("txt päises on arhiiviviide, Transkribus, allikas ja kirjakuju; tekst muutmata reavahetustega", () => {
+  it("txt päises on arhiiviviide, allikas ja kirjakuju; tekst muutmata reavahetustega", () => {
     const txt = koostaTxt(p, ctx);
     expect(txt).toContain("Arhiiviviide: ERA.2966.2.60, kaadrid 27–28");
-    expect(txt).toContain("Transkribus: https://x/document/1/pages/5");
+    expect(txt).not.toContain("Transkribus");
     expect(txt).toContain("Allikas: Tartu Linnavolikogu andmestik, 2026");
     expect(txt).toContain("Kirjakuju: ajalooline");
     expect(txt.endsWith("\n\n" + tekst + "\n")).toBe(true);

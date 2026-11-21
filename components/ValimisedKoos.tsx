@@ -41,25 +41,26 @@ function Viide({ a }: { a: Allikas }) {
   );
 }
 
+/** Kaardi allikaviide(d) kaardi jalusesse — üks kord kaardi kohta, mitte iga rea järel. */
 function Viited({ allikad }: { allikad: Allikas[] }) {
   return (
-    <span className="ml-1.5 text-xs text-stone-500">
-      [
+    <p className="mt-2 border-t border-stone-100 pt-2 text-xs text-stone-500">
+      Allikas:{" "}
       {allikad.map((a, i) => (
         <Fragment key={i}>
           {i > 0 && "; "}
+          {allikad.length > 1 && <>{ALLIKA_NIMI[a.allikas]}: </>}
           <Viide a={a} />
         </Fragment>
       ))}
-      ]
-    </span>
+    </p>
   );
 }
 
 /**
- * VK-01…VK-04: üks kaart valimisaasta kohta; iga väärtuse järel selle allika(te) viide.
- * Sama väärtus mitmest allikast → üks väärtus, kõik viited; erinevad väärtused jäävad kõik
- * nähtavaks, igaüks oma viitega (ei ühtlustata).
+ * VK-01…VK-04: üks kaart valimisaasta kohta; allikaviide(d) üks kord kaardi jaluses.
+ * Sama väärtus mitmest allikast → üks väärtus; erinevad väärtused jäävad kõik nähtavaks
+ * (ei ühtlustata).
  */
 export default function ValimisedKoos({ kirjed }: { kirjed: ValimineKoos[] }) {
   return (
@@ -86,7 +87,6 @@ function ValimiseKaart({ k }: { k: ValimineKoos }) {
             {n.nimi}
           </span>
           {n.kontrollida && <KontrollimiselMark />}
-          <Viited allikad={n.allikad} />
         </span>
       );
     })]);
@@ -107,7 +107,6 @@ function ValimiseKaart({ k }: { k: ValimineKoos }) {
     read.push([silt, v.map((x, i) => (
       <span key={i} className="block">
         {x.vaartus}
-        <Viited allikad={x.allikad} />
       </span>
     ))]);
   }
@@ -143,6 +142,7 @@ function ValimiseKaart({ k }: { k: ValimineKoos }) {
           ))}
         </dl>
       )}
+      {k.allikad.length > 0 && <Viited allikad={k.allikad} />}
     </article>
   );
 }

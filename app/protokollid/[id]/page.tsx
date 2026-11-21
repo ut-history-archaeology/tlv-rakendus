@@ -52,7 +52,6 @@ export default async function ProtokolliLeht({ params }: { params: Promise<{ id:
     arhiiviviide: p.arhiiviviide,
     esimeneLk,
     viimaneLk,
-    transkribusUrl: p.transkribus_url,
   };
   const s = p.statistika;
   // PT-08: kliendipoolse (moderniseeritud) renderduse jaoks ainult selles protokollis esinevad nimed
@@ -117,7 +116,6 @@ export default async function ProtokolliLeht({ params }: { params: Promise<{ id:
         lehed={p.lehed}
         kuupaevTekst={kuupaevadEesti(kuupaevad)}
         arhiiviviide={p.arhiiviviide}
-        transkribusUrl={p.transkribus_url}
         viide={viide}
         leheplokid={Object.fromEntries(leheplokid(p))}
       >
@@ -128,7 +126,7 @@ export default async function ProtokolliLeht({ params }: { params: Promise<{ id:
 
       <p className="text-xs text-stone-500">
         Tekst on OCR-i ja automaatse märgenduse tulemus; osa sõnu võib olla valesti loetud.
-        Originaalid: Rahvusarhiiv, {p.arhiiviviide}; täislahutuses Transkribuses.
+        Originaalid: Rahvusarhiiv, {p.arhiiviviide}.
       </p>
       <p className="print-only text-xs">Viide: {prindiViide}</p>
     </div>
